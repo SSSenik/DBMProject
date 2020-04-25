@@ -1,0 +1,25 @@
+{
+  "name": "dbmproject",
+  "version": "1.0.0",
+  "description": "Repositório para o projeto de DBM",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SSSenik/DBMProject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SSSenik/DBMProject/issues"
+  },
+  "homepage": "https://github.com/SSSenik/DBMProject#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  }
+}
