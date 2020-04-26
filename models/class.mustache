@@ -1,0 +1,22 @@
+const jsf = require('json-schema-faker');
+const faker = require('faker');
+
+jsf.extend('faker', () => faker);
+
+const schema{{classTitle}} = require('../schemas/Schema-{{classTitle}}.json');
+
+class {{classTitle}} {
+    constructor({{constructorArguments}}) {
+        {{#classConstructor}} 
+        this.{{name}} = {{name}};
+        {{/classConstructor}}
+
+        {{#classEnumerables}} 
+        Object.defineProperty(this, '{{name}}', { enumerable: false });
+        {{/classEnumerables}}
+    }
+
+    static create() {
+        return Object.assign(new {{classTitle}}(), jsf.generate(schema{{classTitle}}));
+    }
+}
