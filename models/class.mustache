@@ -1,12 +1,15 @@
 const jsf = require('json-schema-faker');
 const faker = require('faker');
 
+const database = require({{sqlitePath}})({{dbName}})
+
 jsf.extend('faker', () => faker);
 
 const schema{{classTitle}} = require('../schemas/Schema-{{classTitle}}.json');
 
 class {{classTitle}} {
-    constructor({{constructorArguments}}) {
+    constructor(id, {{constructorArguments}}) {
+        this.id = id
         {{#classConstructor}} 
         this.{{name}} = {{name}};
         {{/classConstructor}}
@@ -14,9 +17,34 @@ class {{classTitle}} {
         {{#classEnumerables}} 
         Object.defineProperty(this, '{{name}}', { enumerable: false });
         {{/classEnumerables}}
+        Object.defineProperty(this, id, { enumerable: false, writable: true } );
     }
 
     static create() {
         return Object.assign(new {{classTitle}}(), jsf.generate(schema{{classTitle}}));
     }
+
+    static all(callback) {
+        database.where("SELECT * FROM {{classTitle}}", [], {{classTitle}}, callback)
+    }
+
+    static get(id, callback) {
+        database.get("SELECT * FROM {{classTitle}} WHERE id = ?", [id], {{classTitle}}, callback)
+    }
+
+    static delete(id, callback) {
+        database.run("DELETE FROM {{classTitle}} WHERE id = ?", [id], callback)
+    }
+    save(callback) {
+        if (this.id) {
+            database.run("UPDATE Aluno SET numero = ?,nome = ?,email = ?,morada =
+            ?,notafinal = ? WHERE id = ?", [this.numero, this.nome, this.email, this.morada,
+            this.notafinal, this.id], callback);
+        } else{
+            database.run("INSERT INTO Aluno (numero,nome,email,morada,notafinal)
+            VALUES (?,?,?,?,?)", [this.numero, this.nome, this.email, this.morada,
+            this.notafinal], callback);
+        }
+    }
+
 }

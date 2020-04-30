@@ -2,7 +2,7 @@ const mustache = require('mustache');
 const { promises: fs } = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 
-const databaseModel = './models/dbscript.mustache';
+const DBSCRIPT_MUSTACHE = './database/dbscript.mustache';
 
 const sqliteTypeTranslator = {
     integer: 'INTEGER',
@@ -26,7 +26,7 @@ const createTableView = (schema) => ({
     })),
 });
 
-const buildConstraints = (columnName, column) => {
+function buildConstraints(columnName, column) {
     let constraint = '';
     Object.keys(column).forEach((prop) => {
         switch (prop) {
@@ -47,9 +47,9 @@ const buildConstraints = (columnName, column) => {
         return `CHECK(${constraint.substring(0, constraint.length - 5)})`;
     }
     return;
-};
+}
 
-module.exports.generate = (dbname, schemas) => {
+function generate(dbname, schemas) {
     const db = new sqlite3.Database(`./publish/database/${dbname}`, (err) => {
         if (err) return console.error(err.message);
         console.log('Connected to SQLite database.');
@@ -57,7 +57,7 @@ module.exports.generate = (dbname, schemas) => {
 
     schemas.forEach(async (schema) => {
         try {
-            const data = await fs.readFile(databaseModel);
+            const data = await fs.readFile(DBSCRIPT_MUSTACHE);
             db.run(
                 mustache.render(
                     data.toString(),
@@ -68,4 +68,15 @@ module.exports.generate = (dbname, schemas) => {
             console.log('Error catched', e);
         }
     });
+
+    // close the database connection
+    db.close((err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+    });
+}
+
+module.exports = {
+    generate,
 };
