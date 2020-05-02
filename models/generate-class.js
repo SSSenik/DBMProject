@@ -16,9 +16,14 @@ const createView = (schema) => ({
     classEnumerables: Object.keys(schema.properties)
         .filter((prop) => schema.required.indexOf(prop) === -1)
         .map((prop) => ({ name: prop })),
+    updateColumns: Object.keys(schema.properties).join(' = ?, ') + ' = ? ',
+    thisColumns: 'this.' + Object.keys(schema.properties).join(', this.'),
+    interrogationSigns: Object.keys(schema.properties)
+        .map((n) => '?')
+        .join(),
 });
 
-function generate(schemas) {
+async function generate(schemas) {
     const data = await fs.readFile(CLASS_MUSTACHE);
     schemas.forEach(async (schema) => {
         try {

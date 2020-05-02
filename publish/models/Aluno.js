@@ -1,7 +1,7 @@
 const jsf = require('json-schema-faker');
 const faker = require('faker');
 
-const database = require(.&#x2F;database&#x2F;sqlite-wrapper.js)(database.db)
+const database = require('../database/sqlite-wrapper.js')('database.db')
 
 jsf.extend('faker', () => faker);
 
@@ -24,7 +24,29 @@ class Aluno {
     static create() {
         return Object.assign(new Aluno(), jsf.generate(schemaAluno));
     }
+
     static all(callback) {
-        database.run("SELECT * FROM Aluno", {}, callback);
+        database.where("SELECT * FROM Aluno", [], Aluno, callback)
     }
+
+    static get(id, callback) {
+        database.get("SELECT * FROM Aluno WHERE id = ?", [id], Aluno, callback)
+    }
+
+    static delete(id, callback) {
+        database.run("DELETE FROM Aluno WHERE id = ?", [id], callback)
+    }
+
+    save(callback) {
+        if (this.id) {
+            database.run(`UPDATE Aluno SET numero = ?, nome = ?, email = ?, morada = ?, notafinal = ?  WHERE id = ?`, [this.numero, this.nome, this.email, this.morada, this.notafinal, this.id], callback);
+        } else{
+            database.run(`INSERT INTO Aluno (numero, nome, email, morada, notafinal)
+            VALUES (?,?,?,?,?)`, [this.numero, this.nome, this.email, this.morada, this.notafinal], callback);
+        }
+    }
+
 }
+
+
+module.exports = Aluno

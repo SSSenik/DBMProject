@@ -49,14 +49,14 @@ function buildConstraints(columnName, column) {
     return;
 }
 
-function generate(dbname, schemas) {
+async function generate(dbname, schemas) {
     const db = new sqlite3.Database(`./publish/database/${dbname}`, (err) => {
         if (err) return console.error(err.message);
         console.log('Connected to SQLite database.');
     });
 
     const data = await fs.readFile(DBSCRIPT_MUSTACHE);
-    schemas.forEach(async (schema) => {
+    schemas.forEach((schema) => {
         try {
             db.run(
                 mustache.render(
