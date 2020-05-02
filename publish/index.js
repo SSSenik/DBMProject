@@ -1,16 +1,9 @@
 const express = require('express');
 
-const { generateServer } = require('./server/server');
-
 const app = express();
 app.use(express.static('public'));
 
-app.post('/generate', (req, res) => {
-    generateServer();
-    res.send('GENERATED');
-});
-
-const server = app.listen(8081, () => {
+const server = app.listen(8082, () => {
     const host =
         server.address().address === '::'
             ? 'localhost'

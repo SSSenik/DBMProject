@@ -4,58 +4,63 @@ const mustache = require('mustache');
 const { promises: fs } = require('fs');
 
 const config = require('./config.json');
-const generateClass = require('../models/generate-class.js');
-const generateDatabase = require('../models/generate-database.js');
+const generateClass = require('../models/generate-class');
+const generateDatabase = require('../database/generate-database');
 
-async function createControllers() {
-    await mkdirp('./publish/controllers');
+const SERVER_MUSTACHE = './server/server.mustache';
+
+async function genFolderTree() {
+    console.log('GENERATING FOLDER TREE...');
+    await del([config.baseGenFolder]).then(() => {
+        mkdirp.sync(`./${config.baseGenFolder}/controllers`);
+        mkdirp.sync(`./${config.baseGenFolder}/models`);
+        mkdirp.sync(`./${config.baseGenFolder}/public/css`);
+        mkdirp.sync(`./${config.baseGenFolder}/public/js`);
+        mkdirp.sync(`./${config.baseGenFolder}/public/html`);
+        mkdirp.sync(`./${config.baseGenFolder}/views`);
+        mkdirp.sync(`./${config.baseGenFolder}/schemas`);
+        mkdirp.sync(`./${config.baseGenFolder}/database`);
+    });
 }
 
-async function createModels() {
-    await mkdirp('./publish/models');
+async function copyStaticFiles() {
+    console.log('COPYING STATIC FILES...');
+    Object.keys(config.staticFiles).forEach(async (name) => {
+        try {
+            await fs.copyFile(
+                `.${config.staticFiles[name].originalPath}`,
+                `./${config.baseGenFolder}${config.staticFiles[name].destinationPath}`
+            );
+        } catch (e) {
+            console.log('Error catched', e);
+        }
+    });
 }
 
-async function createPublic() {
-    await mkdirp('./publish/public/css');
-    await mkdirp('./publish/public/js');
-    await mkdirp('./publish/public/html');
-}
-
-async function createViews() {
-    await mkdirp('./publish/views');
-}
-
-async function createSchemas() {
-    await mkdirp('./publish/schemas');
+async function generateDataStructure() {
+    console.log('GENERATING DATA STRUCTURES...');
     generateClass.generate(config.schemas);
-}
-
-async function createDatabases() {
-    await mkdirp('./publish/database');
     generateDatabase.generate(config.dbname, config.schemas);
 }
 
 async function generateIndex() {
-    const data = await fs.readFile('./server/server.mustache');
+    console.log('GENERATING SERVER FILE...');
+    const data = await fs.readFile(SERVER_MUSTACHE);
     await fs.writeFile(
-        './publish/index.js',
+        `./${config.baseGenFolder}/index.js`,
         mustache.render(data.toString(), config)
     );
 }
 
-async function resetPublish() {
+async function generateServer() {
     try {
-        await del(['publish']);
-        createControllers();
-        createModels();
-        createViews();
-        createPublic();
-        createSchemas();
-        createDatabases();
-        generateIndex();
+        await genFolderTree();
+        await copyStaticFiles();
+        await generateDataStructure();
+        await generateIndex();
     } catch (e) {
         console.log('Error catched', e);
     }
 }
 
-module.exports.resetPublish = resetPublish;
+module.exports = { generateServer };
