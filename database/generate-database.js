@@ -55,9 +55,9 @@ function generate(dbname, schemas) {
         console.log('Connected to SQLite database.');
     });
 
+    const data = await fs.readFile(DBSCRIPT_MUSTACHE);
     schemas.forEach(async (schema) => {
         try {
-            const data = await fs.readFile(DBSCRIPT_MUSTACHE);
             db.run(
                 mustache.render(
                     data.toString(),

@@ -19,14 +19,13 @@ const createView = (schema) => ({
 });
 
 function generate(schemas) {
-    console.log(schemas);
+    const data = await fs.readFile(CLASS_MUSTACHE);
     schemas.forEach(async (schema) => {
         try {
             await fs.copyFile(
                 schema.path,
                 `./${config.baseGenFolder}${schema.path.slice(1)}`
             );
-            const data = await fs.readFile(CLASS_MUSTACHE);
             const output = mustache.render(
                 data.toString(),
                 createView(require(`.${schema.path}`))
