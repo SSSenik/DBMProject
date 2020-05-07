@@ -6,6 +6,7 @@ const { promises: fs } = require('fs');
 const config = require('./config.json');
 const generateClass = require('../models/generate-class');
 const generateDatabase = require('../database/generate-database');
+const generateApis = require('../restful-api/generate-api');
 
 const SERVER_MUSTACHE = './server/server.mustache';
 
@@ -41,15 +42,20 @@ async function generateDataStructure() {
     console.log('GENERATING DATA STRUCTURES...');
     generateClass.generate(config.schemas);
     generateDatabase.generate(config.dbname, config.schemas);
+    generateApis.generate(config.schemas);
 }
 
+const createIndexView = () => ({
+    port: config.port,
+    schemaApis: config.schemas.map((schema) => ({
+        title: schema.name,
+    })),
+});
 async function generateIndex() {
     console.log('GENERATING SERVER FILE...');
     const data = await fs.readFile(SERVER_MUSTACHE);
-    await fs.writeFile(
-        `./${config.baseGenFolder}/index.js`,
-        mustache.render(data.toString(), config)
-    );
+    const output = mustache.render(data.toString(), createIndexView());
+    await fs.writeFile(`./${config.baseGenFolder}/index.js`, output);
 }
 
 async function generateServer() {

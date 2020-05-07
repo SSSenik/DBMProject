@@ -33,9 +33,13 @@ module.exports = (dbpath) => {
         where: (statement, params, type, callback) => {
             let db = new sqlite3.Database(dbpath);
             db.all(statement, params, (err, rows) => {
-                rows = rows.map((object) => {
-                    return Object.assign(new type(), object);
-                });
+                if (rows) {
+                    rows = rows.map((object) => {
+                        return Object.assign(new type(), object);
+                    });
+                } else {
+                    rows = [];
+                }
                 callback(rows);
             });
             db.close();

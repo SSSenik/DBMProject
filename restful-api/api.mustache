@@ -1,0 +1,29 @@
+const express = require('express');
+var router = express.Router();
+
+var {{title}} = require('../Models/{{title}}.js');
+
+router.post('/{{title}}', function (req, res) {
+    let obj = Object.assign(new {{title}}(), req.body);
+    obj.save(msg => res.json(msg));
+});
+
+router.get('/{{title}}', function (req, res) {
+    {{title}}.all(rows => res.send(rows));
+});
+
+router.get('/{{title}}/:id', function (req, res) {
+    {{title}}.get(req.params.id, (row) => res.json(row));
+});
+
+router.put('/{{title}}/:id', function (req, res) {
+    let obj = Object.assign(new {{title}}(), req.body);
+    obj.id = req.params.id;
+    obj.save((msg) => res.json(msg));
+});
+
+router.delete('/{{title}}/:id', function (req, res) {
+    {{title}}.delete(req.params.id, (row) => res.json(row));
+});
+
+module.exports = router;
