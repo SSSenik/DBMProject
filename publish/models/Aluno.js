@@ -1,7 +1,7 @@
 const jsf = require('json-schema-faker');
 const faker = require('faker');
 
-const database = require('../database/sqlite-wrapper.js')('database.db')
+const database = require('../database/sqlite-wrapper.js')('./database/database.db')
 
 jsf.extend('faker', () => faker);
 
@@ -39,10 +39,11 @@ class Aluno {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Aluno SET numero = ?, nome = ?, email = ?, morada = ?, notafinal = ?  WHERE id = ?`, [this.numero, this.nome, this.email, this.morada, this.notafinal, this.id], callback);
+            database.run(`UPDATE Aluno SET numero = ?, nome = ?, email = ?, morada = ?, notafinal = ?  WHERE id = ?`, 
+            [this.numero, this.nome, this.email, this.morada, this.notafinal, this.id], callback);
         } else{
-            database.run(`INSERT INTO Aluno (numero, nome, email, morada, notafinal)
-            VALUES (?,?,?,?,?)`, [this.numero, this.nome, this.email, this.morada, this.notafinal], callback);
+            database.run(`INSERT INTO Aluno (numero, nome, email, morada, notafinal) VALUES (?,?,?,?,?)`, 
+            [this.numero, this.nome, this.email, this.morada, this.notafinal], callback);
         }
     }
 

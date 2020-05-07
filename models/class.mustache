@@ -1,7 +1,7 @@
 const jsf = require('json-schema-faker');
 const faker = require('faker');
 
-const database = require('.{{{sqlitePath}}}')('{{dbName}}')
+const database = require('.{{{sqlitePath}}}')('./database/{{dbName}}')
 
 jsf.extend('faker', () => faker);
 
@@ -38,10 +38,11 @@ class {{classTitle}} {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE {{classTitle}} SET {{{updateColumns}}} WHERE id = ?`, [{{thisColumns}}, this.id], callback);
+            database.run(`UPDATE {{classTitle}} SET {{{updateColumns}}} WHERE id = ?`, 
+            [{{thisColumns}}, this.id], callback);
         } else{
-            database.run(`INSERT INTO {{classTitle}} ({{constructorArguments}})
-            VALUES ({{interrogationSigns}})`, [{{thisColumns}}], callback);
+            database.run(`INSERT INTO {{classTitle}} ({{constructorArguments}}) VALUES ({{interrogationSigns}})`, 
+            [{{thisColumns}}], callback);
         }
     }
 
