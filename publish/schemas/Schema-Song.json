@@ -1,0 +1,28 @@
+{
+    "title": "Song",
+    "description": "Caracteristicas da Música",
+    "type": "object",
+    "properties": {
+        "name": {
+            "description": "Nome",
+            "type": "string"
+        },
+        "description": {
+            "description": "Descrição",
+            "type": "string"
+        },
+        "duration": {
+            "description": "Duração",
+            "type": "integer"
+        },
+        "lyrics": {
+            "description": "Letra",
+            "type": "string"
+        },
+        "realeaseDate": {
+            "description": "Data de Saida",
+            "type": "string"
+        }
+    },
+    "required": ["name", "duration"]
+}

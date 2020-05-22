@@ -1,0 +1,20 @@
+{
+    "title": "Album",
+    "description": "Caracteristicas do Album",
+    "type": "object",
+    "properties": {
+        "name": {
+            "description": "Nome",
+            "type": "string"
+        },
+        "description": {
+            "description": "Descrição",
+            "type": "string"
+        },
+        "realeaseDate": {
+            "description": "Data de Saida",
+            "type": "string"
+        }
+    },
+    "required": ["name"]
+}

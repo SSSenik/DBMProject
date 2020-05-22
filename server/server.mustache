@@ -5,7 +5,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 {{#schemaApis}}
-const {{title}}Api = require('./controllers/{{title}}-api.js');
+const {{title}}Api = require('./controllers/{{title}}-api');
 app.use('/api', {{title}}Api);
 {{/schemaApis}}
 

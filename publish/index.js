@@ -4,8 +4,14 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-const AlunoApi = require('./controllers/Aluno-api.js');
-app.use('/api', AlunoApi);
+const AlbumApi = require('./controllers/Album-api');
+app.use('/api', AlbumApi);
+const ArtistApi = require('./controllers/Artist-api');
+app.use('/api', ArtistApi);
+const GenreApi = require('./controllers/Genre-api');
+app.use('/api', GenreApi);
+const SongApi = require('./controllers/Song-api');
+app.use('/api', SongApi);
 
 const server = app.listen(8082, () => {
     const host =

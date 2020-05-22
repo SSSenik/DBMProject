@@ -1,0 +1,16 @@
+{
+    "title": "Artist",
+    "description": "Caracteristicas do Artista",
+    "type": "object",
+    "properties": {
+        "name": {
+            "description": "Nome",
+            "type": "string"
+        },
+        "contact": {
+            "description": "Contacto",
+            "type": "string"
+        }
+    },
+    "required": ["name"]
+}

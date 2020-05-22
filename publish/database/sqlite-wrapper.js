@@ -13,8 +13,10 @@ module.exports = (dbpath) => {
             db.get(statement, params, (err, row) => {
                 if (row) {
                     row = Object.assign(new type(), row);
-                    callback(row);
+                } else {
+                    row = {};
                 }
+                callback(row);
             });
             db.close();
         },

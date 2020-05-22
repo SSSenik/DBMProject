@@ -3,8 +3,20 @@
     "dbname": "database.db",
     "schemas": [
         {
-            "name": "Aluno",
-            "path": "./schemas/Schema-Aluno.json"
+            "name": "Album",
+            "path": "./schemas/Schema-Album.json"
+        },
+        {
+            "name": "Artist",
+            "path": "./schemas/Schema-Artist.json"
+        },
+        {
+            "name": "Genre",
+            "path": "./schemas/Schema-Genre.json"
+        },
+        {
+            "name": "Song",
+            "path": "./schemas/Schema-Song.json"
         }
     ],
     "baseGenFolder": "publish",

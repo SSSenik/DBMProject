@@ -1,15 +1,14 @@
 const jsf = require('json-schema-faker');
 const faker = require('faker');
 
-const database = require('.{{{sqlitePath}}}')('./database/{{dbName}}')
+const database = require('{{{sqlitePath}}}')('./database/{{dbName}}')
 
 jsf.extend('faker', () => faker);
 
 const schema{{classTitle}} = require('../schemas/Schema-{{classTitle}}.json');
 
 class {{classTitle}} {
-    constructor(id, {{constructorArguments}}) {
-        this.id = id
+    constructor({{constructorArguments}}) {
         {{#classConstructor}} 
         this.{{name}} = {{name}};
         {{/classConstructor}}

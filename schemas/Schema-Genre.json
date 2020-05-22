@@ -1,0 +1,12 @@
+{
+    "title": "Genre",
+    "description": "Caracteristicas do Género",
+    "type": "object",
+    "properties": {
+        "name": {
+            "description": "Nome",
+            "type": "string"
+        }
+    },
+    "required": ["name"]
+}

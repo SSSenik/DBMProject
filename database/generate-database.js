@@ -2,6 +2,8 @@ const mustache = require('mustache');
 const { promises: fs } = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 
+const config = require('../server/config.json');
+
 const DBSCRIPT_MUSTACHE = './database/dbscript.mustache';
 
 const sqliteTypeTranslator = {
@@ -50,10 +52,13 @@ function buildConstraints(columnName, column) {
 }
 
 async function generate(dbname, schemas) {
-    const db = new sqlite3.Database(`./publish/database/${dbname}`, (err) => {
-        if (err) return console.error(err.message);
-        console.log('Connected to SQLite database.');
-    });
+    const db = new sqlite3.Database(
+        `./${config.baseGenFolder}/database/${dbname}`,
+        (err) => {
+            if (err) return console.error(err.message);
+            console.log('Connected to SQLite database.');
+        }
+    );
 
     const data = await fs.readFile(DBSCRIPT_MUSTACHE);
     schemas.forEach((schema) => {

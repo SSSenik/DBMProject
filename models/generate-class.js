@@ -6,7 +6,7 @@ const config = require('../server/config.json');
 const CLASS_MUSTACHE = './models/class.mustache';
 
 const createView = (schema) => ({
-    sqlitePath: `.${config.staticFiles.sqlite.destinationPath}`,
+    sqlitePath: `..${config.staticFiles.sqlite.destinationPath}`,
     dbName: config.dbname,
     classTitle: schema.title,
     constructorArguments: Object.keys(schema.properties).join(', '),
