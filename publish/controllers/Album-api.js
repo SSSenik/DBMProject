@@ -5,11 +5,11 @@ var Album = require('../Models/Album.js');
 
 router.post('/Album', function (req, res) {
     let obj = Object.assign(new Album(), req.body);
-    obj.save(msg => res.json(msg));
+    obj.save((msg) => res.json(msg));
 });
 
 router.get('/Album', function (req, res) {
-    Album.all(rows => res.send(rows));
+    Album.all((rows) => res.json(rows));
 });
 
 router.get('/Album/:id', function (req, res) {
