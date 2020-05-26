@@ -23,6 +23,7 @@ module.exports = (dbpath) => {
         run: (statement, params, callback) => {
             let db = new sqlite3.Database(dbpath);
             db.run(statement, params, (err) => {
+                console.log(err);
                 if (callback)
                     callback({
                         success: !err,

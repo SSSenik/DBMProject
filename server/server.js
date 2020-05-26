@@ -1,3 +1,4 @@
+const childProcess = require('child_process');
 const del = require('del');
 const mkdirp = require('mkdirp');
 const mustache = require('mustache');
@@ -56,6 +57,7 @@ async function generateIndex() {
     const data = await fs.readFile(SERVER_MUSTACHE);
     const output = mustache.render(data.toString(), createIndexView());
     await fs.writeFile(`./${config.baseGenFolder}/index.js`, output);
+    childProcess.fork('./publish/index.js');
 }
 
 async function generateServer() {

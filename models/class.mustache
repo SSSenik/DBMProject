@@ -1,7 +1,7 @@
 const jsf = require('json-schema-faker');
 const faker = require('faker');
 
-const database = require('{{{sqlitePath}}}')('./database/{{dbName}}')
+const database = require(__basedir + '{{{sqlitePath}}}')(__basedir + '/database/{{dbName}}')
 
 jsf.extend('faker', () => faker);
 
@@ -16,7 +16,7 @@ class {{classTitle}} {
         {{#classEnumerables}} 
         Object.defineProperty(this, '{{name}}', { enumerable: false });
         {{/classEnumerables}}
-        Object.defineProperty(this, id, { enumerable: false, writable: true } );
+        Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
     }
 
     static create() {

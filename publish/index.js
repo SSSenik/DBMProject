@@ -1,8 +1,11 @@
+global.__basedir = __dirname;
 const express = require('express');
 
 const app = express();
 app.use(express.json());
 app.use(express.static('public'));
+
+
 
 const AlbumApi = require('./controllers/Album-api');
 app.use('/api', AlbumApi);

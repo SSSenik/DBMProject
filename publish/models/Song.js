@@ -1,7 +1,7 @@
 const jsf = require('json-schema-faker');
 const faker = require('faker');
 
-const database = require('../database/sqlite-wrapper.js')('./database/database.db')
+const database = require(__basedir + '/database/sqlite-wrapper.js')(__basedir + '/database/database.db')
 
 jsf.extend('faker', () => faker);
 
@@ -18,7 +18,7 @@ class Song {
         Object.defineProperty(this, 'description', { enumerable: false });
         Object.defineProperty(this, 'lyrics', { enumerable: false });
         Object.defineProperty(this, 'realeaseDate', { enumerable: false });
-        Object.defineProperty(this, id, { enumerable: false, writable: true } );
+        Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
     }
 
     static create() {
