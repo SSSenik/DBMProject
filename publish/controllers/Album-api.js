@@ -5,7 +5,7 @@ var Album = require('../Models/Album.js');
 
 router.post('/Album', function (req, res) {
     let obj = Object.assign(new Album(), req.body);
-    obj.save(msg => res.json(msg));
+    obj.save(row => res.json(row));
 });
 
 router.get('/Album', function (req, res) {
@@ -19,7 +19,7 @@ router.get('/Album/:id', function (req, res) {
 router.put('/Album/:id', function (req, res) {
     let obj = Object.assign(new Album(), req.body);
     obj.id = req.params.id;
-    obj.save((msg) => res.json(msg));
+    obj.save((row) => res.json(row));
 });
 
 router.delete('/Album/:id', function (req, res) {

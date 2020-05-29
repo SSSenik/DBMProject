@@ -5,7 +5,7 @@ var {{title}} = require('../Models/{{title}}.js');
 
 router.post('/{{title}}', function (req, res) {
     let obj = Object.assign(new {{title}}(), req.body);
-    obj.save(msg => res.json(msg));
+    obj.save(row => res.json(row));
 });
 
 router.get('/{{title}}', function (req, res) {
@@ -19,7 +19,7 @@ router.get('/{{title}}/:id', function (req, res) {
 router.put('/{{title}}/:id', function (req, res) {
     let obj = Object.assign(new {{title}}(), req.body);
     obj.id = req.params.id;
-    obj.save((msg) => res.json(msg));
+    obj.save((row) => res.json(row));
 });
 
 router.delete('/{{title}}/:id', function (req, res) {

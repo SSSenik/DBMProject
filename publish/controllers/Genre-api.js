@@ -5,7 +5,7 @@ var Genre = require('../Models/Genre.js');
 
 router.post('/Genre', function (req, res) {
     let obj = Object.assign(new Genre(), req.body);
-    obj.save(msg => res.json(msg));
+    obj.save(row => res.json(row));
 });
 
 router.get('/Genre', function (req, res) {
@@ -19,7 +19,7 @@ router.get('/Genre/:id', function (req, res) {
 router.put('/Genre/:id', function (req, res) {
     let obj = Object.assign(new Genre(), req.body);
     obj.id = req.params.id;
-    obj.save((msg) => res.json(msg));
+    obj.save((row) => res.json(row));
 });
 
 router.delete('/Genre/:id', function (req, res) {

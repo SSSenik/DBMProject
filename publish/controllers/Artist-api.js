@@ -5,7 +5,7 @@ var Artist = require('../Models/Artist.js');
 
 router.post('/Artist', function (req, res) {
     let obj = Object.assign(new Artist(), req.body);
-    obj.save(msg => res.json(msg));
+    obj.save(row => res.json(row));
 });
 
 router.get('/Artist', function (req, res) {
@@ -19,7 +19,7 @@ router.get('/Artist/:id', function (req, res) {
 router.put('/Artist/:id', function (req, res) {
     let obj = Object.assign(new Artist(), req.body);
     obj.id = req.params.id;
-    obj.save((msg) => res.json(msg));
+    obj.save((row) => res.json(row));
 });
 
 router.delete('/Artist/:id', function (req, res) {
