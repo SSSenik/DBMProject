@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS {{tableName}} (
+    {{modelCol}} integer REFERENCES {{modelTable}}(id),
+    {{refCol}} integer REFERENCES {{refTable}}(id),
+    PRIMARY KEY({{modelCol}}, {{refCol}})
+);

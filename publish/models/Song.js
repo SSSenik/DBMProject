@@ -8,16 +8,16 @@ jsf.extend('faker', () => faker);
 const schemaSong = require('../schemas/Schema-Song.json');
 
 class Song {
-    constructor(name, description, duration, lyrics, realeaseDate) {
+    constructor(name, description, duration, lyrics, realease_date) {
         this.name = name;
         this.description = description;
         this.duration = duration;
         this.lyrics = lyrics;
-        this.realeaseDate = realeaseDate;
+        this.realease_date = realease_date;
 
         Object.defineProperty(this, 'description', { enumerable: false });
         Object.defineProperty(this, 'lyrics', { enumerable: false });
-        Object.defineProperty(this, 'realeaseDate', { enumerable: false });
+        Object.defineProperty(this, 'realease_date', { enumerable: false });
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
     }
 
@@ -39,11 +39,11 @@ class Song {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Song SET name = ?, description = ?, duration = ?, lyrics = ?, realeaseDate = ?  WHERE id = ?`, 
-            [this.name, this.description, this.duration, this.lyrics, this.realeaseDate, this.id], callback);
+            database.run(`UPDATE Song SET name = ?, description = ?, duration = ?, lyrics = ?, realease_date = ?  WHERE id = ?`, 
+            [this.name, this.description, this.duration, this.lyrics, this.realease_date, this.id], callback);
         } else{
-            database.run(`INSERT INTO Song (name, description, duration, lyrics, realeaseDate) VALUES (?,?,?,?,?)`, 
-            [this.name, this.description, this.duration, this.lyrics, this.realeaseDate], callback);
+            database.run(`INSERT INTO Song (name, description, duration, lyrics, realease_date) VALUES (?,?,?,?,?)`, 
+            [this.name, this.description, this.duration, this.lyrics, this.realease_date], callback);
         }
     }
 

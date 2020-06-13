@@ -41,9 +41,10 @@ async function copyStaticFiles() {
 
 async function generateDataStructure() {
     console.log('GENERATING DATA STRUCTURES...');
-    generateClass.generate(config.schemas);
-    generateDatabase.generate(config.dbname, config.schemas);
-    generateApis.generate(config.schemas);
+    await generateClass.generate(config.schemas);
+    await generateDatabase.generate(config.dbname, config.schemas);
+    await generateDatabase.generateRelationships(config.dbname, config.schemas);
+    await generateApis.generate(config.schemas);
 }
 
 const createIndexView = () => ({

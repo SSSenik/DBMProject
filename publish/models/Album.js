@@ -8,13 +8,13 @@ jsf.extend('faker', () => faker);
 const schemaAlbum = require('../schemas/Schema-Album.json');
 
 class Album {
-    constructor(name, description, realeaseDate) {
+    constructor(name, description, realease_date) {
         this.name = name;
         this.description = description;
-        this.realeaseDate = realeaseDate;
+        this.realease_date = realease_date;
 
         Object.defineProperty(this, 'description', { enumerable: false });
-        Object.defineProperty(this, 'realeaseDate', { enumerable: false });
+        Object.defineProperty(this, 'realease_date', { enumerable: false });
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
     }
 
@@ -36,11 +36,11 @@ class Album {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Album SET name = ?, description = ?, realeaseDate = ?  WHERE id = ?`, 
-            [this.name, this.description, this.realeaseDate, this.id], callback);
+            database.run(`UPDATE Album SET name = ?, description = ?, realease_date = ?  WHERE id = ?`, 
+            [this.name, this.description, this.realease_date, this.id], callback);
         } else{
-            database.run(`INSERT INTO Album (name, description, realeaseDate) VALUES (?,?,?)`, 
-            [this.name, this.description, this.realeaseDate], callback);
+            database.run(`INSERT INTO Album (name, description, realease_date) VALUES (?,?,?)`, 
+            [this.name, this.description, this.realease_date], callback);
         }
     }
 

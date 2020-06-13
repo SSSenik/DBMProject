@@ -19,10 +19,24 @@
             "description": "Letra",
             "type": "string"
         },
-        "realeaseDate": {
+        "realease_date": {
             "description": "Data de Saida",
             "type": "string"
         }
     },
-    "required": ["name", "duration"]
+    "required": ["name", "duration"],
+    "references": [
+        {
+            "model": "Album",
+            "relation": "1-M"
+        },
+        {
+            "model": "Artist",
+            "relation": "1-M"
+        },
+        {
+            "model": "Genre",
+            "relation": "1-M"
+        }
+    ]
 }
