@@ -1,0 +1,45 @@
+body {
+    background-color: #212121;
+    color: white;
+    padding: 20px;
+}
+
+pre {
+    color: white;
+}
+
+.wrapper {
+    height: 100%;
+}
+
+.created {
+    background-color: #333;
+}
+
+.side {
+    overflow: auto;
+    height: 100%;
+}
+
+/* Override bootstrap */
+
+.btn-dark {
+    background-color: #444;
+}
+
+.btn-dark:hover,
+.btn-dark:focus {
+    background-color: #555;
+}
+
+.card.bg-dark {
+    border: 1px solid #555;
+}
+
+.card.bg-dark > .card-body {
+    background-color: #333;
+}
+
+.card.bg-dark > .card-header {
+    background-color: #222;
+}
