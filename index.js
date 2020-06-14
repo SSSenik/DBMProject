@@ -1,12 +1,8 @@
 const express = require('express');
-const mustacheExpress = require('mustache-express');
 
 const { generateServer } = require('./server/server');
 
 const app = express();
-app.engine('mustache', mustacheExpress());
-app.set('view engine', 'mustache');
-app.set('views', __dirname + '/Views');
 app.use(express.static('public'));
 
 app.post('/generate', (req, res) => {

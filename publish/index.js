@@ -1,11 +1,22 @@
 global.__basedir = __dirname;
 const express = require('express');
+const mustacheExpress = require('mustache-express');
 
 const app = express();
 app.use(express.json());
-app.use(express.static('public'));
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+);
+app.engine('mustache', mustacheExpress());
+app.set('view engine', 'mustache');
+app.set('views', __basedir + '/Views');
+app.use(express.static(__basedir + '/public'));
 
 
+const backoffice = require('./controllers/backoffice');
+app.use('/backoffice', backoffice);
 
 const AlbumApi = require('./controllers/Album-api');
 app.use('/api', AlbumApi);

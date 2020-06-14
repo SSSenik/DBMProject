@@ -24,6 +24,22 @@
         "sqlite": {
             "originalPath": "/database/sqlite-wrapper.js",
             "destinationPath": "/database/sqlite-wrapper.js"
+        },
+        "listView": {
+            "originalPath": "/staticFiles/list.mustache",
+            "destinationPath": "/views/list.mustache"
+        },
+        "imgDelete": {
+            "originalPath": "/staticFiles/delete.png",
+            "destinationPath": "/public/images/delete.png"
+        },
+        "imgEdit": {
+            "originalPath": "/staticFiles/edit.png",
+            "destinationPath": "/public/images/edit.png"
+        },
+        "imgRead": {
+            "originalPath": "/staticFiles/read.png",
+            "destinationPath": "/public/images/read.png"
         }
     }
 }

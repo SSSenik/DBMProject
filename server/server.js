@@ -8,6 +8,7 @@ const config = require('./config.json');
 const generateClass = require('../models/generate-class');
 const generateDatabase = require('../database/generate-database');
 const generateApis = require('../restful-api/generate-api');
+const generateBackoffice = require('../backoffice/generate-backoffice');
 
 const SERVER_MUSTACHE = './server/server.mustache';
 
@@ -19,6 +20,7 @@ async function genFolderTree() {
         mkdirp.sync(`./${config.baseGenFolder}/public/css`);
         mkdirp.sync(`./${config.baseGenFolder}/public/js`);
         mkdirp.sync(`./${config.baseGenFolder}/public/html`);
+        mkdirp.sync(`./${config.baseGenFolder}/public/images`);
         mkdirp.sync(`./${config.baseGenFolder}/views`);
         mkdirp.sync(`./${config.baseGenFolder}/schemas`);
         mkdirp.sync(`./${config.baseGenFolder}/database`);
@@ -45,6 +47,7 @@ async function generateDataStructure() {
     await generateDatabase.generate(config.dbname, config.schemas);
     await generateDatabase.generateRelationships(config.dbname, config.schemas);
     await generateApis.generate(config.schemas);
+    await generateBackoffice.generate(config.schemas);
 }
 
 const createIndexView = () => ({

@@ -1,0 +1,46 @@
+const express = require('express');
+var router = express.Router();
+{{#schemas}}
+var {{title}} = require('../Models/{{title}}.js');
+router.get('/{{title}}', function (req, res) {
+    {{title}}.all((rows) => {
+        res.render('list', {
+            title: '{{title}}',
+            columns: Object.keys(new {{title}}()),
+            rows: rows.map((r) => ({
+                rowId: '{{title}}_' + r.id,
+                properties: Object.keys(r).map((key) => r[key]),
+                actions: [
+                    {
+                        link: './{{title}}/Details/' + r.id,
+                        image: { src: '../../images/read.png', alt: 'read' },
+                        tooltip: 'Details',
+                    },
+                    {
+                        link: './{{title}}/Edit/' + r.id,
+                        image: { src: '../../images/edit.png', alt: 'edit' },
+                        tooltip: 'Edit',
+                    },
+                    {
+                        link: '#',
+                        image: {
+                            src: '../../images/delete.png',
+                            alt: 'delete',
+                        },
+                        tooltip: 'Delete',
+                        events: [
+                            {
+                                name: 'onclick',
+                                function: 'remove',
+                                args: r.id,
+                            },
+                        ],
+                    },
+                ],
+            })),
+        });
+    });
+});
+
+{{/schemas}}
+module.exports = router;
