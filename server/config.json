@@ -29,6 +29,18 @@
             "originalPath": "/staticFiles/list.mustache",
             "destinationPath": "/views/list.mustache"
         },
+        "detailsView": {
+            "originalPath": "/staticFiles/details.mustache",
+            "destinationPath": "/views/details.mustache"
+        },
+        "insertView": {
+            "originalPath": "/staticFiles/insert.mustache",
+            "destinationPath": "/views/insert.mustache"
+        },
+        "editView": {
+            "originalPath": "/staticFiles/edit.mustache",
+            "destinationPath": "/views/edit.mustache"
+        },
         "imgDelete": {
             "originalPath": "/staticFiles/delete.png",
             "destinationPath": "/public/images/delete.png"
@@ -40,6 +52,10 @@
         "imgRead": {
             "originalPath": "/staticFiles/read.png",
             "destinationPath": "/public/images/read.png"
+        },
+        "utils": {
+            "originalPath": "/staticFiles/utils.js",
+            "destinationPath": "/utils/utils.js"
         }
     }
 }

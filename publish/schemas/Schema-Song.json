@@ -13,7 +13,8 @@
         },
         "duration": {
             "description": "Duração",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0
         },
         "lyrics": {
             "description": "Letra",
@@ -21,7 +22,8 @@
         },
         "realease_date": {
             "description": "Data de Saida",
-            "type": "string"
+            "type": "string",
+            "presentationMode": "date"
         }
     },
     "required": ["name", "duration"],

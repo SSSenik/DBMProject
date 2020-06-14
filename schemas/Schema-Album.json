@@ -13,7 +13,8 @@
         },
         "realease_date": {
             "description": "Data de Saida",
-            "type": "string"
+            "type": "string",
+            "presentationMode": "date"
         }
     },
     "required": ["name"],

@@ -1,6 +1,9 @@
 const express = require('express');
-var router = express.Router();
-var Album = require('../Models/Album.js');
+const router = express.Router();
+const { presentationModeToHtmlType, columnConstraintToHtmlAttrs } = require(__basedir + '/utils/utils.js');
+
+const Album = require(__basedir + '/Models/Album.js');
+const AlbumSchema = require(__basedir + '/schemas/Schema-Album.json');
 router.get('/Album', function (req, res) {
     Album.all((rows) => {
         res.render('list', {
@@ -41,7 +44,60 @@ router.get('/Album', function (req, res) {
     });
 });
 
-var Artist = require('../Models/Artist.js');
+router.get('/Album/Details/:id', function (req, res) {
+    Album.get(req.params.id, function (row) {
+        res.render('details', {
+            title: 'Album',
+            properties: Object.getOwnPropertyNames(row)
+                .filter((prop) => AlbumSchema.properties.hasOwnProperty(prop))
+                .map((prop) => ({
+                    name: prop,
+                    value: row[prop],
+                })),
+        });
+    });
+});
+
+router.get('/Album/Insert', function (req, res) {
+    res.render('insert', {
+        title: 'Album',
+        properties: Object.getOwnPropertyNames(new Album())
+            .filter((prop) => AlbumSchema.properties.hasOwnProperty(prop))
+            .map((prop) => ({
+                type: presentationModeToHtmlType(
+                    AlbumSchema.properties[prop].presentationMode,
+                    AlbumSchema.properties[prop].type
+                ),
+                required: AlbumSchema.required.includes(prop),
+                attrs: columnConstraintToHtmlAttrs(AlbumSchema.properties[prop]),
+                name: prop,
+            })),
+    });
+});
+
+router.get('/Album/Edit/:id', function (req, res) {
+    Album.get(req.params.id, function (row) {
+        res.render('edit', {
+            title: 'Album',
+            id: req.params.id,
+            properties: Object.getOwnPropertyNames(row)
+                .filter((prop) => AlbumSchema.properties.hasOwnProperty(prop))
+                .map((prop) => ({
+                    type: presentationModeToHtmlType(
+                        AlbumSchema.properties[prop].presentationMode,
+                        AlbumSchema.properties[prop].type
+                    ),
+                    required: AlbumSchema.required.includes(prop),
+                    attrs: columnConstraintToHtmlAttrs(AlbumSchema.properties[prop]),
+                    name: prop,
+                    value: row[prop],
+                })),
+        });
+    });
+});
+
+const Artist = require(__basedir + '/Models/Artist.js');
+const ArtistSchema = require(__basedir + '/schemas/Schema-Artist.json');
 router.get('/Artist', function (req, res) {
     Artist.all((rows) => {
         res.render('list', {
@@ -82,7 +138,60 @@ router.get('/Artist', function (req, res) {
     });
 });
 
-var Genre = require('../Models/Genre.js');
+router.get('/Artist/Details/:id', function (req, res) {
+    Artist.get(req.params.id, function (row) {
+        res.render('details', {
+            title: 'Artist',
+            properties: Object.getOwnPropertyNames(row)
+                .filter((prop) => ArtistSchema.properties.hasOwnProperty(prop))
+                .map((prop) => ({
+                    name: prop,
+                    value: row[prop],
+                })),
+        });
+    });
+});
+
+router.get('/Artist/Insert', function (req, res) {
+    res.render('insert', {
+        title: 'Artist',
+        properties: Object.getOwnPropertyNames(new Artist())
+            .filter((prop) => ArtistSchema.properties.hasOwnProperty(prop))
+            .map((prop) => ({
+                type: presentationModeToHtmlType(
+                    ArtistSchema.properties[prop].presentationMode,
+                    ArtistSchema.properties[prop].type
+                ),
+                required: ArtistSchema.required.includes(prop),
+                attrs: columnConstraintToHtmlAttrs(ArtistSchema.properties[prop]),
+                name: prop,
+            })),
+    });
+});
+
+router.get('/Artist/Edit/:id', function (req, res) {
+    Artist.get(req.params.id, function (row) {
+        res.render('edit', {
+            title: 'Artist',
+            id: req.params.id,
+            properties: Object.getOwnPropertyNames(row)
+                .filter((prop) => ArtistSchema.properties.hasOwnProperty(prop))
+                .map((prop) => ({
+                    type: presentationModeToHtmlType(
+                        ArtistSchema.properties[prop].presentationMode,
+                        ArtistSchema.properties[prop].type
+                    ),
+                    required: ArtistSchema.required.includes(prop),
+                    attrs: columnConstraintToHtmlAttrs(ArtistSchema.properties[prop]),
+                    name: prop,
+                    value: row[prop],
+                })),
+        });
+    });
+});
+
+const Genre = require(__basedir + '/Models/Genre.js');
+const GenreSchema = require(__basedir + '/schemas/Schema-Genre.json');
 router.get('/Genre', function (req, res) {
     Genre.all((rows) => {
         res.render('list', {
@@ -123,7 +232,60 @@ router.get('/Genre', function (req, res) {
     });
 });
 
-var Song = require('../Models/Song.js');
+router.get('/Genre/Details/:id', function (req, res) {
+    Genre.get(req.params.id, function (row) {
+        res.render('details', {
+            title: 'Genre',
+            properties: Object.getOwnPropertyNames(row)
+                .filter((prop) => GenreSchema.properties.hasOwnProperty(prop))
+                .map((prop) => ({
+                    name: prop,
+                    value: row[prop],
+                })),
+        });
+    });
+});
+
+router.get('/Genre/Insert', function (req, res) {
+    res.render('insert', {
+        title: 'Genre',
+        properties: Object.getOwnPropertyNames(new Genre())
+            .filter((prop) => GenreSchema.properties.hasOwnProperty(prop))
+            .map((prop) => ({
+                type: presentationModeToHtmlType(
+                    GenreSchema.properties[prop].presentationMode,
+                    GenreSchema.properties[prop].type
+                ),
+                required: GenreSchema.required.includes(prop),
+                attrs: columnConstraintToHtmlAttrs(GenreSchema.properties[prop]),
+                name: prop,
+            })),
+    });
+});
+
+router.get('/Genre/Edit/:id', function (req, res) {
+    Genre.get(req.params.id, function (row) {
+        res.render('edit', {
+            title: 'Genre',
+            id: req.params.id,
+            properties: Object.getOwnPropertyNames(row)
+                .filter((prop) => GenreSchema.properties.hasOwnProperty(prop))
+                .map((prop) => ({
+                    type: presentationModeToHtmlType(
+                        GenreSchema.properties[prop].presentationMode,
+                        GenreSchema.properties[prop].type
+                    ),
+                    required: GenreSchema.required.includes(prop),
+                    attrs: columnConstraintToHtmlAttrs(GenreSchema.properties[prop]),
+                    name: prop,
+                    value: row[prop],
+                })),
+        });
+    });
+});
+
+const Song = require(__basedir + '/Models/Song.js');
+const SongSchema = require(__basedir + '/schemas/Schema-Song.json');
 router.get('/Song', function (req, res) {
     Song.all((rows) => {
         res.render('list', {
@@ -160,6 +322,58 @@ router.get('/Song', function (req, res) {
                     },
                 ],
             })),
+        });
+    });
+});
+
+router.get('/Song/Details/:id', function (req, res) {
+    Song.get(req.params.id, function (row) {
+        res.render('details', {
+            title: 'Song',
+            properties: Object.getOwnPropertyNames(row)
+                .filter((prop) => SongSchema.properties.hasOwnProperty(prop))
+                .map((prop) => ({
+                    name: prop,
+                    value: row[prop],
+                })),
+        });
+    });
+});
+
+router.get('/Song/Insert', function (req, res) {
+    res.render('insert', {
+        title: 'Song',
+        properties: Object.getOwnPropertyNames(new Song())
+            .filter((prop) => SongSchema.properties.hasOwnProperty(prop))
+            .map((prop) => ({
+                type: presentationModeToHtmlType(
+                    SongSchema.properties[prop].presentationMode,
+                    SongSchema.properties[prop].type
+                ),
+                required: SongSchema.required.includes(prop),
+                attrs: columnConstraintToHtmlAttrs(SongSchema.properties[prop]),
+                name: prop,
+            })),
+    });
+});
+
+router.get('/Song/Edit/:id', function (req, res) {
+    Song.get(req.params.id, function (row) {
+        res.render('edit', {
+            title: 'Song',
+            id: req.params.id,
+            properties: Object.getOwnPropertyNames(row)
+                .filter((prop) => SongSchema.properties.hasOwnProperty(prop))
+                .map((prop) => ({
+                    type: presentationModeToHtmlType(
+                        SongSchema.properties[prop].presentationMode,
+                        SongSchema.properties[prop].type
+                    ),
+                    required: SongSchema.required.includes(prop),
+                    attrs: columnConstraintToHtmlAttrs(SongSchema.properties[prop]),
+                    name: prop,
+                    value: row[prop],
+                })),
         });
     });
 });

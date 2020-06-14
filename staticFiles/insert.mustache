@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>Insert {{title}}</title>
+        <script>
+            function submitForm() {                
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    console.log(this.responseText);
+                    if (this.readyState == 4 && this.status == 200) {
+                        window.location.href = '/backoffice/{{title}}';
+                    }
+                };
+                xhttp.open("POST", "/api/{{title}}/", true);
+                xhttp.setRequestHeader("Content-Type", "application/json");
+                xhttp.send(JSON.stringify({
+                {{#properties}}
+                    '{{name}}':document.getElementsByName('{{name}}')[0].value,
+                {{/properties}}
+                }));
+                return false;
+            }
+        </script>
+    </head>
+    <body>
+        <div>
+            <form onsubmit="submitForm(); return false;" method="POST">
+                {{#properties}}
+                <div>
+                    <label>{{name}}:</label>
+                    <input type="{{type}}" name="{{name}}" {{#required}}required{{/required}} {{#attrs}}{{name}}="{{value}}"{{/attrs}}>
+                </div>
+                {{/properties}}
+                <input type="submit" value="Save"/>
+            </form>
+        </div>
+    </body>
+</html>

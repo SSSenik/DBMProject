@@ -24,6 +24,7 @@ async function genFolderTree() {
         mkdirp.sync(`./${config.baseGenFolder}/views`);
         mkdirp.sync(`./${config.baseGenFolder}/schemas`);
         mkdirp.sync(`./${config.baseGenFolder}/database`);
+        mkdirp.sync(`./${config.baseGenFolder}/utils`);
     });
 }
 

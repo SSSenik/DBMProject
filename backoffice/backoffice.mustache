@@ -1,7 +1,10 @@
 const express = require('express');
-var router = express.Router();
+const router = express.Router();
+const { presentationModeToHtmlType, columnConstraintToHtmlAttrs } = require(__basedir + '/utils/utils.js');
+
 {{#schemas}}
-var {{title}} = require('../Models/{{title}}.js');
+const {{title}} = require(__basedir + '/Models/{{title}}.js');
+const {{title}}Schema = require(__basedir + '/schemas/Schema-{{title}}.json');
 router.get('/{{title}}', function (req, res) {
     {{title}}.all((rows) => {
         res.render('list', {
@@ -38,6 +41,58 @@ router.get('/{{title}}', function (req, res) {
                     },
                 ],
             })),
+        });
+    });
+});
+
+router.get('/{{title}}/Details/:id', function (req, res) {
+    {{title}}.get(req.params.id, function (row) {
+        res.render('details', {
+            title: '{{title}}',
+            properties: Object.getOwnPropertyNames(row)
+                .filter((prop) => {{title}}Schema.properties.hasOwnProperty(prop))
+                .map((prop) => ({
+                    name: prop,
+                    value: row[prop],
+                })),
+        });
+    });
+});
+
+router.get('/{{title}}/Insert', function (req, res) {
+    res.render('insert', {
+        title: '{{title}}',
+        properties: Object.getOwnPropertyNames(new {{title}}())
+            .filter((prop) => {{title}}Schema.properties.hasOwnProperty(prop))
+            .map((prop) => ({
+                type: presentationModeToHtmlType(
+                    {{title}}Schema.properties[prop].presentationMode,
+                    {{title}}Schema.properties[prop].type
+                ),
+                required: {{title}}Schema.required.includes(prop),
+                attrs: columnConstraintToHtmlAttrs({{title}}Schema.properties[prop]),
+                name: prop,
+            })),
+    });
+});
+
+router.get('/{{title}}/Edit/:id', function (req, res) {
+    {{title}}.get(req.params.id, function (row) {
+        res.render('edit', {
+            title: '{{title}}',
+            id: req.params.id,
+            properties: Object.getOwnPropertyNames(row)
+                .filter((prop) => {{title}}Schema.properties.hasOwnProperty(prop))
+                .map((prop) => ({
+                    type: presentationModeToHtmlType(
+                        {{title}}Schema.properties[prop].presentationMode,
+                        {{title}}Schema.properties[prop].type
+                    ),
+                    required: {{title}}Schema.required.includes(prop),
+                    attrs: columnConstraintToHtmlAttrs({{title}}Schema.properties[prop]),
+                    name: prop,
+                    value: row[prop],
+                })),
         });
     });
 });

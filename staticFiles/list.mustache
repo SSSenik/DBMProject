@@ -30,8 +30,7 @@
                 {{/properties}}
                 {{#actions}}
                 <td>
-                    <a href="{{link}}" title="{{tooltip}}" {{#events}}{{name}}="javascript:
-                    {{function}}({{args}})" {{/events}}>
+                    <a href="{{link}}" title="{{tooltip}}" {{#events}}{{name}}="javascript:{{function}}({{args}})" {{/events}}>
                         {{#image}}
                         <img src="{{src}}" alt="{{alt}}" />
                         {{/image}}
@@ -41,5 +40,6 @@
             </tr>
             {{/rows}}
         </table>
+        <a href="./{{title}}/Insert">Insert</a>
     </body>
 </html>
