@@ -1,5 +1,5 @@
-modelName = '';
-modelDescription = '';
+schemaName = '';
+schemaDescription = '';
 properties = [];
 references = [];
 
@@ -71,7 +71,6 @@ function renderSchemaReferences(schema) {
 }
 
 function renderExistingSchemas() {
-    console.log(existingSchemas);
     const schemasHTML = existingSchemas.map(
         (schema) =>
             `
@@ -110,14 +109,14 @@ function renderExistingSchemas() {
 // Model info
 // - - - - - - - - - - -
 
-function updateModelName(element) {
-    modelName = element.value;
+function updateSchemaName(element) {
+    schemaName = element.value;
 
     renderPreview();
 }
 
-function updateModelDescription(element) {
-    modelDescription = element.value;
+function updateSchemaDescription(element) {
+    schemaDescription = element.value;
 
     renderPreview();
 }
@@ -484,7 +483,6 @@ function updateReferenceValue(element) {
     const [refField, refId] = element.id.split('-').splice(1);
     let reference = getReference(Number(refId));
     if (refField === 'model') {
-        console.log('model changed');
         handleModelChange(refId, element.value);
     }
     reference[refField] =
@@ -511,8 +509,8 @@ function buildPreview() {
     let preview = {};
 
     // Model info
-    preview.title = modelName;
-    preview.description = modelDescription;
+    preview.title = schemaName;
+    preview.description = schemaDescription;
 
     // Properties
     requiredProperties = [];
@@ -541,4 +539,75 @@ function renderPreview() {
         null,
         4
     );
+}
+
+// - - - - - - - - - - -
+// Schema creation
+// - - - - - - - - - - -
+
+function validateSchema() {
+    let schema = {};
+
+    // Model info
+    if (!schemaName || schemaName === '') {
+        $('.toast').toast('show');
+        alert('Schema must have a name');
+        return;
+    }
+    if (existingSchemas.map((schema) => schema.title).includes(schemaName)) {
+        $('.toast').toast('show');
+        alert('Schema with this name already exists');
+        return;
+    }
+    schema.title = schemaName;
+    schema.description = schemaDescription;
+
+    // Properties
+    let requiredProperties = [];
+    let mapDuplicates = {};
+    for (var i = 0; i < properties.length; i++) {
+        if (properties[i].name === '') {
+            $('.toast').toast('show');
+            alert('All properties must have a name');
+            return;
+        }
+        if (mapDuplicates[properties[i].name]) {
+            $('.toast').toast('show');
+            alert('Cannot have properties with the same name');
+            return;
+        }
+        mapDuplicates[properties[i].name] = true;
+
+        schema[properties[i].name] = properties[i].toJSON();
+        if (properties[i].isRequired) {
+            requiredProperties.push(properties[i].name);
+        }
+    }
+    if (requiredProperties.length) {
+        schema.required = requiredProperties;
+    }
+
+    // References
+    for (var i = 0; i < references.length; i++) {
+        schema.references = references;
+    }
+
+    $('.toast').toast('show');
+    alert('Schema created');
+    // createSchema(schema);
+}
+
+function createSchema(schema) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                alert('Novo schema criado com sucesso');
+            } else {
+                alert('Não foi possivel criar o novo schema');
+            }
+        }
+    };
+    xhr.open('POST', '/schemas');
+    xhr.send(schema);
 }

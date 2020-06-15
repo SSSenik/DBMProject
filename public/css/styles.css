@@ -6,6 +6,7 @@ body {
 
 pre {
     color: white;
+    flex: 1;
 }
 
 .wrapper {
@@ -14,6 +15,9 @@ pre {
 
 .created {
     background-color: #333;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
 }
 
 .side {
