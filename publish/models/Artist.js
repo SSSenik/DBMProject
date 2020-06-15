@@ -12,8 +12,9 @@ class Artist {
         this.name = name;
         this.contact = contact;
 
-        Object.defineProperty(this, 'contact', { enumerable: false });
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
+        Object.defineProperty(this, 'contact', { enumerable: false });
+        Object.defineProperty(this, 'genre_id', { enumerable: false, writable: true });
     }
 
     static create() {
@@ -31,16 +32,31 @@ class Artist {
     static delete(id, callback) {
         database.run("DELETE FROM Artist WHERE id = ?", [id], callback)
     }
+    
+    static many(model, id, callback) {
+        let tablename = ['Artist', model].sort().join('_');
+        database.where(
+            `SELECT Artist.*
+        FROM Artist
+        INNER JOIN ${tablename} ON ${tablename}.${('Artist').toLowerCase()}_id = Artist.id
+        WHERE ${tablename}.${model.toLowerCase()}_id = ?`,
+            [id],
+            Artist,
+            callback
+        );
+    }
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Artist SET name = ?, contact = ?  WHERE id = ?`, 
-            [this.name, this.contact, this.id], callback);
+            database.run(`UPDATE Artist SET name = ?,contact = ?,genre_id = ? WHERE id = ?`, 
+            [this.name,this.contact,this.genre_id, this.id], callback);
         } else{
-            database.run(`INSERT INTO Artist (name, contact) VALUES (?,?)`, 
-            [this.name, this.contact], callback);
+            database.run(`INSERT INTO Artist (name, contact,genre_id) VALUES (?,?,?)`, 
+            [this.name,this.contact,this.genre_id], callback);
         }
     }
+
+
 
 }
 

@@ -55,6 +55,28 @@ router.get('/{{title}}/Details/:id', function (req, res) {
                     name: prop,
                     value: row[prop],
                 })),
+            references: Object.getOwnPropertyNames(row)
+                .filter((prop) =>
+                    {{title}}Schema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((prop) =>
+                    {{title}}Schema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((ref) => ({
+                    label: ref.label,
+                    model: ref.model,
+                    values:
+                        ref.relation === 'M-M'
+                            ? '{{title}}/' + req.params.id
+                            : row[(ref.model + '_id').toLowerCase()],
+                })),
+            get hasReferences() {
+                return this.references.length > 0;
+            },
         });
     });
 });
@@ -73,6 +95,14 @@ router.get('/{{title}}/Insert', function (req, res) {
                 attrs: columnConstraintToHtmlAttrs({{title}}Schema.properties[prop]),
                 name: prop,
             })),
+        references: {{title}}Schema.references.map((ref) => ({
+            name: `${ref.model}_id`.toLowerCase(),
+            label: ref.label,
+            model: ref.model,
+        })),
+        get hasReferences() {
+            return this.references.length > 0;
+        },
     });
 });
 
@@ -89,10 +119,35 @@ router.get('/{{title}}/Edit/:id', function (req, res) {
                         {{title}}Schema.properties[prop].type
                     ),
                     required: {{title}}Schema.required.includes(prop),
-                    attrs: columnConstraintToHtmlAttrs({{title}}Schema.properties[prop]),
+                    attrs: columnConstraintToHtmlAttrs(
+                        {{title}}Schema.properties[prop]
+                    ),
                     name: prop,
                     value: row[prop],
                 })),
+            references: Object.getOwnPropertyNames(row)
+                .filter((prop) =>
+                    {{title}}Schema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((prop) =>
+                    {{title}}Schema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((ref) => ({
+                    name: `${ref.model}_id`.toLowerCase(),
+                    label: ref.label,
+                    model: ref.model,
+                    values:
+                        ref.relation === 'M-M'
+                            ? '{{title}}/' + req.params.id
+                            : row[(ref.model + '_id').toLowerCase()],
+                })),
+            get hasReferences() {
+                return this.references.length > 0;
+            },
         });
     });
 });

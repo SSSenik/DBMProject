@@ -54,6 +54,28 @@ router.get('/Album/Details/:id', function (req, res) {
                     name: prop,
                     value: row[prop],
                 })),
+            references: Object.getOwnPropertyNames(row)
+                .filter((prop) =>
+                    AlbumSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((prop) =>
+                    AlbumSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((ref) => ({
+                    label: ref.label,
+                    model: ref.model,
+                    values:
+                        ref.relation === 'M-M'
+                            ? 'Album/' + req.params.id
+                            : row[(ref.model + '_id').toLowerCase()],
+                })),
+            get hasReferences() {
+                return this.references.length > 0;
+            },
         });
     });
 });
@@ -72,6 +94,14 @@ router.get('/Album/Insert', function (req, res) {
                 attrs: columnConstraintToHtmlAttrs(AlbumSchema.properties[prop]),
                 name: prop,
             })),
+        references: AlbumSchema.references.map((ref) => ({
+            name: `${ref.model}_id`.toLowerCase(),
+            label: ref.label,
+            model: ref.model,
+        })),
+        get hasReferences() {
+            return this.references.length > 0;
+        },
     });
 });
 
@@ -88,10 +118,35 @@ router.get('/Album/Edit/:id', function (req, res) {
                         AlbumSchema.properties[prop].type
                     ),
                     required: AlbumSchema.required.includes(prop),
-                    attrs: columnConstraintToHtmlAttrs(AlbumSchema.properties[prop]),
+                    attrs: columnConstraintToHtmlAttrs(
+                        AlbumSchema.properties[prop]
+                    ),
                     name: prop,
                     value: row[prop],
                 })),
+            references: Object.getOwnPropertyNames(row)
+                .filter((prop) =>
+                    AlbumSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((prop) =>
+                    AlbumSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((ref) => ({
+                    name: `${ref.model}_id`.toLowerCase(),
+                    label: ref.label,
+                    model: ref.model,
+                    values:
+                        ref.relation === 'M-M'
+                            ? 'Album/' + req.params.id
+                            : row[(ref.model + '_id').toLowerCase()],
+                })),
+            get hasReferences() {
+                return this.references.length > 0;
+            },
         });
     });
 });
@@ -148,6 +203,28 @@ router.get('/Artist/Details/:id', function (req, res) {
                     name: prop,
                     value: row[prop],
                 })),
+            references: Object.getOwnPropertyNames(row)
+                .filter((prop) =>
+                    ArtistSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((prop) =>
+                    ArtistSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((ref) => ({
+                    label: ref.label,
+                    model: ref.model,
+                    values:
+                        ref.relation === 'M-M'
+                            ? 'Artist/' + req.params.id
+                            : row[(ref.model + '_id').toLowerCase()],
+                })),
+            get hasReferences() {
+                return this.references.length > 0;
+            },
         });
     });
 });
@@ -166,6 +243,14 @@ router.get('/Artist/Insert', function (req, res) {
                 attrs: columnConstraintToHtmlAttrs(ArtistSchema.properties[prop]),
                 name: prop,
             })),
+        references: ArtistSchema.references.map((ref) => ({
+            name: `${ref.model}_id`.toLowerCase(),
+            label: ref.label,
+            model: ref.model,
+        })),
+        get hasReferences() {
+            return this.references.length > 0;
+        },
     });
 });
 
@@ -182,10 +267,35 @@ router.get('/Artist/Edit/:id', function (req, res) {
                         ArtistSchema.properties[prop].type
                     ),
                     required: ArtistSchema.required.includes(prop),
-                    attrs: columnConstraintToHtmlAttrs(ArtistSchema.properties[prop]),
+                    attrs: columnConstraintToHtmlAttrs(
+                        ArtistSchema.properties[prop]
+                    ),
                     name: prop,
                     value: row[prop],
                 })),
+            references: Object.getOwnPropertyNames(row)
+                .filter((prop) =>
+                    ArtistSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((prop) =>
+                    ArtistSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((ref) => ({
+                    name: `${ref.model}_id`.toLowerCase(),
+                    label: ref.label,
+                    model: ref.model,
+                    values:
+                        ref.relation === 'M-M'
+                            ? 'Artist/' + req.params.id
+                            : row[(ref.model + '_id').toLowerCase()],
+                })),
+            get hasReferences() {
+                return this.references.length > 0;
+            },
         });
     });
 });
@@ -242,6 +352,28 @@ router.get('/Genre/Details/:id', function (req, res) {
                     name: prop,
                     value: row[prop],
                 })),
+            references: Object.getOwnPropertyNames(row)
+                .filter((prop) =>
+                    GenreSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((prop) =>
+                    GenreSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((ref) => ({
+                    label: ref.label,
+                    model: ref.model,
+                    values:
+                        ref.relation === 'M-M'
+                            ? 'Genre/' + req.params.id
+                            : row[(ref.model + '_id').toLowerCase()],
+                })),
+            get hasReferences() {
+                return this.references.length > 0;
+            },
         });
     });
 });
@@ -260,6 +392,14 @@ router.get('/Genre/Insert', function (req, res) {
                 attrs: columnConstraintToHtmlAttrs(GenreSchema.properties[prop]),
                 name: prop,
             })),
+        references: GenreSchema.references.map((ref) => ({
+            name: `${ref.model}_id`.toLowerCase(),
+            label: ref.label,
+            model: ref.model,
+        })),
+        get hasReferences() {
+            return this.references.length > 0;
+        },
     });
 });
 
@@ -276,10 +416,35 @@ router.get('/Genre/Edit/:id', function (req, res) {
                         GenreSchema.properties[prop].type
                     ),
                     required: GenreSchema.required.includes(prop),
-                    attrs: columnConstraintToHtmlAttrs(GenreSchema.properties[prop]),
+                    attrs: columnConstraintToHtmlAttrs(
+                        GenreSchema.properties[prop]
+                    ),
                     name: prop,
                     value: row[prop],
                 })),
+            references: Object.getOwnPropertyNames(row)
+                .filter((prop) =>
+                    GenreSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((prop) =>
+                    GenreSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((ref) => ({
+                    name: `${ref.model}_id`.toLowerCase(),
+                    label: ref.label,
+                    model: ref.model,
+                    values:
+                        ref.relation === 'M-M'
+                            ? 'Genre/' + req.params.id
+                            : row[(ref.model + '_id').toLowerCase()],
+                })),
+            get hasReferences() {
+                return this.references.length > 0;
+            },
         });
     });
 });
@@ -336,6 +501,28 @@ router.get('/Song/Details/:id', function (req, res) {
                     name: prop,
                     value: row[prop],
                 })),
+            references: Object.getOwnPropertyNames(row)
+                .filter((prop) =>
+                    SongSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((prop) =>
+                    SongSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((ref) => ({
+                    label: ref.label,
+                    model: ref.model,
+                    values:
+                        ref.relation === 'M-M'
+                            ? 'Song/' + req.params.id
+                            : row[(ref.model + '_id').toLowerCase()],
+                })),
+            get hasReferences() {
+                return this.references.length > 0;
+            },
         });
     });
 });
@@ -354,6 +541,14 @@ router.get('/Song/Insert', function (req, res) {
                 attrs: columnConstraintToHtmlAttrs(SongSchema.properties[prop]),
                 name: prop,
             })),
+        references: SongSchema.references.map((ref) => ({
+            name: `${ref.model}_id`.toLowerCase(),
+            label: ref.label,
+            model: ref.model,
+        })),
+        get hasReferences() {
+            return this.references.length > 0;
+        },
     });
 });
 
@@ -370,10 +565,35 @@ router.get('/Song/Edit/:id', function (req, res) {
                         SongSchema.properties[prop].type
                     ),
                     required: SongSchema.required.includes(prop),
-                    attrs: columnConstraintToHtmlAttrs(SongSchema.properties[prop]),
+                    attrs: columnConstraintToHtmlAttrs(
+                        SongSchema.properties[prop]
+                    ),
                     name: prop,
                     value: row[prop],
                 })),
+            references: Object.getOwnPropertyNames(row)
+                .filter((prop) =>
+                    SongSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((prop) =>
+                    SongSchema.references.find(
+                        (ref) => `${ref.model}_id`.toLowerCase() === prop
+                    )
+                )
+                .map((ref) => ({
+                    name: `${ref.model}_id`.toLowerCase(),
+                    label: ref.label,
+                    model: ref.model,
+                    values:
+                        ref.relation === 'M-M'
+                            ? 'Song/' + req.params.id
+                            : row[(ref.model + '_id').toLowerCase()],
+                })),
+            get hasReferences() {
+                return this.references.length > 0;
+            },
         });
     });
 });

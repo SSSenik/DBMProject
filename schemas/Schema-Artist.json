@@ -13,5 +13,11 @@
         }
     },
     "required": ["name"],
-    "references": []
+    "references": [
+        {
+            "model": "Genre",
+            "relation": "1-1",
+            "label": "name"
+        }
+    ]
 }

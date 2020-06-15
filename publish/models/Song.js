@@ -8,17 +8,20 @@ jsf.extend('faker', () => faker);
 const schemaSong = require('../schemas/Schema-Song.json');
 
 class Song {
-    constructor(name, description, duration, lyrics, realease_date) {
+    constructor(name, description, duration, lyrics, release_date) {
         this.name = name;
         this.description = description;
         this.duration = duration;
         this.lyrics = lyrics;
-        this.realease_date = realease_date;
+        this.release_date = release_date;
 
+        Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
         Object.defineProperty(this, 'description', { enumerable: false });
         Object.defineProperty(this, 'lyrics', { enumerable: false });
-        Object.defineProperty(this, 'realease_date', { enumerable: false });
-        Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
+        Object.defineProperty(this, 'release_date', { enumerable: false });
+        Object.defineProperty(this, 'album_id', { enumerable: false, writable: true });
+        Object.defineProperty(this, 'artist_id', { enumerable: false, writable: true });
+        Object.defineProperty(this, 'genre_id', { enumerable: false, writable: true });
     }
 
     static create() {
@@ -36,16 +39,31 @@ class Song {
     static delete(id, callback) {
         database.run("DELETE FROM Song WHERE id = ?", [id], callback)
     }
+    
+    static many(model, id, callback) {
+        let tablename = ['Song', model].sort().join('_');
+        database.where(
+            `SELECT Song.*
+        FROM Song
+        INNER JOIN ${tablename} ON ${tablename}.${('Song').toLowerCase()}_id = Song.id
+        WHERE ${tablename}.${model.toLowerCase()}_id = ?`,
+            [id],
+            Song,
+            callback
+        );
+    }
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Song SET name = ?, description = ?, duration = ?, lyrics = ?, realease_date = ?  WHERE id = ?`, 
-            [this.name, this.description, this.duration, this.lyrics, this.realease_date, this.id], callback);
+            database.run(`UPDATE Song SET name = ?,description = ?,duration = ?,lyrics = ?,release_date = ?,album_id = ?,artist_id = ?,genre_id = ? WHERE id = ?`, 
+            [this.name,this.description,this.duration,this.lyrics,this.release_date,this.album_id,this.artist_id,this.genre_id, this.id], callback);
         } else{
-            database.run(`INSERT INTO Song (name, description, duration, lyrics, realease_date) VALUES (?,?,?,?,?)`, 
-            [this.name, this.description, this.duration, this.lyrics, this.realease_date], callback);
+            database.run(`INSERT INTO Song (name, description, duration, lyrics, release_date,album_id,artist_id,genre_id) VALUES (?,?,?,?,?,?,?,?)`, 
+            [this.name,this.description,this.duration,this.lyrics,this.release_date,this.album_id,this.artist_id,this.genre_id], callback);
         }
     }
+
+
 
 }
 

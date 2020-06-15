@@ -11,17 +11,12 @@
             "description": "Descrição",
             "type": "string"
         },
-        "realease_date": {
+        "release_date": {
             "description": "Data de Saida",
             "type": "string",
             "presentationMode": "date"
         }
     },
     "required": ["name"],
-    "references": [
-        {
-            "model": "Genre",
-            "relation": "M-M"
-        }
-    ]
+    "references": []
 }

@@ -8,14 +8,14 @@ jsf.extend('faker', () => faker);
 const schemaAlbum = require('../schemas/Schema-Album.json');
 
 class Album {
-    constructor(name, description, realease_date) {
+    constructor(name, description, release_date) {
         this.name = name;
         this.description = description;
-        this.realease_date = realease_date;
+        this.release_date = release_date;
 
-        Object.defineProperty(this, 'description', { enumerable: false });
-        Object.defineProperty(this, 'realease_date', { enumerable: false });
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
+        Object.defineProperty(this, 'description', { enumerable: false });
+        Object.defineProperty(this, 'release_date', { enumerable: false });
     }
 
     static create() {
@@ -33,16 +33,31 @@ class Album {
     static delete(id, callback) {
         database.run("DELETE FROM Album WHERE id = ?", [id], callback)
     }
+    
+    static many(model, id, callback) {
+        let tablename = ['Album', model].sort().join('_');
+        database.where(
+            `SELECT Album.*
+        FROM Album
+        INNER JOIN ${tablename} ON ${tablename}.${('Album').toLowerCase()}_id = Album.id
+        WHERE ${tablename}.${model.toLowerCase()}_id = ?`,
+            [id],
+            Album,
+            callback
+        );
+    }
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Album SET name = ?, description = ?, realease_date = ?  WHERE id = ?`, 
-            [this.name, this.description, this.realease_date, this.id], callback);
+            database.run(`UPDATE Album SET name = ?,description = ?,release_date = ? WHERE id = ?`, 
+            [this.name,this.description,this.release_date, this.id], callback);
         } else{
-            database.run(`INSERT INTO Album (name, description, realease_date) VALUES (?,?,?)`, 
-            [this.name, this.description, this.realease_date], callback);
+            database.run(`INSERT INTO Album (name, description, release_date) VALUES (?,?,?)`, 
+            [this.name,this.description,this.release_date], callback);
         }
     }
+
+
 
 }
 
