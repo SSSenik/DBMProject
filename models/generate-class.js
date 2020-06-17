@@ -10,6 +10,11 @@ const getSchemaReferencesColumns = (schema) =>
         .filter((ref) => ref.relation !== 'M-M')
         .map((ref) => `${ref.model}_id`.toLowerCase());
 
+const getAllColumnNames = (schema) => [
+    ...Object.keys(schema.properties),
+    ...getSchemaReferencesColumns(schema),
+];
+
 const createView = (schema) => ({
     sqlitePath: config.staticFiles.sqlite.destinationPath,
     dbName: config.dbname,
@@ -21,18 +26,15 @@ const createView = (schema) => ({
     classEnumerables: Object.keys(schema.properties)
         .filter((prop) => schema.required.indexOf(prop) === -1)
         .map((prop) => ({ name: prop })),
-    updateColumns: [
-        ...Object.keys(schema.properties).map((prop) => `${prop} = ?`),
-        ...getSchemaReferencesColumns(schema).map((ref) => `${ref} = ?`),
-    ].join(),
-    thisColumns: [
-        ...Object.keys(schema.properties).map((prop) => `this.${prop}`),
-        ...getSchemaReferencesColumns(schema).map((ref) => `this.${ref}`),
-    ].join(),
-    interrogationSigns: [
-        ...Object.keys(schema.properties).map((n) => '?'),
-        ...getSchemaReferencesColumns(schema).map((n) => '?'),
-    ].join(),
+    updateColumns: getAllColumnNames(schema)
+        .map((column) => `${column} = ?`)
+        .join(),
+    thisColumns: getAllColumnNames(schema)
+        .map((column) => `this.${column}`)
+        .join(),
+    interrogationSigns: getAllColumnNames(schema)
+        .map(() => '?')
+        .join(),
     references: getSchemaReferencesColumns(schema).map((column) => ({
         name: column,
     })),
