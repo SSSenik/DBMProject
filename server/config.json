@@ -5,10 +5,6 @@
 		{
 			"name": "Aluno",
 			"path": "./schemas/Schema-Aluno.json"
-		},
-		{
-			"name": "132",
-			"path": "./schemas/Schema-132.json"
 		}
 	],
 	"baseGenFolder": "publish",

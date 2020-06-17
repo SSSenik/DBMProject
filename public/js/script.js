@@ -74,9 +74,14 @@ function renderExistingSchemas() {
     const schemasHTML = existingSchemas.map(
         (schema) =>
             `
-        <div class="col-12">
+        <div class="col-12" id="schema-${schema.title}">
             <div class="card text-white bg-dark mb-3">
                 <div class="card-header">
+                    <button class="btn btn-danger btn-sm float-right" onclick="deleteSchema('${
+                        schema.title
+                    }')">
+                        Delete
+                    </button>
                     <h4>${schema.title}</h4>
                     ${schema.description}
                 </div>
@@ -103,6 +108,21 @@ function renderExistingSchemas() {
 
     const schemasContainer = document.getElementById('schemasContainer');
     schemasContainer.innerHTML = schemasHTML.join('');
+}
+
+function deleteSchema(schemaName) {
+    console.log(schemaName);
+    var xhr = new XMLHttpRequest();
+    xhr.open('DELETE', '/schemas', true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                document.getElementById(`schema-${schemaName}`).outerHTML = '';
+            }
+        }
+    };
+    xhr.send(JSON.stringify({ schemaName }));
 }
 
 // - - - - - - - - - - -

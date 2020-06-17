@@ -1,4 +1,5 @@
 const express = require('express');
+const del = require('del');
 const fs = require('fs').promises;
 
 const { generateServer } = require('./server/server');
@@ -32,13 +33,19 @@ app.post('/schemas', async (req, res) => {
 
 app.delete('/schemas', async (req, res) => {
     try {
-        const schemaPath = `./schemas/Schema-${req.body.schema}.json`;
-        await fs.writeFile(schemaPath, JSON.stringify(newSchema));
-        config.schemas.filter((schema) => schema.title === req.body.schema);
-        await fs.writeFile('/server/config.json', JSON.stringify(config));
-        res.send('Schema criado com sucesso');
+        const schemaPath = `./schemas/Schema-${req.body.schemaName}.json`;
+        await del(schemaPath);
+        config.schemas = config.schemas.filter(
+            (schema) => schema.name !== req.body.schemaName
+        );
+        await fs.writeFile(
+            './server/config.json',
+            JSON.stringify(config, null, '\t')
+        );
+        res.send('Schema apagado com sucesso');
     } catch (e) {
-        res.status(400).send('Não foi possivel criar o schema');
+        console.log(e);
+        res.status(400).send('Não foi possivel apagar o schema');
     }
 });
 
