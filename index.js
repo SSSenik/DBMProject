@@ -6,6 +6,7 @@ const config = require('./server/config.json');
 
 const app = express();
 app.use(express.static('public'));
+app.use(express.json());
 
 app.get('/schemas', (req, res) => {
     const schemas = config.schemas.map((schema) => require(schema.path));
@@ -13,11 +14,28 @@ app.get('/schemas', (req, res) => {
 });
 
 app.post('/schemas', async (req, res) => {
-    const newSchema = req.body.schema;
-    const schemaPath = `./schemas/Schema-${newSchema.title}.json`;
     try {
-        await fs.writeFile(schemaPath, JSON.stringify(newSchema));
+        const newSchema = req.body.schema;
+        const schemaPath = `./schemas/Schema-${newSchema.title}.json`;
+        await fs.writeFile(schemaPath, JSON.stringify(newSchema, null, '\t'));
         config.schemas.push({ name: newSchema.title, path: schemaPath });
+        await fs.writeFile(
+            './server/config.json',
+            JSON.stringify(config, null, '\t')
+        );
+        res.send('Schema criado com sucesso');
+    } catch (e) {
+        console.log(e);
+        res.status(400).send('Não foi possivel criar o schema');
+    }
+});
+
+app.delete('/schemas', async (req, res) => {
+    try {
+        const schemaPath = `./schemas/Schema-${req.body.schema}.json`;
+        await fs.writeFile(schemaPath, JSON.stringify(newSchema));
+        config.schemas.filter((schema) => schema.title === req.body.schema);
+        await fs.writeFile('/server/config.json', JSON.stringify(config));
         res.send('Schema criado com sucesso');
     } catch (e) {
         res.status(400).send('Não foi possivel criar o schema');

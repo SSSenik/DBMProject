@@ -47,3 +47,7 @@ pre {
 .card.bg-dark > .card-header {
     background-color: #222;
 }
+
+.toast-body {
+    background-color: #f44336;
+}

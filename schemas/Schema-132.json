@@ -1,0 +1,10 @@
+{
+	"title": "132",
+	"description": "231",
+	"properties": {
+		"prop-0": {
+			"type": "string",
+			"isUnique": false
+		}
+	}
+}

@@ -1,17 +1,21 @@
 {
-    "port": 8082,
-    "dbname": "database.db",
-    "schemas": [
-        {
-            "name": "Aluno",
-            "path": "./schemas/Schema-Aluno.json"
-        }
-    ],
-    "baseGenFolder": "publish",
-    "staticFiles": {
-        "sqlite": {
-            "originalPath": "/database/sqlite-wrapper.js",
-            "destinationPath": "/database/sqlite-wrapper.js"
-        }
-    }
+	"port": 8082,
+	"dbname": "database.db",
+	"schemas": [
+		{
+			"name": "Aluno",
+			"path": "./schemas/Schema-Aluno.json"
+		},
+		{
+			"name": "132",
+			"path": "./schemas/Schema-132.json"
+		}
+	],
+	"baseGenFolder": "publish",
+	"staticFiles": {
+		"sqlite": {
+			"originalPath": "/database/sqlite-wrapper.js",
+			"destinationPath": "/database/sqlite-wrapper.js"
+		}
+	}
 }

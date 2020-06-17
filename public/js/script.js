@@ -102,7 +102,7 @@ function renderExistingSchemas() {
     );
 
     const schemasContainer = document.getElementById('schemasContainer');
-    schemasContainer.innerHTML = schemasHTML;
+    schemasContainer.innerHTML = schemasHTML.join('');
 }
 
 // - - - - - - - - - - -
@@ -224,7 +224,7 @@ class Property {
             Maximum
           </label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="prop-maximum-${this.id}" onkeyup="updatePropertyValue(this)"/>
+            <input type="number" class="form-control" id="prop-maximum-${this.id}" onkeyup="updatePropertyValue(this)"/>
           </div>
         </div>
         <div class="form-group row" style="display: none">
@@ -232,7 +232,7 @@ class Property {
             Minimum
           </label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="prop-minimum-${this.id}" onkeyup="updatePropertyValue(this)"/>
+            <input type="number" class="form-control" id="prop-minimum-${this.id}" onkeyup="updatePropertyValue(this)"/>
           </div>
         </div>
         <div class="form-check form-check-inline">
@@ -514,14 +514,17 @@ function buildPreview() {
 
     // Properties
     requiredProperties = [];
-    for (var i = 0; i < properties.length; i++) {
-        preview[properties[i].name] = properties[i].toJSON();
-        if (properties[i].isRequired) {
-            requiredProperties.push(properties[i].name);
+    if (properties.length) {
+        preview.properties = {};
+        for (var i = 0; i < properties.length; i++) {
+            preview.properties[properties[i].name] = properties[i].toJSON();
+            if (properties[i].isRequired) {
+                requiredProperties.push(properties[i].name);
+            }
         }
-    }
-    if (requiredProperties.length) {
-        preview.required = requiredProperties;
+        if (requiredProperties.length) {
+            preview.properties.required = requiredProperties;
+        }
     }
 
     // References
@@ -547,44 +550,53 @@ function renderPreview() {
 
 function validateSchema() {
     let schema = {};
+    const errorContainer = document.getElementById('error-msg');
 
     // Model info
     if (!schemaName || schemaName === '') {
+        errorContainer.textContent = 'Schema must have a name';
         $('.toast').toast('show');
-        alert('Schema must have a name');
         return;
     }
     if (existingSchemas.map((schema) => schema.title).includes(schemaName)) {
+        errorContainer.textContent = 'Schema with this name already exists';
         $('.toast').toast('show');
-        alert('Schema with this name already exists');
         return;
     }
     schema.title = schemaName;
     schema.description = schemaDescription;
 
     // Properties
+    if (properties.length === 0) {
+        errorContainer.textContent = 'Schema must have atleast 1 property';
+        $('.toast').toast('show');
+        return;
+    }
+
     let requiredProperties = [];
+    schema.properties = {};
     let mapDuplicates = {};
     for (var i = 0; i < properties.length; i++) {
         if (properties[i].name === '') {
+            errorContainer.textContent = 'All properties must have a name';
             $('.toast').toast('show');
-            alert('All properties must have a name');
             return;
         }
         if (mapDuplicates[properties[i].name]) {
+            errorContainer.textContent =
+                'Cannot have properties with the same name';
             $('.toast').toast('show');
-            alert('Cannot have properties with the same name');
             return;
         }
         mapDuplicates[properties[i].name] = true;
 
-        schema[properties[i].name] = properties[i].toJSON();
+        schema.properties[properties[i].name] = properties[i].toJSON();
         if (properties[i].isRequired) {
             requiredProperties.push(properties[i].name);
         }
     }
     if (requiredProperties.length) {
-        schema.required = requiredProperties;
+        schema.properties.required = requiredProperties;
     }
 
     // References
@@ -592,22 +604,21 @@ function validateSchema() {
         schema.references = references;
     }
 
-    $('.toast').toast('show');
-    alert('Schema created');
-    // createSchema(schema);
+    createSchema(schema);
 }
 
 function createSchema(schema) {
     var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/schemas', true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.onreadystatechange = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
-                alert('Novo schema criado com sucesso');
+                window.location.href = '/schemas.html';
             } else {
                 alert('Não foi possivel criar o novo schema');
             }
         }
     };
-    xhr.open('POST', '/schemas');
-    xhr.send(schema);
+    xhr.send(JSON.stringify({ schema }));
 }
