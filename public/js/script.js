@@ -9,13 +9,14 @@ existingSchemas = [];
 // Existing schemas
 // - - - - - - - - - - -
 
-function loadExistingSchemas(render) {
+function loadExistingSchemas(render, schemaToEdit) {
     const xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.onreadystatechange = () => {
         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             existingSchemas = xhr.response;
             if (render) renderExistingSchemas();
+            if (schemaToEdit) prefillData(schemaToEdit);
         }
     };
 
@@ -81,6 +82,13 @@ function renderExistingSchemas() {
                         schema.title
                     }')">
                         Delete
+                    </button>
+                    <button 
+                        class="btn btn-primary btn-sm float-right mr-2" 
+                        onclick="window.location.href = '/editor.html?schema=${
+                            schema.title
+                        }'">
+                        Edit
                     </button>
                     <h4>${schema.title}</h4>
                     ${schema.description}
@@ -148,17 +156,27 @@ function updateSchemaDescription(element) {
 class Property {
     static count = 0;
 
-    constructor() {
-        this.id = Property.count;
-        this.name = `prop-${Property.count++}`;
-        this.description = undefined;
-        this.label = undefined;
-        this.type = 'string';
-        this.isRequired = false;
-        this.isUnique = false;
-        this.pattern = undefined;
-        this.maximum = undefined;
-        this.minimum = undefined;
+    constructor({
+        name,
+        description,
+        label,
+        type,
+        isRequired,
+        unique,
+        pattern,
+        maximum,
+        minimum,
+    } = {}) {
+        this.id = Property.count++;
+        this.name = name || `prop-${this.id}`;
+        this.description = description;
+        this.label = label;
+        this.type = type || 'string';
+        this.isRequired = isRequired || false;
+        this.unique = unique || false;
+        this.pattern = pattern;
+        this.maximum = maximum;
+        this.minimum = minimum;
     }
 
     toJSON() {
@@ -166,7 +184,7 @@ class Property {
             description,
             label,
             type,
-            isUnique,
+            unique,
             pattern,
             maximum,
             minimum,
@@ -175,7 +193,7 @@ class Property {
             description,
             label,
             type,
-            isUnique,
+            unique,
             pattern,
             maximum,
             minimum,
@@ -183,6 +201,7 @@ class Property {
     }
 
     render() {
+        console.log(this);
         return `
     <div class="card text-white bg-dark mb-3" id="property-${this.id}">
       <div class="card-header">
@@ -200,15 +219,23 @@ class Property {
             Name
           </label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" value="prop-${this.id}" id="prop-name-${this.id}" onkeyup="updatePropertyValue(this)"/>
+            <input type="text" class="form-control" value="${
+                this.name === undefined ? '' : this.name
+            }" id="prop-name-${this.id}" onkeyup="updatePropertyValue(this)"/>
           </div>
         </div>
         <div class="form-group row">
-          <label for="prop-description-${this.id}" class="col-sm-3 col-form-label">
+          <label for="prop-description-${
+              this.id
+          }" class="col-sm-3 col-form-label">
             Description
           </label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="prop-description-${this.id}" onkeyup="updatePropertyValue(this)"/>
+            <input type="text" class="form-control" value="${
+                this.description === undefined ? '' : this.description
+            }" id="prop-description-${
+            this.id
+        }" onkeyup="updatePropertyValue(this)"/>
           </div>
         </div>
         <div class="form-group row">
@@ -216,7 +243,9 @@ class Property {
             Label name (in details)
           </label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="prop-label-${this.id}" onkeyup="updatePropertyValue(this)"/>
+            <input type="text" class="form-control" value="${
+                this.label === undefined ? '' : this.label
+            }" id="prop-label-${this.id}" onkeyup="updatePropertyValue(this)"/>
           </div>
         </div>
         <div class="form-group row">
@@ -224,10 +253,18 @@ class Property {
             Type
           </label>
           <div class="col-sm-9">
-            <select class="form-control" id="prop-type-${this.id}" onchange="updatePropertyValue(this)">
-              <option value="string">String</option>
-              <option value="integer">Integer</option>
-              <option value="boolean">Boolean</option>
+            <select class="form-control" id="prop-type-${
+                this.id
+            }" onchange="updatePropertyValue(this)">
+              <option value="string" ${
+                  this.type === 'string' ? 'selected' : ''
+              }>String</option>
+              <option value="integer" ${
+                  this.type === 'integer' ? 'selected' : ''
+              }>Integer</option>
+              <option value="boolean" ${
+                  this.type === 'boolean' ? 'selected' : ''
+              }>Boolean</option>
             </select>
           </div>
         </div>
@@ -236,7 +273,11 @@ class Property {
             Pattern
           </label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="prop-pattern-${this.id}" onkeyup="updatePropertyValue(this)"/>
+            <input type="text" class="form-control" value="${
+                this.pattern === undefined ? '' : this.pattern
+            }" id="prop-pattern-${
+            this.id
+        }" onkeyup="updatePropertyValue(this)"/>
           </div>
         </div>
         <div class="form-group row" style="display: none">
@@ -244,7 +285,11 @@ class Property {
             Maximum
           </label>
           <div class="col-sm-9">
-            <input type="number" class="form-control" id="prop-maximum-${this.id}" onkeyup="updatePropertyValue(this)"/>
+            <input type="number" class="form-control" value="${
+                this.maximum === undefined ? '' : this.maximum
+            }" id="prop-maximum-${
+            this.id
+        }" onkeyup="updatePropertyValue(this)"/>
           </div>
         </div>
         <div class="form-group row" style="display: none">
@@ -252,7 +297,11 @@ class Property {
             Minimum
           </label>
           <div class="col-sm-9">
-            <input type="number" class="form-control" id="prop-minimum-${this.id}" onkeyup="updatePropertyValue(this)"/>
+            <input type="number" class="form-control" value="${
+                this.minimum === undefined ? '' : this.minimum
+            }" id="prop-minimum-${
+            this.id
+        }" onkeyup="updatePropertyValue(this)"/>
           </div>
         </div>
         <div class="form-check form-check-inline">
@@ -261,6 +310,7 @@ class Property {
             type="checkbox"
             id="prop-isRequired-${this.id}"
             onchange="updatePropertyValue(this)"
+            ${this.isRequired ? 'checked' : ''}
           />
           <label class="form-check-label" for="prop-isRequired-${this.id}">
             Required property
@@ -270,10 +320,11 @@ class Property {
           <input
             class="form-check-input"
             type="checkbox"
-            id="prop-isUnique-${this.id}"
+            id="prop-unique-${this.id}"
             onchange="updatePropertyValue(this)"
+            ${this.unique ? 'checked' : ''}
           />
-          <label class="form-check-label" for="prop-isUnique-${this.id}">
+          <label class="form-check-label" for="prop-unique-${this.id}">
             Unique property
           </label>
         </div>
@@ -291,12 +342,13 @@ function getProperty(id) {
     }
 }
 
-function addProperty() {
-    const newProp = new Property();
+function addProperty(prop) {
+    const newProp = prop || new Property();
     properties.push(newProp);
 
     const propertiesContainer = document.getElementById('properties');
     propertiesContainer.insertAdjacentHTML('beforeend', newProp.render());
+    handleConstraints(newProp, newProp.type);
 
     renderPreview();
 }
@@ -368,9 +420,12 @@ function handleConstraints(property, type) {
 // References
 // - - - - - - - - - - -
 
-function renderExistingSchemasNames() {
+function renderExistingSchemasNames(selection) {
     return existingSchemas.map(
-        (schema) => `<option value="${schema.title}">${schema.title}</option>`
+        (schema) =>
+            `<option value="${schema.title}" ${
+                selection === schema.title ? 'selected' : ''
+            }>${schema.title}</option>`
     );
 }
 
@@ -384,14 +439,14 @@ function renderDefaultLabels() {
 class Reference {
     static count = 0;
 
-    constructor() {
+    constructor({ model, relation, label, isRequired }) {
         this.id = Reference.count++;
-        this.model = existingSchemas[0].title;
-        this.relation = '1-1';
-        this.label = Object.values(
-            existingSchemas[0].properties
-        )[0].description;
-        this.isRequired = false;
+        this.model = model || existingSchemas[0].title;
+        this.relation = relation || '1-1';
+        this.label =
+            label ||
+            Object.values(existingSchemas[0].properties)[0].description;
+        this.isRequired = isRequired === undefined ? false : isRequired;
     }
 
     toJSON() {
@@ -420,7 +475,7 @@ class Reference {
             <select class="form-control" id="ref-model-${
                 this.id
             }" onchange="updateReferenceValue(this)">
-              ${renderExistingSchemasNames()}
+              ${renderExistingSchemasNames(this.model)}
             </select>
           </div>
         </div>
@@ -432,9 +487,15 @@ class Reference {
             <select class="form-control" id="ref-relation-${
                 this.id
             }" onchange="updateReferenceValue(this)">
-              <option value="1-1">1-1</option>
-              <option value="1-M">1-M</option>
-              <option value="M-M">M-M</option>
+              <option value="1-1" ${
+                  this.relation === '1-1' ? 'selected' : ''
+              }>1-1</option>
+              <option value="1-M" ${
+                  this.relation === '1-M' ? 'selected' : ''
+              }>1-M</option>
+              <option value="M-M" ${
+                  this.relation === 'M-M' ? 'selected' : ''
+              }>M-M</option>
             </select>
           </div>
         </div>
@@ -446,7 +507,6 @@ class Reference {
             <select class="form-control" id="ref-label-${
                 this.id
             }" onchange="updateReferenceValue(this)">
-                ${renderDefaultLabels()}
             </select>
           </div>
         </div>
@@ -456,6 +516,7 @@ class Reference {
             type="checkbox"
             id="ref-isRequired-${this.id}"
             onchange="updateReferenceValue(this)"
+            ${this.isRequired ? 'checked' : ''}
           />
           <label class="form-check-label" for="ref-isRequired-${this.id}">
             Required on reference insert form
@@ -475,12 +536,13 @@ function getReference(id) {
     }
 }
 
-function addReference() {
-    const newRef = new Reference();
+function addReference(ref) {
+    const newRef = ref || new Reference();
     references.push(newRef);
 
     const referencesContainer = document.getElementById('references');
     referencesContainer.insertAdjacentHTML('beforeend', newRef.render());
+    handleModelChange(ref.id, ref.model, ref.label);
 
     renderPreview();
 }
@@ -511,13 +573,15 @@ function updateReferenceValue(element) {
     renderPreview();
 }
 
-function handleModelChange(refId, value) {
+function handleModelChange(refId, value, selection) {
     const refLabels = document.getElementById(`ref-label-${refId}`);
     refLabels.innerHTML = Object.values(
         getExistingSchema(value).properties
     ).map(
         (prop) =>
-            `<option value="${prop.description}">${prop.description}</option>`
+            `<option value="${prop.description}" ${
+                selection === prop.description ? 'selected' : ''
+            }>${prop.description}</option>`
     );
 }
 
@@ -568,7 +632,7 @@ function renderPreview() {
 // Schema creation
 // - - - - - - - - - - -
 
-function validateSchema() {
+function validateSchema(isCreation) {
     let schema = {};
     const errorContainer = document.getElementById('error-msg');
 
@@ -578,7 +642,10 @@ function validateSchema() {
         $('.toast').toast('show');
         return;
     }
-    if (existingSchemas.map((schema) => schema.title).includes(schemaName)) {
+    if (
+        isCreation &&
+        existingSchemas.map((schema) => schema.title).includes(schemaName)
+    ) {
         errorContainer.textContent = 'Schema with this name already exists';
         $('.toast').toast('show');
         return;
@@ -624,7 +691,7 @@ function validateSchema() {
         schema.references = references;
     }
 
-    createSchema(schema);
+    isCreation ? createSchema(schema) : editSchema(schema);
 }
 
 function createSchema(schema) {
@@ -642,3 +709,82 @@ function createSchema(schema) {
     };
     xhr.send(JSON.stringify({ schema }));
 }
+
+// - - - - - - - - - - -
+// Schema edition
+// - - - - - - - - - - -
+
+function prefillData(schemaToEdit) {
+    const schema = existingSchemas.filter(
+        (sch) => sch.title === schemaToEdit
+    )[0];
+    if (schema) {
+        document.getElementById('modelName').value = schema.title;
+        document.getElementById('modelDesc').value = schema.description;
+        schemaName = schema.title;
+        schemaDescription = schema.description;
+
+        Object.keys(schema.properties).forEach((prop) => {
+            addProperty(
+                new Property({
+                    name: prop,
+                    ...schema.properties[prop],
+                    isRequired:
+                        schema.required && schema.required.includes(prop),
+                })
+            );
+        });
+        if (schema.references) {
+            schema.references.forEach((ref) => {
+                addReference(new Reference(ref));
+            });
+        }
+    }
+}
+
+function editSchema(schema) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', '/schemas', true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                window.location.href = '/schemas.html';
+            } else {
+                alert('Não foi possivel criar o novo schema');
+            }
+        }
+    };
+    xhr.send(JSON.stringify({ schema }));
+}
+
+// - - - - - - - - - - -
+// Loading of pages
+// - - - - - - - - - - -
+
+window.onload = () => {
+    switch (window.location.pathname) {
+        case '/schemas.html':
+            loadExistingSchemas(true);
+            break;
+        case '/editor.html':
+            const submitBtn = document.getElementById('submitBtn');
+            if (window.location.search) {
+                submitBtn.textContent = 'Edit schema';
+                submitBtn.onclick = () => {
+                    validateSchema(false);
+                };
+                document.getElementById('modelName').disabled = true;
+                const urlParams = new URLSearchParams(window.location.search);
+                loadExistingSchemas(false, urlParams.get('schema'));
+            } else {
+                submitBtn.textContent = 'Create schema';
+                submitBtn.onclick = () => {
+                    validateSchema(true);
+                };
+                loadExistingSchemas(false);
+            }
+            renderPreview();
+            break;
+    }
+};

@@ -31,6 +31,17 @@ app.post('/schemas', async (req, res) => {
     }
 });
 
+app.put('/schemas', async (req, res) => {
+    try {
+        const schema = req.body.schema;
+        const schemaPath = `./schemas/Schema-${schema.title}.json`;
+        await fs.writeFile(schemaPath, JSON.stringify(schema, null, '\t'));
+        res.send('Schema editado com sucesso');
+    } catch (e) {
+        res.status(400).send('Não foi possivel editar o schema');
+    }
+});
+
 app.delete('/schemas', async (req, res) => {
     try {
         const schemaPath = `./schemas/Schema-${req.body.schemaName}.json`;

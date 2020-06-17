@@ -10,10 +10,7 @@
         <link rel="stylesheet" type="text/css" href="css/styles.css" />
     </head>
 
-    <body
-        onload="loadExistingSchemas(false); renderPreview();"
-        style="position: relative;"
-    >
+    <body style="position: relative;">
         <div
             class="toast"
             data-delay="4000"
@@ -88,12 +85,10 @@
                 <div class="col-sm-12 col-md-6 created side">
                     <pre id="preview-code"></pre>
                     <button
+                        id="submitBtn"
                         type="button"
                         class="btn float-right btn-danger"
-                        onclick="validateSchema()"
-                    >
-                        Create Schema
-                    </button>
+                    ></button>
                 </div>
             </div>
         </div>
