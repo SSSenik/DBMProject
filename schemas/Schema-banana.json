@@ -1,0 +1,19 @@
+{
+	"title": "banana",
+	"description": "Uma banana",
+	"properties": {
+		"prop-1": {
+			"description": "Nome da Pessoa",
+			"type": "string",
+			"unique": false
+		}
+	},
+	"references": [
+		{
+			"model": "Aluno",
+			"relation": "1-M",
+			"label": "Nota Final",
+			"isRequired": true
+		}
+	]
+}
