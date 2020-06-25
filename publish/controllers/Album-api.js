@@ -9,7 +9,13 @@ router.post('/Album', function (req, res) {
 });
 
 router.get('/Album', function (req, res) {
-    Album.all(rows => res.send(rows));
+    Album.all((rows) =>
+        res.json(
+            JSON.parse(
+                JSON.stringify(rows, Object.keys(new Album()).concat(['id']))
+            )
+        )
+    );
 });
 
 router.get('/Album/:id', function (req, res) {
@@ -25,5 +31,10 @@ router.put('/Album/:id', function (req, res) {
 router.delete('/Album/:id', function (req, res) {
     Album.delete(req.params.id, (row) => res.json(row));
 });
+
+router.get('/Album/:model/:id', function (req, res) {
+ Album.many(req.params.model, req.params.id, rows => res.json(rows));
+});
+
 
 module.exports = router;

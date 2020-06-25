@@ -5,6 +5,16 @@ const config = require('../server/config.json');
 
 const CLASS_MUSTACHE = './models/class.mustache';
 
+const getSchemaReferencesColumns = (schema) =>
+    schema.references
+        .filter((ref) => ref.relation !== 'M-M')
+        .map((ref) => `${ref.model}_id`.toLowerCase());
+
+const getAllColumnNames = (schema) => [
+    ...Object.keys(schema.properties),
+    ...getSchemaReferencesColumns(schema),
+];
+
 const createView = (schema) => ({
     sqlitePath: config.staticFiles.sqlite.destinationPath,
     dbName: config.dbname,
@@ -16,11 +26,20 @@ const createView = (schema) => ({
     classEnumerables: Object.keys(schema.properties)
         .filter((prop) => schema.required.indexOf(prop) === -1)
         .map((prop) => ({ name: prop })),
-    updateColumns: Object.keys(schema.properties).join(' = ?, ') + ' = ? ',
-    thisColumns: 'this.' + Object.keys(schema.properties).join(', this.'),
-    interrogationSigns: Object.keys(schema.properties)
-        .map((n) => '?')
+    updateColumns: getAllColumnNames(schema)
+        .map((column) => `${column} = ?`)
         .join(),
+    thisColumns: getAllColumnNames(schema)
+        .map((column) => `this.${column}`)
+        .join(),
+    interrogationSigns: getAllColumnNames(schema)
+        .map(() => '?')
+        .join(),
+    references: getSchemaReferencesColumns(schema).map((column) => ({
+        name: column,
+    })),
+    selColsRefs: getSchemaReferencesColumns(schema).join(','),
+    hasRefs: getSchemaReferencesColumns(schema).length > 0,
 });
 
 async function generate(schemas) {

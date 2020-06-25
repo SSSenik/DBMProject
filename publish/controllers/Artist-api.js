@@ -9,7 +9,13 @@ router.post('/Artist', function (req, res) {
 });
 
 router.get('/Artist', function (req, res) {
-    Artist.all(rows => res.send(rows));
+    Artist.all((rows) =>
+        res.json(
+            JSON.parse(
+                JSON.stringify(rows, Object.keys(new Artist()).concat(['id']))
+            )
+        )
+    );
 });
 
 router.get('/Artist/:id', function (req, res) {
@@ -25,5 +31,10 @@ router.put('/Artist/:id', function (req, res) {
 router.delete('/Artist/:id', function (req, res) {
     Artist.delete(req.params.id, (row) => res.json(row));
 });
+
+router.get('/Artist/:model/:id', function (req, res) {
+ Artist.many(req.params.model, req.params.id, rows => res.json(rows));
+});
+
 
 module.exports = router;

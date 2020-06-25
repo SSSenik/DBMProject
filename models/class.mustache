@@ -13,10 +13,13 @@ class {{classTitle}} {
         this.{{name}} = {{name}};
         {{/classConstructor}}
 
+        Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
         {{#classEnumerables}} 
         Object.defineProperty(this, '{{name}}', { enumerable: false });
         {{/classEnumerables}}
-        Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
+        {{#references}} 
+        Object.defineProperty(this, '{{name}}', { enumerable: false, writable: true });
+        {{/references}}
     }
 
     static create() {
@@ -34,16 +37,31 @@ class {{classTitle}} {
     static delete(id, callback) {
         database.run("DELETE FROM {{classTitle}} WHERE id = ?", [id], callback)
     }
+    
+    static many(model, id, callback) {
+        let tablename = ['{{classTitle}}', model].sort().join('_');
+        database.where(
+            `SELECT {{classTitle}}.*
+        FROM {{classTitle}}
+        INNER JOIN ${tablename} ON ${tablename}.${('{{classTitle}}').toLowerCase()}_id = {{classTitle}}.id
+        WHERE ${tablename}.${model.toLowerCase()}_id = ?`,
+            [id],
+            {{classTitle}},
+            callback
+        );
+    }
 
     save(callback) {
         if (this.id) {
             database.run(`UPDATE {{classTitle}} SET {{{updateColumns}}} WHERE id = ?`, 
             [{{thisColumns}}, this.id], callback);
         } else{
-            database.run(`INSERT INTO {{classTitle}} ({{constructorArguments}}) VALUES ({{interrogationSigns}})`, 
+            database.run(`INSERT INTO {{classTitle}} ({{constructorArguments}}{{#hasRefs}},{{/hasRefs}}{{selColsRefs}}) VALUES ({{interrogationSigns}})`, 
             [{{thisColumns}}], callback);
         }
     }
+
+
 
 }
 

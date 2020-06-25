@@ -9,7 +9,13 @@ router.post('/Genre', function (req, res) {
 });
 
 router.get('/Genre', function (req, res) {
-    Genre.all(rows => res.send(rows));
+    Genre.all((rows) =>
+        res.json(
+            JSON.parse(
+                JSON.stringify(rows, Object.keys(new Genre()).concat(['id']))
+            )
+        )
+    );
 });
 
 router.get('/Genre/:id', function (req, res) {
@@ -25,5 +31,10 @@ router.put('/Genre/:id', function (req, res) {
 router.delete('/Genre/:id', function (req, res) {
     Genre.delete(req.params.id, (row) => res.json(row));
 });
+
+router.get('/Genre/:model/:id', function (req, res) {
+ Genre.many(req.params.model, req.params.id, rows => res.json(rows));
+});
+
 
 module.exports = router;

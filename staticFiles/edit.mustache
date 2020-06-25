@@ -16,14 +16,59 @@
                 {{#properties}}
                     '{{name}}':document.getElementsByName('{{name}}')[0].value,
                 {{/properties}}
+                {{#references}}
+                    '{{name}}':document.getElementsByName('{{name}}')[0].value,
+                {{/references}}
                 }));
                 return false;
             }
+            {{#hasReferences}}
+            function loadValues(model, values, label, controlId, isManyToMany) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", `../../../api/${model}`, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var control = document.getElementById(controlId);
+                        var response = JSON.parse(this.responseText);
+                        if (isManyToMany) {
+                        //function to create many inputs (type="checkbox")
+                        } else {
+                            var select = document.createElement("select");
+                            select.name = model.toLowerCase()+"_id";
+                            
+                            var option = document.createElement("option");
+                            option.text = 'Select Option';
+                            option.value = '';
+                            select.add(option);
+
+                            response.forEach(row => {
+                                var option = document.createElement("option");
+                                option.text = row[label];
+                                option.value = row.id;
+                                if(values == row.id) {
+                                    option.selected = 'selected';
+                                }
+                                select.add(option);
+                            });
+                            control.appendChild(select);
+                        }
+                    }
+                }
+                xhr.send();
+            }
+            
+            
+            window.onload = function() {
+                {{#references}}
+                loadValues('{{model}}','{{{values}}}','{{label}}','div{{model}}value', {{isManyToMany}});
+                {{/references}}
+            }
+            {{/hasReferences}}
         </script>
     </head>
     <body>
         <div>
-            <form onsubmit="submitForm(); return false;" method="POST">
+            <form onsubmit="submitForm(); return false;">
                 <input type="hidden" name="id" value="{{id}}" />
                 {{#properties}}
                 <div>
@@ -31,6 +76,12 @@
                     <input type="{{type}}" name="{{name}}" value="{{value}}" {{#required}}required{{/required}} {{#attrs}}{{name}}="{{value}}"{{/attrs}}>
                 </div>
                 {{/properties}}
+                {{#references}}
+                <div>
+                    <label>{{model}}:</label>
+                    <div id="div{{model}}value"></div>
+                </div>
+                {{/references}}
                 <input type="submit" value="Save"/>
             </form>
         </div>

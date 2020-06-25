@@ -9,7 +9,13 @@ router.post('/Song', function (req, res) {
 });
 
 router.get('/Song', function (req, res) {
-    Song.all(rows => res.send(rows));
+    Song.all((rows) =>
+        res.json(
+            JSON.parse(
+                JSON.stringify(rows, Object.keys(new Song()).concat(['id']))
+            )
+        )
+    );
 });
 
 router.get('/Song/:id', function (req, res) {
@@ -25,5 +31,10 @@ router.put('/Song/:id', function (req, res) {
 router.delete('/Song/:id', function (req, res) {
     Song.delete(req.params.id, (row) => res.json(row));
 });
+
+router.get('/Song/:model/:id', function (req, res) {
+ Song.many(req.params.model, req.params.id, rows => res.json(rows));
+});
+
 
 module.exports = router;
