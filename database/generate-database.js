@@ -108,12 +108,21 @@ async function generate(dbname, schemas) {
     try {
         const data = await fs.readFile(DBSCRIPT_MUSTACHE);
         for (const schema of schemas) {
-            db.run(
-                mustache.render(
-                    data.toString(),
-                    createTableView(require(`.${schema.path}`))
-                )
-            );
+            await new Promise((res, rej) => {
+                db.run(
+                    mustache.render(
+                        data.toString(),
+                        createTableView(require(`.${schema.path}`))
+                    ),
+                    (err) => {
+                        if (err) {
+                            rej(err); // optional: again, you might choose to swallow this error.
+                        } else {
+                            res(); // resolve the promise
+                        }
+                    }
+                );
+            });
         }
     } catch (e) {
         console.log('Error catched', e);

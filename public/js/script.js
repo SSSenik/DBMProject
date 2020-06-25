@@ -439,7 +439,7 @@ function renderDefaultLabels() {
 class Reference {
     static count = 0;
 
-    constructor({ model, relation, label, isRequired }) {
+    constructor({ model, relation, label, isRequired } = {}) {
         this.id = Reference.count++;
         this.model = model || existingSchemas[0].title;
         this.relation = relation || '1-1';
@@ -542,7 +542,7 @@ function addReference(ref) {
 
     const referencesContainer = document.getElementById('references');
     referencesContainer.insertAdjacentHTML('beforeend', newRef.render());
-    handleModelChange(ref.id, ref.model, ref.label);
+    handleModelChange(newRef, newRef.model, newRef.label);
 
     renderPreview();
 }
@@ -565,7 +565,7 @@ function updateReferenceValue(element) {
     const [refField, refId] = element.id.split('-').splice(1);
     let reference = getReference(Number(refId));
     if (refField === 'model') {
-        handleModelChange(refId, element.value);
+        handleModelChange(reference, element.value);
     }
     reference[refField] =
         element.type === 'checkbox' ? element.checked : element.value;
@@ -573,15 +573,14 @@ function updateReferenceValue(element) {
     renderPreview();
 }
 
-function handleModelChange(refId, value, selection) {
-    const refLabels = document.getElementById(`ref-label-${refId}`);
-    refLabels.innerHTML = Object.values(
-        getExistingSchema(value).properties
-    ).map(
+function handleModelChange(ref, value, selection) {
+    const refLabels = document.getElementById(`ref-label-${ref.id}`);
+    ref.label = Object.keys(getExistingSchema(value).properties)[0];
+    refLabels.innerHTML = Object.keys(getExistingSchema(value).properties).map(
         (prop) =>
-            `<option value="${prop.description}" ${
-                selection === prop.description ? 'selected' : ''
-            }>${prop.description}</option>`
+            `<option value="${prop}" ${
+                selection === prop ? 'selected' : ''
+            }>${prop}</option>`
     );
 }
 
