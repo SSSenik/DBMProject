@@ -3,7 +3,6 @@ const { promises: fs } = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 
 const config = require('../server/config.json');
-const { deflate } = require('zlib');
 
 const DBSCRIPT_MUSTACHE = './database/dbscript.mustache';
 const ONE_ONE_MUSTACHE = './database/relationships/one-to-one.mustache';

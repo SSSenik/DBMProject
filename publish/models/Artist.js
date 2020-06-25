@@ -14,7 +14,6 @@ class Artist {
 
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
         Object.defineProperty(this, 'contact', { enumerable: false });
-        Object.defineProperty(this, 'genre_id', { enumerable: false, writable: true });
     }
 
     static create() {
@@ -48,11 +47,11 @@ class Artist {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Artist SET name = ?,contact = ?,genre_id = ? WHERE id = ?`, 
-            [this.name,this.contact,this.genre_id, this.id], callback);
+            database.run(`UPDATE Artist SET name = ?,contact = ? WHERE id = ?`, 
+            [this.name,this.contact, this.id], callback);
         } else{
-            database.run(`INSERT INTO Artist (name, contact,genre_id) VALUES (?,?,?)`, 
-            [this.name,this.contact,this.genre_id], callback);
+            database.run(`INSERT INTO Artist (name, contact) VALUES (?,?)`, 
+            [this.name,this.contact], callback);
         }
     }
 
