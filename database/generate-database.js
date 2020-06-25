@@ -105,19 +105,19 @@ async function generate(dbname, schemas) {
         }
     );
 
-    const data = await fs.readFile(DBSCRIPT_MUSTACHE);
-    schemas.forEach((schema) => {
-        try {
+    try {
+        const data = await fs.readFile(DBSCRIPT_MUSTACHE);
+        for (const schema of schemas) {
             db.run(
                 mustache.render(
                     data.toString(),
                     createTableView(require(`.${schema.path}`))
                 )
             );
-        } catch (e) {
-            console.log('Error catched', e);
         }
-    });
+    } catch (e) {
+        console.log('Error catched', e);
+    }
 
     db.close((err) => {
         if (err) {
