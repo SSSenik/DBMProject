@@ -6,15 +6,15 @@
         function loadValues(model,values,label,controlId){
             if(values === '') return;
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", `../../../api/${model}/${values}`, true);
+            xhr.open("GET", `/api/${model}/${values}`, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var control = document.getElementById(controlId);
                     var response = JSON.parse(this.responseText);
                     if (response.constructor === Array) {
-                        control.innerHTML = response.map(row => { return row[label] }).join();
+                        control.innerHTML = response.map(row => { return `<a href="/backoffice/${model}/details/${row.id}/">${row[label]}</a>` }).join(', ');
                     } else {
-                        control.innerHTML = response[label];
+                        control.innerHTML = `<a href="/backoffice/${model}/details/${response.id}/">${response[label]}</a>`;
                     }
                 }
             }

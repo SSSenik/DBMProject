@@ -9,5 +9,11 @@
         }
     },
     "required": ["name"],
-    "references": []
+    "references": [
+        {
+            "model": "Album",
+            "relation": "1-1",
+            "label": "name"
+        }
+    ]
 }

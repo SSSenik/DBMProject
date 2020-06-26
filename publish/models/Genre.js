@@ -12,6 +12,7 @@ class Genre {
         this.name = name;
 
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
+        Object.defineProperty(this, 'album_id', { enumerable: false, writable: true });
     }
 
     static create() {
@@ -29,6 +30,15 @@ class Genre {
     static delete(id, callback) {
         database.run("DELETE FROM Genre WHERE id = ?", [id], callback)
     }
+
+    static getLastId(callback) {
+        database.where(
+            'SELECT * FROM Genre ORDER BY id DESC LIMIT 1',
+            [],
+            Genre,
+            callback
+        );
+    }
     
     static many(model, id, callback) {
         let tablename = ['Genre', model].sort().join('_');
@@ -42,14 +52,40 @@ class Genre {
             callback
         );
     }
+    
+    static manyDelete(model, id, callback) {
+        let tablename = ['Genre', model].sort().join('_');
+        database.run(
+            `DELETE FROM ${tablename}
+        WHERE ${tablename}.${'Genre'.toLowerCase()}_id = ?`,
+            [id],
+            callback
+        );
+    }
+
+    static manyInsert(model, id, values) {
+        let tablename = ['Genre', model].sort().join('_');
+        for (const refid of values) {
+            database.run(
+                `INSERT INTO ${tablename} (${'Genre'.toLowerCase()}_id, ${model.toLowerCase()}_id) VALUES (?, ?)`,
+                [id, refid]
+            );
+        }
+    }
+
+    static manySave(model, id, values) {
+        this.manyDelete(model, id, () => {
+            this.manyInsert(model, id, values);
+        });
+    }
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Genre SET name = ? WHERE id = ?`, 
-            [this.name, this.id], callback);
+            database.run(`UPDATE Genre SET name = ?,album_id = ? WHERE id = ?`, 
+            [this.name,this.album_id, this.id], callback);
         } else{
-            database.run(`INSERT INTO Genre (name) VALUES (?)`, 
-            [this.name], callback);
+            database.run(`INSERT INTO Genre (name,album_id) VALUES (?,?)`, 
+            [this.name,this.album_id], callback);
         }
     }
 

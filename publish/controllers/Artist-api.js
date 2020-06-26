@@ -1,11 +1,26 @@
 const express = require('express');
-var router = express.Router();
+const router = express.Router();
 
-var Artist = require('../Models/Artist.js');
-
+const Artist = require(__basedir + '/Models/Artist.js');
+const ArtistSchema = require(__basedir + '/schemas/Schema-Artist.json');
 router.post('/Artist', function (req, res) {
     let obj = Object.assign(new Artist(), req.body);
-    obj.save(row => res.json(row));
+    obj.save((msg) => {
+        if (!msg.success) return res.json(msg);
+        Artist.getLastId((row) => {
+            const jsonRes = JSON.parse(
+                JSON.stringify(row, Object.keys(new Artist()).concat(['id']))
+            )[0];
+            for (const ref of ArtistSchema.references) {
+                const col = `${ref.model}_id`.toLowerCase();
+                if (ref.relation === 'M-M' && req.body[col].length) {
+                    Artist.manySave(ref.model, jsonRes.id, req.body[col]);
+                }
+            }
+
+            res.json(msg);
+        });
+    });
 });
 
 router.get('/Artist', function (req, res) {
@@ -19,13 +34,28 @@ router.get('/Artist', function (req, res) {
 });
 
 router.get('/Artist/:id', function (req, res) {
-    Artist.get(req.params.id, (row) => res.json(row));
+    Artist.get(req.params.id, (row) =>
+        res.json(
+            JSON.parse(
+                JSON.stringify(row, Object.keys(new Artist()).concat(['id']))
+            )
+        )
+    );
 });
 
 router.put('/Artist/:id', function (req, res) {
     let obj = Object.assign(new Artist(), req.body);
     obj.id = req.params.id;
-    obj.save((row) => res.json(row));
+    obj.save((msg) => {
+        if (!msg.success) return res.json(msg);
+        for (const ref of ArtistSchema.references) {
+            const col = `${ref.model}_id`.toLowerCase();
+            if (ref.relation === 'M-M' && req.body[col].length) {
+                Artist.manySave(ref.model, req.params.id, req.body[col]);
+            }
+        }
+        res.json(msg);
+    });
 });
 
 router.delete('/Artist/:id', function (req, res) {
@@ -33,7 +63,13 @@ router.delete('/Artist/:id', function (req, res) {
 });
 
 router.get('/Artist/:model/:id', function (req, res) {
- Artist.many(req.params.model, req.params.id, rows => res.json(rows));
+    Artist.many(req.params.model, req.params.id, (rows) =>
+        res.json(
+            JSON.parse(
+                JSON.stringify(rows, Object.keys(new Artist()).concat(['id']))
+            )
+        )
+    );
 });
 
 

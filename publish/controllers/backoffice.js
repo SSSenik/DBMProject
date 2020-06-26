@@ -72,6 +72,7 @@ router.get('/Album/Details/:id', function (req, res) {
                         ref.relation === 'M-M'
                             ? 'Album/' + req.params.id
                             : row[(ref.model + '_id').toLowerCase()],
+                    isManyToMany: ref.relation === 'M-M',
                 })),
             get hasReferences() {
                 return this.references.length > 0;
@@ -98,6 +99,7 @@ router.get('/Album/Insert', function (req, res) {
             name: `${ref.model}_id`.toLowerCase(),
             label: ref.label,
             model: ref.model,
+            isManyToMany: ref.relation === 'M-M',
         })),
         get hasReferences() {
             return this.references.length > 0;
@@ -143,6 +145,7 @@ router.get('/Album/Edit/:id', function (req, res) {
                         ref.relation === 'M-M'
                             ? 'Album/' + req.params.id
                             : row[(ref.model + '_id').toLowerCase()],
+                    isManyToMany: ref.relation === 'M-M',
                 })),
             get hasReferences() {
                 return this.references.length > 0;
@@ -221,6 +224,7 @@ router.get('/Artist/Details/:id', function (req, res) {
                         ref.relation === 'M-M'
                             ? 'Artist/' + req.params.id
                             : row[(ref.model + '_id').toLowerCase()],
+                    isManyToMany: ref.relation === 'M-M',
                 })),
             get hasReferences() {
                 return this.references.length > 0;
@@ -247,6 +251,7 @@ router.get('/Artist/Insert', function (req, res) {
             name: `${ref.model}_id`.toLowerCase(),
             label: ref.label,
             model: ref.model,
+            isManyToMany: ref.relation === 'M-M',
         })),
         get hasReferences() {
             return this.references.length > 0;
@@ -292,6 +297,7 @@ router.get('/Artist/Edit/:id', function (req, res) {
                         ref.relation === 'M-M'
                             ? 'Artist/' + req.params.id
                             : row[(ref.model + '_id').toLowerCase()],
+                    isManyToMany: ref.relation === 'M-M',
                 })),
             get hasReferences() {
                 return this.references.length > 0;
@@ -370,6 +376,7 @@ router.get('/Genre/Details/:id', function (req, res) {
                         ref.relation === 'M-M'
                             ? 'Genre/' + req.params.id
                             : row[(ref.model + '_id').toLowerCase()],
+                    isManyToMany: ref.relation === 'M-M',
                 })),
             get hasReferences() {
                 return this.references.length > 0;
@@ -396,6 +403,7 @@ router.get('/Genre/Insert', function (req, res) {
             name: `${ref.model}_id`.toLowerCase(),
             label: ref.label,
             model: ref.model,
+            isManyToMany: ref.relation === 'M-M',
         })),
         get hasReferences() {
             return this.references.length > 0;
@@ -441,6 +449,7 @@ router.get('/Genre/Edit/:id', function (req, res) {
                         ref.relation === 'M-M'
                             ? 'Genre/' + req.params.id
                             : row[(ref.model + '_id').toLowerCase()],
+                    isManyToMany: ref.relation === 'M-M',
                 })),
             get hasReferences() {
                 return this.references.length > 0;
@@ -519,6 +528,7 @@ router.get('/Song/Details/:id', function (req, res) {
                         ref.relation === 'M-M'
                             ? 'Song/' + req.params.id
                             : row[(ref.model + '_id').toLowerCase()],
+                    isManyToMany: ref.relation === 'M-M',
                 })),
             get hasReferences() {
                 return this.references.length > 0;
@@ -545,6 +555,7 @@ router.get('/Song/Insert', function (req, res) {
             name: `${ref.model}_id`.toLowerCase(),
             label: ref.label,
             model: ref.model,
+            isManyToMany: ref.relation === 'M-M',
         })),
         get hasReferences() {
             return this.references.length > 0;
@@ -590,6 +601,7 @@ router.get('/Song/Edit/:id', function (req, res) {
                         ref.relation === 'M-M'
                             ? 'Song/' + req.params.id
                             : row[(ref.model + '_id').toLowerCase()],
+                    isManyToMany: ref.relation === 'M-M',
                 })),
             get hasReferences() {
                 return this.references.length > 0;

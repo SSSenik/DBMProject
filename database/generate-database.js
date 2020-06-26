@@ -5,9 +5,11 @@ const sqlite3 = require('sqlite3').verbose();
 const config = require('../server/config.json');
 
 const DBSCRIPT_MUSTACHE = './database/dbscript.mustache';
-const ONE_ONE_MUSTACHE = './database/relationships/one-to-one.mustache';
-const ONE_MANY_MUSTACHE = './database/relationships/one-to-many.mustache';
-const MANY_MANY_MUSTACHE = './database/relationships/many-to-many.mustache';
+const UNIQUE_INDEX_MUSTACHE = './database/relationships/unique-index.mustache';
+const ADD_FOREIGN_KEY_MUSTACHE =
+    './database/relationships/add-foreign-key.mustache';
+const MANY_MANY_TABLE_MUSTACHE =
+    './database/relationships/many-to-many-table.mustache';
 
 const sqliteTypeTranslator = {
     integer: 'INTEGER',
@@ -33,41 +35,56 @@ const createTableView = (schema) => ({
 
 const createRelationshipQuery = async (schemaTitle, ref) => {
     try {
-        let mustString = '';
-        let mustData = {};
+        let queriesData = [];
         switch (ref.relation) {
             case '1-1':
-                mustString = await fs.readFile(ONE_ONE_MUSTACHE);
-                mustData = {
-                    tableName: schemaTitle,
-                    refColumnName: `${ref.model}_id`.toLowerCase(),
-                    refTableName: ref.model,
-                    indexName: `${ref.model}_unique`,
-                };
+                queriesData.push({
+                    mustString: await fs.readFile(ADD_FOREIGN_KEY_MUSTACHE),
+                    mustData: {
+                        tableName: schemaTitle,
+                        refColumnName: `${ref.model}_id`.toLowerCase(),
+                        refTableName: ref.model,
+                        indexName: `${ref.model}_unique`,
+                    },
+                });
+                queriesData.push({
+                    mustString: await fs.readFile(UNIQUE_INDEX_MUSTACHE),
+                    mustData: {
+                        tableName: schemaTitle,
+                        refColumnName: `${ref.model}_id`.toLowerCase(),
+                        indexName: `${ref.model}_unique`,
+                    },
+                });
                 break;
             case '1-M':
-                mustString = await fs.readFile(ONE_MANY_MUSTACHE);
-                mustData = {
-                    tableName: schemaTitle,
-                    refColumnName: `${ref.model}_id`.toLowerCase(),
-                    refTableName: ref.model,
-                };
+                queriesData.push({
+                    mustString: await fs.readFile(ADD_FOREIGN_KEY_MUSTACHE),
+                    mustData: {
+                        tableName: schemaTitle,
+                        refColumnName: `${ref.model}_id`.toLowerCase(),
+                        refTableName: ref.model,
+                    },
+                });
                 break;
             case 'M-M':
-                mustString = await fs.readFile(MANY_MANY_MUSTACHE);
-                mustData = {
-                    tableName: [schemaTitle, ref.model].sort().join('_'),
-                    modelCol: `${schemaTitle}_id`.toLowerCase(),
-                    refCol: `${ref.model}_id`.toLowerCase(),
-                    modelTable: schemaTitle,
-                    refTable: ref.model,
-                };
+                queriesData.push({
+                    mustString: await fs.readFile(MANY_MANY_TABLE_MUSTACHE),
+                    mustData: {
+                        tableName: [schemaTitle, ref.model].sort().join('_'),
+                        modelCol: `${schemaTitle}_id`.toLowerCase(),
+                        refCol: `${ref.model}_id`.toLowerCase(),
+                        modelTable: schemaTitle,
+                        refTable: ref.model,
+                    },
+                });
                 break;
             default:
                 break;
         }
-        if (!mustString.toString() || !mustData) return;
-        return mustache.render(mustString.toString(), mustData);
+        if (!queriesData.length) return;
+        return queriesData.map((q) =>
+            mustache.render(q.mustString.toString(), q.mustData)
+        );
     } catch (err) {
         console.log('Error catched', err);
     }
@@ -116,9 +133,9 @@ async function generate(dbname, schemas) {
                     ),
                     (err) => {
                         if (err) {
-                            rej(err); // optional: again, you might choose to swallow this error.
+                            rej(err);
                         } else {
-                            res(); // resolve the promise
+                            res();
                         }
                     }
                 );
@@ -150,7 +167,21 @@ async function generateRelationships(dbname, schemas) {
 
         for (const ref of schema.references) {
             try {
-                db.run(await createRelationshipQuery(schema.title, ref));
+                const queries = await createRelationshipQuery(
+                    schema.title,
+                    ref
+                );
+                for (const q of queries) {
+                    await new Promise((res, rej) => {
+                        db.run(q, (err) => {
+                            if (err) {
+                                rej(err);
+                            } else {
+                                res();
+                            }
+                        });
+                    });
+                }
             } catch (err) {
                 console.log('Error catched', err);
             }

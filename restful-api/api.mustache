@@ -1,11 +1,26 @@
 const express = require('express');
-var router = express.Router();
+const router = express.Router();
 
-var {{title}} = require('../Models/{{title}}.js');
-
+const {{title}} = require(__basedir + '/Models/{{title}}.js');
+const {{title}}Schema = require(__basedir + '/schemas/Schema-{{title}}.json');
 router.post('/{{title}}', function (req, res) {
     let obj = Object.assign(new {{title}}(), req.body);
-    obj.save(row => res.json(row));
+    obj.save((msg) => {
+        if (!msg.success) return res.json(msg);
+        {{title}}.getLastId((row) => {
+            const jsonRes = JSON.parse(
+                JSON.stringify(row, Object.keys(new {{title}}()).concat(['id']))
+            )[0];
+            for (const ref of {{title}}Schema.references) {
+                const col = `${ref.model}_id`.toLowerCase();
+                if (ref.relation === 'M-M' && req.body[col].length) {
+                    {{title}}.manySave(ref.model, jsonRes.id, req.body[col]);
+                }
+            }
+
+            res.json(msg);
+        });
+    });
 });
 
 router.get('/{{title}}', function (req, res) {
@@ -19,13 +34,28 @@ router.get('/{{title}}', function (req, res) {
 });
 
 router.get('/{{title}}/:id', function (req, res) {
-    {{title}}.get(req.params.id, (row) => res.json(row));
+    {{title}}.get(req.params.id, (row) =>
+        res.json(
+            JSON.parse(
+                JSON.stringify(row, Object.keys(new {{title}}()).concat(['id']))
+            )
+        )
+    );
 });
 
 router.put('/{{title}}/:id', function (req, res) {
     let obj = Object.assign(new {{title}}(), req.body);
     obj.id = req.params.id;
-    obj.save((row) => res.json(row));
+    obj.save((msg) => {
+        if (!msg.success) return res.json(msg);
+        for (const ref of {{title}}Schema.references) {
+            const col = `${ref.model}_id`.toLowerCase();
+            if (ref.relation === 'M-M' && req.body[col].length) {
+                {{title}}.manySave(ref.model, req.params.id, req.body[col]);
+            }
+        }
+        res.json(msg);
+    });
 });
 
 router.delete('/{{title}}/:id', function (req, res) {
@@ -33,7 +63,13 @@ router.delete('/{{title}}/:id', function (req, res) {
 });
 
 router.get('/{{title}}/:model/:id', function (req, res) {
- {{title}}.many(req.params.model, req.params.id, rows => res.json(rows));
+    {{title}}.many(req.params.model, req.params.id, (rows) =>
+        res.json(
+            JSON.parse(
+                JSON.stringify(rows, Object.keys(new {{title}}()).concat(['id']))
+            )
+        )
+    );
 });
 
 

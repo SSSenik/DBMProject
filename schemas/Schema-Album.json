@@ -4,17 +4,25 @@
     "type": "object",
     "properties": {
         "name": {
-            "description": "Nome",
+            "description": "Nome do Album",
+            "label": "Nome",
             "type": "string"
         },
         "description": {
-            "description": "Descrição",
-            "type": "string"
+            "description": "Descrição do Album",
+            "label": "Descrição",
+            "type": "string",
+            "presentationMode": "fulltext"
         },
         "release_date": {
-            "description": "Data de Saida",
-            "type": "string",
-            "presentationMode": "date"
+            "description": "Data de Saida do Album",
+            "label": "Data de Saida",
+            "type": "date"
+        },
+        "cover": {
+            "description": "Capa do Album",
+            "label": "Capa",
+            "type": "date"
         }
     },
     "required": ["name"],

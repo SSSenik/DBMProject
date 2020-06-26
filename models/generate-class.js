@@ -35,8 +35,8 @@ const createView = (schema) => ({
     interrogationSigns: getAllColumnNames(schema)
         .map(() => '?')
         .join(),
-    references: getSchemaReferencesColumns(schema).map((column) => ({
-        name: column,
+    references: schema.references.map((ref) => ({
+        name: `${ref.model}_id`.toLowerCase(),
     })),
     selColsRefs: getSchemaReferencesColumns(schema).join(','),
     hasRefs: getSchemaReferencesColumns(schema).length > 0,

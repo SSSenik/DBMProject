@@ -4,10 +4,17 @@
     "type": "object",
     "properties": {
         "name": {
-            "description": "Nome",
+            "description": "Nome do Genero",
+            "label": "Nome",
             "type": "string"
         }
     },
     "required": ["name"],
-    "references": []
+    "references": [
+        {
+            "model": "Album",
+            "relation": "1-1",
+            "label": "name"
+        }
+    ]
 }

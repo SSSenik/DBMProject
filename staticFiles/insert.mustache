@@ -6,33 +6,58 @@
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        if(!response.success) {
+                            alert("An error has ocurred");
+                            return
+                        }
                         window.location.href = '/backoffice/{{title}}';
                     }
                 };
                 xhttp.open("POST", "/api/{{title}}/", true);
                 xhttp.setRequestHeader("Content-Type", "application/json");
-                xhttp.send(JSON.stringify({
-                {{#properties}}
+                let data = {
+                    {{#properties}}
                     '{{name}}':document.getElementsByName('{{name}}')[0].value,
-                {{/properties}}
+                    {{/properties}}
+                };
+
                 {{#references}}
-                    '{{name}}':document.getElementsByName('{{name}}')[0].value,
+                    data['{{name}}'] = {{isManyToMany}} 
+                        ? [...document.getElementsByName('{{model}}_ids')].filter(node => node.checked).map((node => node.value))
+                        : document.getElementsByName('{{name}}')[0].value
                 {{/references}}
-                }));
+                
+                xhttp.send(JSON.stringify(data));
                 return false;
             }
 
             {{#hasReferences}}
             function loadValues(model, label, controlId, isManyToMany) {
                 var xhr = new XMLHttpRequest();
-                xhr.open("GET", `../../../api/${model}`, true);
+                xhr.open("GET", `/api/${model}`, true);
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4 && xhr.status === 200) {
                         var control = document.getElementById(controlId);
                         var response = JSON.parse(this.responseText);
                         if (isManyToMany) {
-                            console.log("MANY");
-                        //function to create many inputs (type="checkbox")
+                            var div = document.createElement("div");
+                            div.id = model.toLowerCase() + "_id";
+                            response.forEach(row => {
+                                var optiondiv = document.createElement("div");
+                                optiondiv.class = 'reference';
+                                var optioninp = document.createElement("input");
+                                optioninp.id = model + '_id_' + row.id;
+                                optioninp.name = model + '_ids';
+                                optioninp.type = 'checkbox';
+                                optioninp.value = row.id;
+                                var optionlbl = document.createElement("label");
+                                optionlbl.innerHTML = row[label];
+                                div.appendChild(optiondiv);
+                                optiondiv.appendChild(optioninp);
+                                optiondiv.appendChild(optionlbl);
+                            });
+                            control.appendChild(div);
                         } else {
                             var select = document.createElement("select");
                             select.name = model.toLowerCase()+"_id";

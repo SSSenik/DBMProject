@@ -4,11 +4,13 @@
     "type": "object",
     "properties": {
         "name": {
-            "description": "Nome",
+            "description": "Nome do Artista",
+            "label": "Nome",
             "type": "string"
         },
         "contact": {
-            "description": "Contacto",
+            "description": "Contacto do Artista",
+            "label": "Contacto",
             "type": "string"
         }
     },

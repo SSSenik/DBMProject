@@ -39,6 +39,15 @@ class Song {
     static delete(id, callback) {
         database.run("DELETE FROM Song WHERE id = ?", [id], callback)
     }
+
+    static getLastId(callback) {
+        database.where(
+            'SELECT * FROM Song ORDER BY id DESC LIMIT 1',
+            [],
+            Song,
+            callback
+        );
+    }
     
     static many(model, id, callback) {
         let tablename = ['Song', model].sort().join('_');
@@ -51,6 +60,32 @@ class Song {
             Song,
             callback
         );
+    }
+    
+    static manyDelete(model, id, callback) {
+        let tablename = ['Song', model].sort().join('_');
+        database.run(
+            `DELETE FROM ${tablename}
+        WHERE ${tablename}.${'Song'.toLowerCase()}_id = ?`,
+            [id],
+            callback
+        );
+    }
+
+    static manyInsert(model, id, values) {
+        let tablename = ['Song', model].sort().join('_');
+        for (const refid of values) {
+            database.run(
+                `INSERT INTO ${tablename} (${'Song'.toLowerCase()}_id, ${model.toLowerCase()}_id) VALUES (?, ?)`,
+                [id, refid]
+            );
+        }
+    }
+
+    static manySave(model, id, values) {
+        this.manyDelete(model, id, () => {
+            this.manyInsert(model, id, values);
+        });
     }
 
     save(callback) {

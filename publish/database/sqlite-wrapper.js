@@ -28,6 +28,7 @@ module.exports = (dbpath) => {
                         success: !err,
                         error: err,
                         rowsAffected: this.changes,
+                        lastInsertedId: this.lastId,
                     });
             });
             db.close();
