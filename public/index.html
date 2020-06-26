@@ -1,12 +1,32 @@
 <html>
     <head>
         <title>Testing</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+            integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
     </head>
-    <body>
+    <body id="mainPage">
+        <h1>DBM Project</h1>
+        <button
+            class="button-red"
+            onclick="window.location.href='schemas.html'"
+        >
+            Schemas
+        </button>
+        <button
+            class="button-red"
+            onclick="window.location.href='styleSwitcher.html'"
+        >
+            Style Switcher
+        </button>
         <form action="/generate" method="POST">
-            <button type="submit">Publish and Generate</button>
+            <button class="button-red" type="submit">
+                Publish and Generate
+            </button>
         </form>
-        <a href="editor.html"> Criar schema </a>
-        <a href="schemas.html"> Schemas </a>
     </body>
 </html>

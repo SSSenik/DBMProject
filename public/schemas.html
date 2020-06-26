@@ -8,29 +8,29 @@
             crossorigin="anonymous"
         />
         <link rel="stylesheet" type="text/css" href="css/styles.css" />
+        <link href="/css/fontawesome/css/all.css" rel="stylesheet">
     </head>
     <body>
-        <div class="container-fluid">
-            <div class="row pb-4">
-                <div class="col-12">
-                    <p>banana</p>
-                </div>
-                <div class="col-4">
-                    <button type="button" class="btn btn-danger btn-block">
-                        Create schema
-                    </button>
-                </div>
-                <div class="col-4">
-                    <button type="button" class="btn btn-danger btn-block">
-                        Schemas
-                    </button>
-                </div>
-                <div class="col-4">
-                    <button type="button" class="btn btn-danger btn-block">
-                        Generate
-                    </button>
-                </div>
+        <div class="header">
+            <div style="flex: 1;">
+                <button
+                    class="backBtn"
+                    onclick="window.location.href='/'"
+                >
+                    <i class="fas fa-arrow-left"></i>
+                </button>
             </div>
+            <div class="headerTitle">
+                <h4>DBM Project</h4>
+                <p>Schemas</p>
+            </div>
+            <div style="flex: 1;">
+                <button class="button-red float-right" onclick="window.location.href='editor.html'">
+                    Create schema
+                </button>
+            </div>
+        </div>
+        <div class="container-fluid">
             <h2>Schemas existentes</h5>
             <div
                 class="row pb-4"

@@ -7,6 +7,7 @@
             integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
             crossorigin="anonymous"
         />
+        <link href="/css/fontawesome/css/all.css" rel="stylesheet" />
         <link rel="stylesheet" type="text/css" href="css/styles.css" />
     </head>
 
@@ -18,7 +19,22 @@
         >
             <div class="toast-body" id="error-msg"></div>
         </div>
-        <div class="container-fluid">
+        <div class="header">
+            <div style="flex: 1;">
+                <button
+                    class="backBtn"
+                    onclick="window.location.href='/schemas.html'"
+                >
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+            <div class="headerTitle">
+                <h4>DBM Project</h4>
+                <p>Editor de schemas</p>
+            </div>
+            <div style="flex: 1;"></div>
+        </div>
+        <div class="container-fluid" style="height: calc(100% - 105px);">
             <div class="wrapper row">
                 <div class="col-sm-12 col-md-6 side">
                     <div>

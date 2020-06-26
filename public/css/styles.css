@@ -1,7 +1,74 @@
 body {
     background-color: #212121;
     color: white;
-    padding: 20px;
+}
+
+#mainPage form {
+    display: inline-block;
+}
+
+#mainPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#mainPage h1 {
+    margin-bottom: 50px;
+}
+
+#mainPage button {
+    width: 400px;
+}
+
+.button-red {
+    background-color: orangered;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.button-red:hover {
+    background-color: tomato;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.headerTitle {
+    text-align: center;
+}
+
+.headerTitle p {
+    margin: 0;
+}
+
+.backBtn {
+    padding: 15px;
+    border-radius: 50%;
+    text-decoration: none;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-size: 25px;
+    margin: 10px;
+}
+
+.backBtn:hover {
+    background-color: #dddddd22;
 }
 
 pre {
