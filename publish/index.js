@@ -15,6 +15,8 @@ app.set('views', __basedir + '/Views');
 app.use(express.static(__basedir + '/public'));
 
 
+const frontoffice = require('./controllers/frontoffice');
+app.use('/', frontoffice);
 const backoffice = require('./controllers/backoffice');
 app.use('/backoffice', backoffice);
 

@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { presentationModeToHtmlType, columnConstraintToHtmlAttrs } = require(__basedir + '/utils/utils.js');
+const { presentationModeToHtmlString, columnConstraintToHtmlAttrs, schemaTypeToInputType } = require(__basedir + '/utils/utils.js');
+
+const menuItems = [
+    {{#schemas}}
+    { href: '/backoffice/{{title}}', name: '{{title}}' },
+    {{/schemas}}
+];
 
 {{#schemas}}
 const {{title}} = require(__basedir + '/Models/{{title}}.js');
@@ -9,7 +15,8 @@ router.get('/{{title}}', function (req, res) {
     {{title}}.all((rows) => {
         res.render('list', {
             title: '{{title}}',
-            columns: Object.keys(new {{title}}()),
+            schemas: menuItems,
+            columns: Object.keys(new {{title}}()).map((col) => {{title}}Schema.properties[col].label),
             rows: rows.map((r) => ({
                 rowId: '{{title}}_' + r.id,
                 properties: Object.keys(r).map((key) => r[key]),
@@ -49,11 +56,14 @@ router.get('/{{title}}/Details/:id', function (req, res) {
     {{title}}.get(req.params.id, function (row) {
         res.render('details', {
             title: '{{title}}',
+            schemas: menuItems,
             properties: Object.getOwnPropertyNames(row)
                 .filter((prop) => {{title}}Schema.properties.hasOwnProperty(prop))
                 .map((prop) => ({
                     name: prop,
                     value: row[prop],
+                    label: {{title}}Schema.properties[prop].label,
+                    htmlString: presentationModeToHtmlString({{title}}Schema.properties[prop].presentationMode, row[prop])
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -85,16 +95,20 @@ router.get('/{{title}}/Details/:id', function (req, res) {
 router.get('/{{title}}/Insert', function (req, res) {
     res.render('insert', {
         title: '{{title}}',
+        schemas: menuItems,
         properties: Object.getOwnPropertyNames(new {{title}}())
             .filter((prop) => {{title}}Schema.properties.hasOwnProperty(prop))
             .map((prop) => ({
-                type: presentationModeToHtmlType(
-                    {{title}}Schema.properties[prop].presentationMode,
+                type: schemaTypeToInputType(
                     {{title}}Schema.properties[prop].type
                 ),
+                isCheckbox: schemaTypeToInputType(
+                    {{title}}Schema.properties[prop].type
+                ) === 'checkbox',
                 required: {{title}}Schema.required.includes(prop),
                 attrs: columnConstraintToHtmlAttrs({{title}}Schema.properties[prop]),
                 name: prop,
+                label: {{title}}Schema.properties[prop].label,
             })),
         references: {{title}}Schema.references.map((ref) => ({
             name: `${ref.model}_id`.toLowerCase(),
@@ -112,20 +126,24 @@ router.get('/{{title}}/Edit/:id', function (req, res) {
     {{title}}.get(req.params.id, function (row) {
         res.render('edit', {
             title: '{{title}}',
+            schemas: menuItems,
             id: req.params.id,
             properties: Object.getOwnPropertyNames(row)
                 .filter((prop) => {{title}}Schema.properties.hasOwnProperty(prop))
                 .map((prop) => ({
-                    type: presentationModeToHtmlType(
-                        {{title}}Schema.properties[prop].presentationMode,
+                    type: schemaTypeToInputType(
                         {{title}}Schema.properties[prop].type
                     ),
+                    isCheckbox: schemaTypeToInputType(
+                        {{title}}Schema.properties[prop].type
+                    ) === 'checkbox',
                     required: {{title}}Schema.required.includes(prop),
                     attrs: columnConstraintToHtmlAttrs(
                         {{title}}Schema.properties[prop]
                     ),
                     name: prop,
                     value: row[prop],
+                    label: {{title}}Schema.properties[prop].label,
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>

@@ -11,11 +11,11 @@
         "description": {
             "description": "Descrição da Música",
             "label": "Descrição",
-            "type": "string"
+            "type": "boolean"
         },
         "duration": {
             "description": "Duração da Música",
-            "label": "Duração",
+            "label": "Duração (seg)",
             "type": "integer",
             "minimum": 0
         },
@@ -28,9 +28,15 @@
             "description": "Data de Saida da Música",
             "label": "Data de Saida",
             "type": "date"
+        },
+        "video_clip": {
+            "description": "Video Clip da musica",
+            "label": "Video Clip",
+            "type": "url",
+            "presentationMode": "video"
         }
     },
-    "required": ["name", "duration"],
+    "required": ["name", "release_date", "duration"],
     "references": [
         {
             "model": "Album",

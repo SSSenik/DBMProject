@@ -38,13 +38,17 @@ class {{classTitle}} {
         database.run("DELETE FROM {{classTitle}} WHERE id = ?", [id], callback)
     }
 
-    static getLastId(callback) {
+    static top(property, order, limit, callback) {
         database.where(
-            'SELECT * FROM {{classTitle}} ORDER BY id DESC LIMIT 1',
+            `SELECT * FROM {{classTitle}} ORDER BY ${property} ${order} LIMIT ${limit}`,
             [],
             {{classTitle}},
             callback
         );
+    }
+
+    static getLastInserted(callback) {
+        this.top('id', 'DESC', 1, callback);
     }
     
     static many(model, id, callback) {

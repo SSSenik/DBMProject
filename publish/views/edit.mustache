@@ -1,130 +1,148 @@
 <html>
-    <head>
-        <title>Edit {{title}}</title>
-        <script>
-            function submitForm() {                
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var response = JSON.parse(this.responseText);
-                        if(!response.success) {
-                            alert("An error has ocurred");
-                            return
-                        }
-                        window.location.href = '/backoffice/{{title}}';
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit {{title}}</title>
+
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <script>
+        function submitForm() {                
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    if(!response.success) {
+                        alert("An error has ocurred");
+                        return
                     }
-                };
-                xhttp.open("PUT", "/api/{{title}}/{{id}}", true);
-                xhttp.setRequestHeader("Content-Type", "application/json");
-                let data = {
-                    {{#properties}}
-                    '{{name}}':document.getElementsByName('{{name}}')[0].value,
-                    {{/properties}}
-                };
+                    window.location.href = '/backoffice/{{title}}';
+                }
+            };
+            xhttp.open("PUT", "/api/{{title}}/{{id}}", true);
+            xhttp.setRequestHeader("Content-Type", "application/json");
 
-                {{#references}}
-                    data['{{name}}'] = {{isManyToMany}} 
-                        ? [...document.getElementsByName('{{model}}_ids')].filter(node => node.checked).map((node => node.value))
-                        : document.getElementsByName('{{name}}')[0].value
-                {{/references}}
-                
-                xhttp.send(JSON.stringify(data));
-                return false;
+            let data = {};
+            {{#properties}}
+            data['{{name}}'] = document.getElementsByName('{{name}}')[0].type === 'checkbox' 
+                ? document.getElementsByName('{{name}}')[0].checked
+                : document.getElementsByName('{{name}}')[0].value 
+            {{/properties}}
+            {{#references}}
+                data['{{name}}'] = {{isManyToMany}} 
+                    ? [...document.getElementsByName('{{model}}_ids')].filter(node => node.checked).map((node => node.value))
+                    : document.getElementsByName('{{name}}')[0].value
+            {{/references}}
+            
+            xhttp.send(JSON.stringify(data));
+            return false;
+        }
+
+        function getManyToManyValues(model,) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", `/api/${model}/{{title}}/{{id}}`, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(this.responseText);
+                    response.forEach(row => {
+                        document.getElementById(model + '_id_'+ row.id).checked = true
+                    });
+                }
             }
+            xhr.send();
+        }
 
-            function getManyToManyValues(model,) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", `/api/${model}/{{title}}/{{id}}`, true);
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        var response = JSON.parse(this.responseText);
+        {{#hasReferences}}
+        function loadValues(model, values, label, controlId, isManyToMany) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", `/api/${model}`, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var control = document.getElementById(controlId);
+                    var response = JSON.parse(this.responseText);
+                    if (isManyToMany) {
+                        var div = document.createElement("div");
+                        div.id = model.toLowerCase() + "_id";
                         response.forEach(row => {
-                            document.getElementById(model + '_id_'+ row.id).checked = true
+                            var optiondiv = document.createElement("div");
+                            optiondiv.class = 'reference';
+                            var optioninp = document.createElement("input");
+                            optioninp.id = model + '_id_' + row.id;
+                            optioninp.name = model + '_ids';
+                            optioninp.type = 'checkbox';
+                            optioninp.value = row.id;
+                            optioninp.className = 'form-check-input';
+                            var optionlbl = document.createElement("label");
+                            optionlbl.innerHTML = row[label];
+                            optionlbl.className = 'form-check-label';
+                            div.appendChild(optiondiv);
+                            optiondiv.appendChild(optioninp);
+                            optiondiv.appendChild(optionlbl);
                         });
-                    }
-                }
-                xhr.send();
-            }
+                        control.appendChild(div);
+                        getManyToManyValues(model, values);
+                    } else {
+                        var select = document.createElement("select");
+                        select.name = model.toLowerCase()+"_id";
+                        select.className = 'form-control';
+                        
+                        var option = document.createElement("option");
+                        option.text = 'Select Option';
+                        option.value = '';
+                        select.add(option);
 
-            {{#hasReferences}}
-            function loadValues(model, values, label, controlId, isManyToMany) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", `/api/${model}`, true);
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        var control = document.getElementById(controlId);
-                        var response = JSON.parse(this.responseText);
-                        if (isManyToMany) {
-                            var div = document.createElement("div");
-                            div.id = model.toLowerCase() + "_id";
-                            response.forEach(row => {
-                                var optiondiv = document.createElement("div");
-                                optiondiv.class = 'reference';
-                                var optioninp = document.createElement("input");
-                                optioninp.id = model + '_id_' + row.id;
-                                optioninp.name = model + '_ids';
-                                optioninp.type = 'checkbox';
-                                optioninp.value = row.id;
-                                var optionlbl = document.createElement("label");
-                                optionlbl.innerHTML = row[label];
-                                div.appendChild(optiondiv);
-                                optiondiv.appendChild(optioninp);
-                                optiondiv.appendChild(optionlbl);
-                            });
-                            control.appendChild(div);
-                            getManyToManyValues(model, values);
-                        } else {
-                            var select = document.createElement("select");
-                            select.name = model.toLowerCase()+"_id";
-                            
+                        response.forEach(row => {
                             var option = document.createElement("option");
-                            option.text = 'Select Option';
-                            option.value = '';
+                            option.text = row[label];
+                            option.value = row.id;
+                            if(values == row.id) {
+                                option.selected = 'selected';
+                            }
                             select.add(option);
-
-                            response.forEach(row => {
-                                var option = document.createElement("option");
-                                option.text = row[label];
-                                option.value = row.id;
-                                if(values == row.id) {
-                                    option.selected = 'selected';
-                                }
-                                select.add(option);
-                            });
-                            control.appendChild(select);
-                        }
+                        });
+                        control.appendChild(select);
                     }
                 }
-                xhr.send();
             }
-            
-            
-            window.onload = function() {
-                {{#references}}
-                loadValues('{{model}}','{{{values}}}','{{label}}','div{{model}}value', {{isManyToMany}});
-                {{/references}}
-            }
-            {{/hasReferences}}
-        </script>
-    </head>
-    <body>
-        <div>
-            <form onsubmit="submitForm(); return false;">
-                <input type="hidden" name="id" value="{{id}}" />
-                {{#properties}}
-                <div>
-                    <label>{{name}}:</label>
-                    <input type="{{type}}" name="{{name}}" value="{{value}}" {{#required}}required{{/required}} {{#attrs}}{{name}}="{{value}}"{{/attrs}}>
-                </div>
-                {{/properties}}
-                {{#references}}
-                <div>
-                    <label>{{model}}:</label>
-                    <div id="div{{model}}value"></div>
-                </div>
-                {{/references}}
-                <input type="submit" value="Save"/>
-            </form>
-        </div>
-    </body>
+            xhr.send();
+        }
+        
+        
+        window.onload = function() {
+            {{#references}}
+            loadValues('{{model}}','{{{values}}}','{{label}}','div{{model}}value', {{isManyToMany}});
+            {{/references}}
+        }
+        {{/hasReferences}}
+    </script>
+</head>
+<body>
+    {{>menu}}
+    <div class="container mt-4">
+        <h1>Edit {{title}}</h1>
+        <hr>
+        <form onsubmit="submitForm(); return false;">
+            <input type="hidden" name="id" value="{{id}}" />
+            {{#properties}}
+            <div class="form-group">
+                <label title={{description}} for="{{name}}_id">{{label}}</label>
+                <input type="{{type}}" id="{{name}}_id" name="{{name}}" value="{{value}}" class="form-control" {{#required}}required{{/required}} {{#attrs}}{{name}}="{{value}}"{{/attrs}}>
+            </div>
+            {{/properties}}
+            {{#references}}
+            <div class="form-group">
+                <label>{{model}}</label>
+                <div id="div{{model}}value"></div>
+            </div>
+            {{/references}}
+            <input type="submit" value="Save" class="btn btn-primary"/>
+        </form>
+    </div>
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script></body>
+</body>
 </html>

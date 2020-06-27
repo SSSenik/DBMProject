@@ -9,6 +9,7 @@ const generateClass = require('../models/generate-class');
 const generateDatabase = require('../database/generate-database');
 const generateApis = require('../restful-api/generate-api');
 const generateBackoffice = require('../backoffice/generate-backoffice');
+const generateFrontoffice = require('../frontoffice/generate-frontoffice');
 
 const SERVER_MUSTACHE = './server/server.mustache';
 
@@ -49,6 +50,7 @@ async function generateDataStructure() {
     await generateDatabase.generateRelationships(config.dbname, config.schemas);
     await generateApis.generate(config.schemas);
     await generateBackoffice.generate(config.schemas);
+    await generateFrontoffice.generate(config.schemas);
 }
 
 const createIndexView = () => ({

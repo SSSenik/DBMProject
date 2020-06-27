@@ -8,17 +8,18 @@ jsf.extend('faker', () => faker);
 const schemaSong = require('../schemas/Schema-Song.json');
 
 class Song {
-    constructor(name, description, duration, lyrics, release_date) {
+    constructor(name, description, duration, lyrics, release_date, video_clip) {
         this.name = name;
         this.description = description;
         this.duration = duration;
         this.lyrics = lyrics;
         this.release_date = release_date;
+        this.video_clip = video_clip;
 
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
         Object.defineProperty(this, 'description', { enumerable: false });
         Object.defineProperty(this, 'lyrics', { enumerable: false });
-        Object.defineProperty(this, 'release_date', { enumerable: false });
+        Object.defineProperty(this, 'video_clip', { enumerable: false });
         Object.defineProperty(this, 'album_id', { enumerable: false, writable: true });
         Object.defineProperty(this, 'artist_id', { enumerable: false, writable: true });
         Object.defineProperty(this, 'genre_id', { enumerable: false, writable: true });
@@ -40,13 +41,17 @@ class Song {
         database.run("DELETE FROM Song WHERE id = ?", [id], callback)
     }
 
-    static getLastId(callback) {
+    static top(property, order, limit, callback) {
         database.where(
-            'SELECT * FROM Song ORDER BY id DESC LIMIT 1',
+            `SELECT * FROM Song ORDER BY ${property} ${order} LIMIT ${limit}`,
             [],
             Song,
             callback
         );
+    }
+
+    static getLastInserted(callback) {
+        this.top('id', 'DESC', 1, callback);
     }
     
     static many(model, id, callback) {
@@ -90,11 +95,11 @@ class Song {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Song SET name = ?,description = ?,duration = ?,lyrics = ?,release_date = ?,album_id = ?,artist_id = ?,genre_id = ? WHERE id = ?`, 
-            [this.name,this.description,this.duration,this.lyrics,this.release_date,this.album_id,this.artist_id,this.genre_id, this.id], callback);
+            database.run(`UPDATE Song SET name = ?,description = ?,duration = ?,lyrics = ?,release_date = ?,video_clip = ?,album_id = ?,artist_id = ?,genre_id = ? WHERE id = ?`, 
+            [this.name,this.description,this.duration,this.lyrics,this.release_date,this.video_clip,this.album_id,this.artist_id,this.genre_id, this.id], callback);
         } else{
-            database.run(`INSERT INTO Song (name, description, duration, lyrics, release_date,album_id,artist_id,genre_id) VALUES (?,?,?,?,?,?,?,?)`, 
-            [this.name,this.description,this.duration,this.lyrics,this.release_date,this.album_id,this.artist_id,this.genre_id], callback);
+            database.run(`INSERT INTO Song (name, description, duration, lyrics, release_date, video_clip,album_id,artist_id,genre_id) VALUES (?,?,?,?,?,?,?,?,?)`, 
+            [this.name,this.description,this.duration,this.lyrics,this.release_date,this.video_clip,this.album_id,this.artist_id,this.genre_id], callback);
         }
     }
 

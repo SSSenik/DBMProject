@@ -1,6 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { presentationModeToHtmlType, columnConstraintToHtmlAttrs } = require(__basedir + '/utils/utils.js');
+const { presentationModeToHtmlString, columnConstraintToHtmlAttrs, schemaTypeToInputType } = require(__basedir + '/utils/utils.js');
+
+const menuItems = [
+    { href: '/backoffice/Album', name: 'Album' },
+    { href: '/backoffice/Artist', name: 'Artist' },
+    { href: '/backoffice/Genre', name: 'Genre' },
+    { href: '/backoffice/Song', name: 'Song' },
+];
 
 const Album = require(__basedir + '/Models/Album.js');
 const AlbumSchema = require(__basedir + '/schemas/Schema-Album.json');
@@ -8,7 +15,8 @@ router.get('/Album', function (req, res) {
     Album.all((rows) => {
         res.render('list', {
             title: 'Album',
-            columns: Object.keys(new Album()),
+            schemas: menuItems,
+            columns: Object.keys(new Album()).map((col) => AlbumSchema.properties[col].label),
             rows: rows.map((r) => ({
                 rowId: 'Album_' + r.id,
                 properties: Object.keys(r).map((key) => r[key]),
@@ -48,11 +56,14 @@ router.get('/Album/Details/:id', function (req, res) {
     Album.get(req.params.id, function (row) {
         res.render('details', {
             title: 'Album',
+            schemas: menuItems,
             properties: Object.getOwnPropertyNames(row)
                 .filter((prop) => AlbumSchema.properties.hasOwnProperty(prop))
                 .map((prop) => ({
                     name: prop,
                     value: row[prop],
+                    label: AlbumSchema.properties[prop].label,
+                    htmlString: presentationModeToHtmlString(AlbumSchema.properties[prop].presentationMode, row[prop])
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -84,16 +95,20 @@ router.get('/Album/Details/:id', function (req, res) {
 router.get('/Album/Insert', function (req, res) {
     res.render('insert', {
         title: 'Album',
+        schemas: menuItems,
         properties: Object.getOwnPropertyNames(new Album())
             .filter((prop) => AlbumSchema.properties.hasOwnProperty(prop))
             .map((prop) => ({
-                type: presentationModeToHtmlType(
-                    AlbumSchema.properties[prop].presentationMode,
+                type: schemaTypeToInputType(
                     AlbumSchema.properties[prop].type
                 ),
+                isCheckbox: schemaTypeToInputType(
+                    AlbumSchema.properties[prop].type
+                ) === 'checkbox',
                 required: AlbumSchema.required.includes(prop),
                 attrs: columnConstraintToHtmlAttrs(AlbumSchema.properties[prop]),
                 name: prop,
+                label: AlbumSchema.properties[prop].label,
             })),
         references: AlbumSchema.references.map((ref) => ({
             name: `${ref.model}_id`.toLowerCase(),
@@ -111,20 +126,24 @@ router.get('/Album/Edit/:id', function (req, res) {
     Album.get(req.params.id, function (row) {
         res.render('edit', {
             title: 'Album',
+            schemas: menuItems,
             id: req.params.id,
             properties: Object.getOwnPropertyNames(row)
                 .filter((prop) => AlbumSchema.properties.hasOwnProperty(prop))
                 .map((prop) => ({
-                    type: presentationModeToHtmlType(
-                        AlbumSchema.properties[prop].presentationMode,
+                    type: schemaTypeToInputType(
                         AlbumSchema.properties[prop].type
                     ),
+                    isCheckbox: schemaTypeToInputType(
+                        AlbumSchema.properties[prop].type
+                    ) === 'checkbox',
                     required: AlbumSchema.required.includes(prop),
                     attrs: columnConstraintToHtmlAttrs(
                         AlbumSchema.properties[prop]
                     ),
                     name: prop,
                     value: row[prop],
+                    label: AlbumSchema.properties[prop].label,
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -160,7 +179,8 @@ router.get('/Artist', function (req, res) {
     Artist.all((rows) => {
         res.render('list', {
             title: 'Artist',
-            columns: Object.keys(new Artist()),
+            schemas: menuItems,
+            columns: Object.keys(new Artist()).map((col) => ArtistSchema.properties[col].label),
             rows: rows.map((r) => ({
                 rowId: 'Artist_' + r.id,
                 properties: Object.keys(r).map((key) => r[key]),
@@ -200,11 +220,14 @@ router.get('/Artist/Details/:id', function (req, res) {
     Artist.get(req.params.id, function (row) {
         res.render('details', {
             title: 'Artist',
+            schemas: menuItems,
             properties: Object.getOwnPropertyNames(row)
                 .filter((prop) => ArtistSchema.properties.hasOwnProperty(prop))
                 .map((prop) => ({
                     name: prop,
                     value: row[prop],
+                    label: ArtistSchema.properties[prop].label,
+                    htmlString: presentationModeToHtmlString(ArtistSchema.properties[prop].presentationMode, row[prop])
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -236,16 +259,20 @@ router.get('/Artist/Details/:id', function (req, res) {
 router.get('/Artist/Insert', function (req, res) {
     res.render('insert', {
         title: 'Artist',
+        schemas: menuItems,
         properties: Object.getOwnPropertyNames(new Artist())
             .filter((prop) => ArtistSchema.properties.hasOwnProperty(prop))
             .map((prop) => ({
-                type: presentationModeToHtmlType(
-                    ArtistSchema.properties[prop].presentationMode,
+                type: schemaTypeToInputType(
                     ArtistSchema.properties[prop].type
                 ),
+                isCheckbox: schemaTypeToInputType(
+                    ArtistSchema.properties[prop].type
+                ) === 'checkbox',
                 required: ArtistSchema.required.includes(prop),
                 attrs: columnConstraintToHtmlAttrs(ArtistSchema.properties[prop]),
                 name: prop,
+                label: ArtistSchema.properties[prop].label,
             })),
         references: ArtistSchema.references.map((ref) => ({
             name: `${ref.model}_id`.toLowerCase(),
@@ -263,20 +290,24 @@ router.get('/Artist/Edit/:id', function (req, res) {
     Artist.get(req.params.id, function (row) {
         res.render('edit', {
             title: 'Artist',
+            schemas: menuItems,
             id: req.params.id,
             properties: Object.getOwnPropertyNames(row)
                 .filter((prop) => ArtistSchema.properties.hasOwnProperty(prop))
                 .map((prop) => ({
-                    type: presentationModeToHtmlType(
-                        ArtistSchema.properties[prop].presentationMode,
+                    type: schemaTypeToInputType(
                         ArtistSchema.properties[prop].type
                     ),
+                    isCheckbox: schemaTypeToInputType(
+                        ArtistSchema.properties[prop].type
+                    ) === 'checkbox',
                     required: ArtistSchema.required.includes(prop),
                     attrs: columnConstraintToHtmlAttrs(
                         ArtistSchema.properties[prop]
                     ),
                     name: prop,
                     value: row[prop],
+                    label: ArtistSchema.properties[prop].label,
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -312,7 +343,8 @@ router.get('/Genre', function (req, res) {
     Genre.all((rows) => {
         res.render('list', {
             title: 'Genre',
-            columns: Object.keys(new Genre()),
+            schemas: menuItems,
+            columns: Object.keys(new Genre()).map((col) => GenreSchema.properties[col].label),
             rows: rows.map((r) => ({
                 rowId: 'Genre_' + r.id,
                 properties: Object.keys(r).map((key) => r[key]),
@@ -352,11 +384,14 @@ router.get('/Genre/Details/:id', function (req, res) {
     Genre.get(req.params.id, function (row) {
         res.render('details', {
             title: 'Genre',
+            schemas: menuItems,
             properties: Object.getOwnPropertyNames(row)
                 .filter((prop) => GenreSchema.properties.hasOwnProperty(prop))
                 .map((prop) => ({
                     name: prop,
                     value: row[prop],
+                    label: GenreSchema.properties[prop].label,
+                    htmlString: presentationModeToHtmlString(GenreSchema.properties[prop].presentationMode, row[prop])
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -388,16 +423,20 @@ router.get('/Genre/Details/:id', function (req, res) {
 router.get('/Genre/Insert', function (req, res) {
     res.render('insert', {
         title: 'Genre',
+        schemas: menuItems,
         properties: Object.getOwnPropertyNames(new Genre())
             .filter((prop) => GenreSchema.properties.hasOwnProperty(prop))
             .map((prop) => ({
-                type: presentationModeToHtmlType(
-                    GenreSchema.properties[prop].presentationMode,
+                type: schemaTypeToInputType(
                     GenreSchema.properties[prop].type
                 ),
+                isCheckbox: schemaTypeToInputType(
+                    GenreSchema.properties[prop].type
+                ) === 'checkbox',
                 required: GenreSchema.required.includes(prop),
                 attrs: columnConstraintToHtmlAttrs(GenreSchema.properties[prop]),
                 name: prop,
+                label: GenreSchema.properties[prop].label,
             })),
         references: GenreSchema.references.map((ref) => ({
             name: `${ref.model}_id`.toLowerCase(),
@@ -415,20 +454,24 @@ router.get('/Genre/Edit/:id', function (req, res) {
     Genre.get(req.params.id, function (row) {
         res.render('edit', {
             title: 'Genre',
+            schemas: menuItems,
             id: req.params.id,
             properties: Object.getOwnPropertyNames(row)
                 .filter((prop) => GenreSchema.properties.hasOwnProperty(prop))
                 .map((prop) => ({
-                    type: presentationModeToHtmlType(
-                        GenreSchema.properties[prop].presentationMode,
+                    type: schemaTypeToInputType(
                         GenreSchema.properties[prop].type
                     ),
+                    isCheckbox: schemaTypeToInputType(
+                        GenreSchema.properties[prop].type
+                    ) === 'checkbox',
                     required: GenreSchema.required.includes(prop),
                     attrs: columnConstraintToHtmlAttrs(
                         GenreSchema.properties[prop]
                     ),
                     name: prop,
                     value: row[prop],
+                    label: GenreSchema.properties[prop].label,
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -464,7 +507,8 @@ router.get('/Song', function (req, res) {
     Song.all((rows) => {
         res.render('list', {
             title: 'Song',
-            columns: Object.keys(new Song()),
+            schemas: menuItems,
+            columns: Object.keys(new Song()).map((col) => SongSchema.properties[col].label),
             rows: rows.map((r) => ({
                 rowId: 'Song_' + r.id,
                 properties: Object.keys(r).map((key) => r[key]),
@@ -504,11 +548,14 @@ router.get('/Song/Details/:id', function (req, res) {
     Song.get(req.params.id, function (row) {
         res.render('details', {
             title: 'Song',
+            schemas: menuItems,
             properties: Object.getOwnPropertyNames(row)
                 .filter((prop) => SongSchema.properties.hasOwnProperty(prop))
                 .map((prop) => ({
                     name: prop,
                     value: row[prop],
+                    label: SongSchema.properties[prop].label,
+                    htmlString: presentationModeToHtmlString(SongSchema.properties[prop].presentationMode, row[prop])
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -540,16 +587,20 @@ router.get('/Song/Details/:id', function (req, res) {
 router.get('/Song/Insert', function (req, res) {
     res.render('insert', {
         title: 'Song',
+        schemas: menuItems,
         properties: Object.getOwnPropertyNames(new Song())
             .filter((prop) => SongSchema.properties.hasOwnProperty(prop))
             .map((prop) => ({
-                type: presentationModeToHtmlType(
-                    SongSchema.properties[prop].presentationMode,
+                type: schemaTypeToInputType(
                     SongSchema.properties[prop].type
                 ),
+                isCheckbox: schemaTypeToInputType(
+                    SongSchema.properties[prop].type
+                ) === 'checkbox',
                 required: SongSchema.required.includes(prop),
                 attrs: columnConstraintToHtmlAttrs(SongSchema.properties[prop]),
                 name: prop,
+                label: SongSchema.properties[prop].label,
             })),
         references: SongSchema.references.map((ref) => ({
             name: `${ref.model}_id`.toLowerCase(),
@@ -567,20 +618,24 @@ router.get('/Song/Edit/:id', function (req, res) {
     Song.get(req.params.id, function (row) {
         res.render('edit', {
             title: 'Song',
+            schemas: menuItems,
             id: req.params.id,
             properties: Object.getOwnPropertyNames(row)
                 .filter((prop) => SongSchema.properties.hasOwnProperty(prop))
                 .map((prop) => ({
-                    type: presentationModeToHtmlType(
-                        SongSchema.properties[prop].presentationMode,
+                    type: schemaTypeToInputType(
                         SongSchema.properties[prop].type
                     ),
+                    isCheckbox: schemaTypeToInputType(
+                        SongSchema.properties[prop].type
+                    ) === 'checkbox',
                     required: SongSchema.required.includes(prop),
                     attrs: columnConstraintToHtmlAttrs(
                         SongSchema.properties[prop]
                     ),
                     name: prop,
                     value: row[prop],
+                    label: SongSchema.properties[prop].label,
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>

@@ -4,14 +4,16 @@
     "type": "object",
     "properties": {
         "name": {
-            "description": "Nome",
+            "description": "Nome do Artista",
+            "label": "Nome",
             "type": "string"
         },
-        "contact": {
-            "description": "Contacto",
-            "type": "string"
+        "email": {
+            "description": "Contacto do Artista",
+            "label": "Email de Contacto",
+            "type": "email"
         }
     },
-    "required": ["name"],
+    "required": ["name", "email"],
     "references": []
 }

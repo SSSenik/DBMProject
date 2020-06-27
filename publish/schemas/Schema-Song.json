@@ -4,29 +4,39 @@
     "type": "object",
     "properties": {
         "name": {
-            "description": "Nome",
+            "description": "Nome da Música",
+            "label": "Nome",
             "type": "string"
         },
         "description": {
-            "description": "Descrição",
-            "type": "string"
+            "description": "Descrição da Música",
+            "label": "Descrição",
+            "type": "boolean"
         },
         "duration": {
-            "description": "Duração",
+            "description": "Duração da Música",
+            "label": "Duração (seg)",
             "type": "integer",
             "minimum": 0
         },
         "lyrics": {
-            "description": "Letra",
+            "description": "Letra da Música",
+            "label": "Letra",
             "type": "string"
         },
         "release_date": {
-            "description": "Data de Saida",
-            "type": "string",
-            "presentationMode": "date"
+            "description": "Data de Saida da Música",
+            "label": "Data de Saida",
+            "type": "date"
+        },
+        "video_clip": {
+            "description": "Video Clip da musica",
+            "label": "Video Clip",
+            "type": "url",
+            "presentationMode": "video"
         }
     },
-    "required": ["name", "duration"],
+    "required": ["name", "release_date", "duration"],
     "references": [
         {
             "model": "Album",

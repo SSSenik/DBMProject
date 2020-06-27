@@ -1,20 +1,31 @@
-function presentationModeToHtmlType(mode, type) {
+function presentationModeToHtmlString(mode, value) {
+    if (!value) return '<label></label>';
     switch (mode) {
         case 'image':
+            return `<br><img height="345" src='${value}' alt='an image'>`;
         case 'video':
-            return 'url';
+            return `
+                <br>
+                <iframe width="420" height="345" src="${value}">
+                </iframe>
+            `;
         default:
-            if (mode) return mode;
-            switch (type) {
-                case 'string':
-                    return 'text';
-                case 'integer':
-                    return 'number';
-                case 'boolean':
-                    return 'checkbox';
-                default:
-                    return 'string';
-            }
+            return `<label>${value}</label>`;
+    }
+}
+
+function schemaTypeToInputType(type) {
+    switch (type) {
+        case 'string':
+            return 'text';
+        case 'boolean':
+            return 'checkbox';
+        case 'integer':
+            return 'number';
+        case 'datetime':
+            return 'datetime-local';
+        default:
+            return type;
     }
 }
 
@@ -54,6 +65,7 @@ function columnConstraintToHtmlAttrs(column) {
 }
 
 module.exports = {
-    presentationModeToHtmlType,
+    presentationModeToHtmlString,
     columnConstraintToHtmlAttrs,
+    schemaTypeToInputType,
 };

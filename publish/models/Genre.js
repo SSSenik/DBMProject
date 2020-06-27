@@ -12,7 +12,6 @@ class Genre {
         this.name = name;
 
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
-        Object.defineProperty(this, 'album_id', { enumerable: false, writable: true });
     }
 
     static create() {
@@ -31,13 +30,17 @@ class Genre {
         database.run("DELETE FROM Genre WHERE id = ?", [id], callback)
     }
 
-    static getLastId(callback) {
+    static top(property, order, limit, callback) {
         database.where(
-            'SELECT * FROM Genre ORDER BY id DESC LIMIT 1',
+            `SELECT * FROM Genre ORDER BY ${property} ${order} LIMIT ${limit}`,
             [],
             Genre,
             callback
         );
+    }
+
+    static getLastInserted(callback) {
+        this.top('id', 'DESC', 1, callback);
     }
     
     static many(model, id, callback) {
@@ -81,11 +84,11 @@ class Genre {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Genre SET name = ?,album_id = ? WHERE id = ?`, 
-            [this.name,this.album_id, this.id], callback);
+            database.run(`UPDATE Genre SET name = ? WHERE id = ?`, 
+            [this.name, this.id], callback);
         } else{
-            database.run(`INSERT INTO Genre (name,album_id) VALUES (?,?)`, 
-            [this.name,this.album_id], callback);
+            database.run(`INSERT INTO Genre (name) VALUES (?)`, 
+            [this.name], callback);
         }
     }
 

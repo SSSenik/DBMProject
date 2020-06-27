@@ -1,0 +1,55 @@
+const express = require('express');
+const router = express.Router();
+const {
+    presentationModeToHtmlString,
+    columnConstraintToHtmlAttrs,
+    schemaTypeToInputType,
+} = require(__basedir + '/utils/utils.js');
+
+const menuItems = [
+    {{#schemas}}
+    { href: '/backoffice/{{title}}', name: '{{title}}' },
+    {{/schemas}}
+];
+
+{{#tables}}
+const {{title}} = require(__basedir + '/Models/{{title}}.js');
+const {{title}}Schema = require(__basedir + '/schemas/Schema-{{title}}.json');
+
+{{/tables}}
+async function frontoffice(req, res) {
+    {{#tables}}
+    const rows{{title}} = await new Promise((res) => {
+        {{title}}.top('name', 'DESC', 3, (rows) => {
+            res(fetchRows(rows));
+        });
+    });
+    {{/tables}}
+    res.render('home', {
+        schemas: menuItems,
+        tables: [
+            {{#tables}}
+            {
+                title: '{{title}}',
+                rows: rows{{title}},
+                columns: Object.keys(new {{title}}()).map(
+                    (col) => {{title}}Schema.properties[col].label
+                ),
+            },
+            {{/tables}}
+        ],
+    });
+}
+
+function fetchRows(rows) {
+    return rows.map((obj) => ({
+        properties: Object.keys(obj).map((key) => ({
+            name: key,
+            value: obj[key],
+        })),
+    }));
+}
+
+router.get('/', frontoffice);
+router.get('/Home', frontoffice);
+module.exports = router;

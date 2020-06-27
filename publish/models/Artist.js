@@ -8,12 +8,11 @@ jsf.extend('faker', () => faker);
 const schemaArtist = require('../schemas/Schema-Artist.json');
 
 class Artist {
-    constructor(name, contact) {
+    constructor(name, email) {
         this.name = name;
-        this.contact = contact;
+        this.email = email;
 
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
-        Object.defineProperty(this, 'contact', { enumerable: false });
     }
 
     static create() {
@@ -32,13 +31,17 @@ class Artist {
         database.run("DELETE FROM Artist WHERE id = ?", [id], callback)
     }
 
-    static getLastId(callback) {
+    static top(property, order, limit, callback) {
         database.where(
-            'SELECT * FROM Artist ORDER BY id DESC LIMIT 1',
+            `SELECT * FROM Artist ORDER BY ${property} ${order} LIMIT ${limit}`,
             [],
             Artist,
             callback
         );
+    }
+
+    static getLastInserted(callback) {
+        this.top('id', 'DESC', 1, callback);
     }
     
     static many(model, id, callback) {
@@ -82,11 +85,11 @@ class Artist {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Artist SET name = ?,contact = ? WHERE id = ?`, 
-            [this.name,this.contact, this.id], callback);
+            database.run(`UPDATE Artist SET name = ?,email = ? WHERE id = ?`, 
+            [this.name,this.email, this.id], callback);
         } else{
-            database.run(`INSERT INTO Artist (name, contact) VALUES (?,?)`, 
-            [this.name,this.contact], callback);
+            database.run(`INSERT INTO Artist (name, email) VALUES (?,?)`, 
+            [this.name,this.email], callback);
         }
     }
 

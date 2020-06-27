@@ -7,7 +7,7 @@ router.post('/Genre', function (req, res) {
     let obj = Object.assign(new Genre(), req.body);
     obj.save((msg) => {
         if (!msg.success) return res.json(msg);
-        Genre.getLastId((row) => {
+        Genre.getLastInserted((row) => {
             const jsonRes = JSON.parse(
                 JSON.stringify(row, Object.keys(new Genre()).concat(['id']))
             )[0];
