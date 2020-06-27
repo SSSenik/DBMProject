@@ -265,6 +265,30 @@ class Property {
               <option value="boolean" ${
                   this.type === 'boolean' ? 'selected' : ''
               }>Boolean</option>
+              <option value="color" ${
+                  this.type === 'color' ? 'selected' : ''
+              }>Color</option>
+              <option value="date" ${
+                  this.type === 'date' ? 'selected' : ''
+              }>Date</option>
+              <option value="datetime" ${
+                  this.type === 'datetime' ? 'selected' : ''
+              }>Datetime</option>
+              <option value="email" ${
+                  this.type === 'email' ? 'selected' : ''
+              }>Email</option>
+              <option value="password" ${
+                  this.type === 'password' ? 'selected' : ''
+              }>Password</option>
+              <option value="range" ${
+                  this.type === 'range' ? 'selected' : ''
+              }>Range</option>
+              <option value="time" ${
+                  this.type === 'time' ? 'selected' : ''
+              }>Time</option>
+              <option value="url" ${
+                  this.type === 'url' ? 'selected' : ''
+              }>URL</option>
             </select>
           </div>
         </div>
@@ -402,7 +426,7 @@ function handleConstraints(property, type) {
             propMinHTML.parentNode.parentNode.style.display = 'flex';
             propPatternHTML.value = '';
             break;
-        case 'boolean':
+        default:
             property.pattern = undefined;
             property.maximum = undefined;
             property.minimum = undefined;
