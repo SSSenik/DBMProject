@@ -1,4 +1,5 @@
 const express = require('express');
+const mustache = require('mustache');
 const del = require('del');
 const fs = require('fs').promises;
 
@@ -57,6 +58,31 @@ app.delete('/schemas', async (req, res) => {
     } catch (e) {
         console.log(e);
         res.status(400).send('Não foi possivel apagar o schema');
+    }
+});
+
+app.post('/styles', async (req, res) => {
+    try {
+        const newStyles = req.body.styles;
+        const data = await fs.readFile(`./staticFiles/styles.mustache`);
+
+        const stylesData = {
+            ...newStyles,
+            backgroundPattern: newStyles.pattern
+                ? newStyles.pattern.replace(
+                      '<foregroundColor>',
+                      newStyles.foregroundColor
+                  )
+                : '',
+        };
+
+        const output = mustache.render(data.toString(), stylesData);
+
+        await fs.writeFile(`./staticFiles/styles.css`, output);
+        res.send('Styles criado com sucesso');
+    } catch (e) {
+        console.log(e);
+        res.status(400).send('Não foi possivel criar o Styles');
     }
 });
 

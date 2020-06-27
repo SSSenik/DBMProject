@@ -63,6 +63,10 @@
             "originalPath": "/staticFiles/home.mustache",
             "destinationPath": "/views/home.mustache"
         },
+        "styles": {
+            "originalPath": "/staticFiles/styles.css",
+            "destinationPath": "/public/css/styles.css"
+        },
         "imgDelete": {
             "originalPath": "/staticFiles/delete.png",
             "destinationPath": "/public/images/delete.png"

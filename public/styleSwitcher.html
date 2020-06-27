@@ -40,7 +40,9 @@
                                     id="backgroundPattern"
                                     onchange="changeBackgroundPattern(this)"
                                 >
-                                    <option value="Default">None</option>
+                                    <option value="Default" selected
+                                        >None</option
+                                    >
                                     <option>Texture</option>
                                     <option>Jupiter</option>
                                     <option>Hideout</option>
@@ -59,6 +61,7 @@
                                     type="color"
                                     class="form-control"
                                     id="backgroundColor"
+                                    value="#ffffff"
                                     oninput="changeBackgroundColor(this)"
                                 />
                             </div>
@@ -74,6 +77,7 @@
                                     type="color"
                                     class="form-control"
                                     id="backgroundFColor"
+                                    value="#000000"
                                     oninput="changeBackgroundFColor(this)"
                                 />
                             </div>
@@ -122,9 +126,11 @@
                                     id="textSize"
                                     onchange="changeTextSize(this)"
                                 >
-                                    <option>Large</option>
-                                    <option>Medium</option>
-                                    <option>Small</option>
+                                    <option selected value="2.5rem"
+                                        >Large</option
+                                    >
+                                    <option value="1.75rem">Medium</option>
+                                    <option value="1.25rem">Small</option>
                                 </select>
                             </div>
                         </div>
@@ -139,7 +145,41 @@
                                     type="color"
                                     class="form-control"
                                     id="textColor"
+                                    value="#000"
                                     oninput="changeTextColor(this)"
+                                />
+                            </div>
+                        </div>
+                        <h5>Buttons:</h5>
+                        <div class="form-group row">
+                            <label
+                                for="buttonBackground"
+                                class="col-sm-4 col-form-label"
+                                >Background</label
+                            >
+                            <div class="col-sm-8">
+                                <input
+                                    type="color"
+                                    class="form-control"
+                                    id="buttonBackground"
+                                    value="#007bff"
+                                    oninput="changeButtonBackground(this)"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label
+                                for="buttonTextColor"
+                                class="col-sm-4 col-form-label"
+                                >Text</label
+                            >
+                            <div class="col-sm-8">
+                                <input
+                                    type="color"
+                                    class="form-control"
+                                    id="buttonTextColor"
+                                    value="#ffffff"
+                                    oninput="changeButtonTextColor(this)"
                                 />
                             </div>
                         </div>
@@ -155,6 +195,7 @@
                                     type="color"
                                     class="form-control"
                                     id="tableHeaderBackgroundColor"
+                                    value="#ffffff"
                                     oninput="changeTableHeaderBackground(this)"
                                 />
                             </div>
@@ -170,6 +211,7 @@
                                     type="color"
                                     class="form-control"
                                     id="tableHeaderTextColor"
+                                    value="#212529"
                                     oninput="changeTableHeaderText(this)"
                                 />
                             </div>
@@ -185,6 +227,7 @@
                                     type="color"
                                     class="form-control"
                                     id="tableBodyBackgroundColor"
+                                    value="#ffffff"
                                     oninput="changeTableBodyBackground(this)"
                                 />
                             </div>
@@ -200,6 +243,7 @@
                                     type="color"
                                     class="form-control"
                                     id="tableBodyTextColor"
+                                    value="#212529"
                                     oninput="changeTableBodyText(this)"
                                 />
                             </div>
@@ -215,7 +259,41 @@
                                     type="color"
                                     class="form-control"
                                     id="tableBorderColor"
+                                    value="#dee2e6"
                                     oninput="changeTableBorderColor(this)"
+                                />
+                            </div>
+                        </div>
+                        <h5>Navbar:</h5>
+                        <div class="form-group row">
+                            <label
+                                for="navbarBackgroundColor"
+                                class="col-sm-4 col-form-label"
+                                >Background</label
+                            >
+                            <div class="col-sm-8">
+                                <input
+                                    type="color"
+                                    class="form-control"
+                                    id="navbarBackgroundColor"
+                                    value="#e3f2fd"
+                                    oninput="changeNavbarBackgroundColor(this)"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label
+                                for="navbarTextColor"
+                                class="col-sm-4 col-form-label"
+                                >Text</label
+                            >
+                            <div class="col-sm-8">
+                                <input
+                                    type="color"
+                                    class="form-control"
+                                    id="navbarTextColor"
+                                    value="#000000"
+                                    oninput="changeNavbarTextColor(this)"
                                 />
                             </div>
                         </div>
@@ -231,9 +309,12 @@
                 <div class="col-12 col-md-9">
                     <div id="preview">
                         <nav
-                            class="navbar navbar-expand-lg navbar-dark bg-dark"
+                            class="navbar navbar-expand-lg"
+                            style="
+                                background-color: #343a40;
+                                color: #fff !important;
+                            "
                         >
-                            <a class="navbar-brand" href="#">Navbar</a>
                             <button
                                 class="navbar-toggler"
                                 type="button"
@@ -280,32 +361,69 @@
                             "
                         >
                             <div class="primary">
-                                <span> Aluno </span>
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">First</th>
-                                            <th scope="col">Last</th>
-                                            <th scope="col">Handle</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">Larry the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <h1>Title</h1>
+                                <hr />
+                                <div class="mt-4">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <a
+                                                class="btn btn-custom"
+                                                role="button"
+                                                href="/backoffice/{{title}}/Insert"
+                                                >Insert</a
+                                            >
+                                        </div>
+                                        <div class="col-md py-2"></div>
+                                        <div class="col-md">
+                                            <div class="input-group mb-3">
+                                                <div
+                                                    class="input-group-prepend"
+                                                >
+                                                    <span
+                                                        class="input-group-text"
+                                                        id="basic-addon1"
+                                                        >Search</span
+                                                    >
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    id="inputSearch"
+                                                    onkeyup="search(this)"
+                                                    class="form-control"
+                                                    aria-label="Search"
+                                                    aria-describedby="basic-addon1"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">First</th>
+                                                <th scope="col">Last</th>
+                                                <th scope="col">Handle</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Mark</td>
+                                                <td>Otto</td>
+                                                <td>@mdo</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jacob</td>
+                                                <td>Thornton</td>
+                                                <td>@fat</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    Larry the Bird
+                                                </td>
+                                                <td>@twitter</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

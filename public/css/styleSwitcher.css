@@ -29,6 +29,10 @@
     background-color: #dddddd22;
 }
 
+.navbar .navbar-nav .nav-link {
+    color: inherit;
+}
+
 #controlPanel {
     padding: 20px;
     background-color: #212121;

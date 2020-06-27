@@ -12,19 +12,46 @@ let patterns = {
     'Graph Paper': `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23<foregroundColor>' fill-opacity='0.4'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
 };
 
-let textColor = '#ffffff';
-let textSize = '';
+let textColor = '#000';
+let textSize = '2.5rem';
 let textFont = '';
 
-let tableHeaderBackgroundColor = '';
-let tableHeaderTextColor = '';
-let tableBodyBackgroundColor = '';
-let tableBodyTextColor = '';
-let tableBorderColor = '';
+let tableHeaderBackgroundColor = '#fff';
+let tableHeaderTextColor = '#212529';
+let tableBodyBackgroundColor = '#fff';
+let tableBodyTextColor = '#212529';
+let tableBorderColor = '#dee2e6';
+
+let navbarBackgroundColor = '#e3f2fd';
+let navbarTextColor = '#000';
+
+let buttonBackground = '#007bff';
+let buttonTextColor = '#ffffff';
 
 window.onload = () => {
     preview = document.getElementById('preview').parentNode;
     content = document.getElementById('content');
+
+    changeBackgroundPattern(document.getElementById('backgroundPattern'));
+    changeBackgroundColor(document.getElementById('backgroundColor'));
+    changeBackgroundFColor(document.getElementById('backgroundFColor'));
+    changeTextFont(document.getElementById('textFamily'));
+    changeTextSize(document.getElementById('textSize'));
+    changeTableHeaderBackground(
+        document.getElementById('tableHeaderBackgroundColor')
+    );
+    changeButtonBackground(document.getElementById('buttonBackground'));
+    changeButtonTextColor(document.getElementById('buttonTextColor'));
+    changeTableHeaderText(document.getElementById('tableHeaderTextColor'));
+    changeTableBodyBackground(
+        document.getElementById('tableBodyBackgroundColor')
+    );
+    changeTableBodyText(document.getElementById('tableBodyTextColor'));
+    changeTableBorderColor(document.getElementById('tableBorderColor'));
+    changeNavbarBackgroundColor(
+        document.getElementById('navbarBackgroundColor')
+    );
+    changeNavbarTextColor(document.getElementById('navbarTextColor'));
 };
 
 // - - - - - - - -
@@ -48,6 +75,7 @@ function changeBackgroundFColor(input) {
 }
 
 function changeBackgroundColor(input) {
+    backgroundColor = input.value;
     preview.style.backgroundColor = input.value;
 }
 
@@ -61,17 +89,7 @@ function changeTextColor(input) {
 }
 
 function changeTextSize(input) {
-    switch (input.value) {
-        case 'Large':
-            textSize = '2.5rem';
-            break;
-        case 'Medium':
-            textSize = '1.75rem';
-            break;
-        case 'Small':
-            textSize = '1.25rem';
-            break;
-    }
+    textSize = input.value;
     content.style.fontSize = textSize;
 }
 
@@ -132,20 +150,69 @@ function changeTableBodyText(input) {
     }
 }
 
+function changeNavbarBackgroundColor(input) {
+    navbarBackgroundColor = input.value;
+    const navs = document.getElementsByTagName('nav');
+    for (let nav of navs) {
+        nav.style.backgroundColor = input.value;
+    }
+}
+
+function changeNavbarTextColor(input) {
+    navbarTextColor = input.value;
+    const navs = document.getElementsByTagName('nav');
+    for (let nav of navs) {
+        nav.style.color = input.value;
+    }
+}
+
+function changeButtonBackground(input) {
+    buttonBackground = input.value;
+    const buttons = document.getElementsByClassName('btn-custom');
+    for (let button of buttons) {
+        button.style.backgroundColor = input.value;
+    }
+}
+
+function changeButtonTextColor(input) {
+    buttonTextColor = input.value;
+    const buttons = document.getElementsByClassName('btn-custom');
+    for (let button of buttons) {
+        button.style.color = input.value;
+    }
+}
+
 function buildResult() {
-    let customizations = {
+    let styles = {
         backgroundColor,
         foregroundColor,
         pattern,
         textColor,
         textSize,
         textFont,
+        buttonBackground,
+        buttonTextColor,
         tableHeaderBackgroundColor,
         tableHeaderTextColor,
         tableBodyBackgroundColor,
         tableBodyTextColor,
         tableBorderColor,
+        navbarBackgroundColor,
+        navbarTextColor,
     };
 
-    console.log(customizations);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/styles', true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                window.location.href = '/';
+            } else {
+                alert('Não foi possivel gerar os styles');
+            }
+        }
+    };
+    xhr.send(JSON.stringify({ styles }));
+    console.log(styles);
 }

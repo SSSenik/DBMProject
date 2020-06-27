@@ -7,6 +7,8 @@
 
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/styles.css"> 
+
 
     <script>
         function remove(id) {
@@ -43,13 +45,13 @@
 </head>
 <body>
     {{>menu}}
-    <div class="container mt-4">
+    <div class="container mt-4 bg-white p-4 rounded shadow">
         <h1>{{title}}</h1>
         <hr>
         <div class="mt-4">
             <div class="row">
                 <div class="col-sm">
-                    <a class="btn btn-primary" role="button" href="/backoffice/{{title}}/Insert">Insert</a>
+                    <a class="btn" role="button" href="/backoffice/{{title}}/Insert">Insert</a>
                 </div>
                 <div class="col-md py-2">
                 </div>
@@ -62,7 +64,7 @@
                     </div>
                 </div>
             </div>
-            <table id="table{{title}}" class="table table-hover">
+            <table id="table{{title}}" class="table table-bordered">
                 <thead>
                     <tr>
                         {{#columns}}
