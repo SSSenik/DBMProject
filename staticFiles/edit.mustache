@@ -67,7 +67,7 @@
                         div.id = model.toLowerCase() + "_id";
                         response.forEach(row => {
                             var optiondiv = document.createElement("div");
-                            optiondiv.class = 'reference';
+                            optiondiv.className = 'reference form-group form-check';
                             var optioninp = document.createElement("input");
                             optioninp.id = model + '_id_' + row.id;
                             optioninp.name = model + '_ids';
@@ -126,9 +126,12 @@
         <form onsubmit="submitForm(); return false;">
             <input type="hidden" name="id" value="{{id}}" />
             {{#properties}}
-            <div class="form-group">
-                <label title={{description}} for="{{name}}_id">{{label}}</label>
-                <input type="{{type}}" id="{{name}}_id" name="{{name}}" value="{{value}}" class="form-control" {{#required}}required{{/required}} {{#attrs}}{{name}}="{{value}}"{{/attrs}}>
+            <div class="form-group {{#isCheckbox}}form-check{{/isCheckbox}}">
+                {{^isCheckbox}}<label title={{description}} for="{{name}}_id">{{label}}</label>{{/isCheckbox}}
+                <input type="{{type}}" id="{{name}}_id" name="{{name}}" value="{{value}}" {{#isCheckbox}}checked{{/isCheckbox}}
+                    class="{{^isCheckbox}}{{^isRange}}form-control{{/isRange}}{{/isCheckbox}} {{#isCheckbox}}form-check-input{{/isCheckbox}} {{#isRange}}form-control-range{{/isRange}}" 
+                    {{#required}}required{{/required}} {{#attrs}}{{name}}="{{value}}"{{/attrs}}>
+                {{#isCheckbox}}<label title={{description}} for="{{name}}_id" class="form-check-label">{{label}}</label>{{/isCheckbox}}
             </div>
             {{/properties}}
             {{#references}}

@@ -63,7 +63,17 @@ router.get('/{{title}}/Details/:id', function (req, res) {
                     name: prop,
                     value: row[prop],
                     label: {{title}}Schema.properties[prop].label,
-                    htmlString: presentationModeToHtmlString({{title}}Schema.properties[prop].presentationMode, row[prop])
+                    htmlString: presentationModeToHtmlString(
+                        {{title}}Schema.properties[prop].presentationMode, 
+                        row[prop], 
+                        {{title}}Schema.properties[prop].type
+                    ),
+                    isCheckbox: schemaTypeToInputType(
+                        {{title}}Schema.properties[prop].type
+                    ) === 'checkbox',
+                    isRange: schemaTypeToInputType(
+                        {{title}}Schema.properties[prop].type
+                    ) === 'range',
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -105,6 +115,9 @@ router.get('/{{title}}/Insert', function (req, res) {
                 isCheckbox: schemaTypeToInputType(
                     {{title}}Schema.properties[prop].type
                 ) === 'checkbox',
+                isRange: schemaTypeToInputType(
+                    {{title}}Schema.properties[prop].type
+                ) === 'range',
                 required: {{title}}Schema.required.includes(prop),
                 attrs: columnConstraintToHtmlAttrs({{title}}Schema.properties[prop]),
                 name: prop,
@@ -137,6 +150,9 @@ router.get('/{{title}}/Edit/:id', function (req, res) {
                     isCheckbox: schemaTypeToInputType(
                         {{title}}Schema.properties[prop].type
                     ) === 'checkbox',
+                    isRange: schemaTypeToInputType(
+                        {{title}}Schema.properties[prop].type
+                    ) === 'range',
                     required: {{title}}Schema.required.includes(prop),
                     attrs: columnConstraintToHtmlAttrs(
                         {{title}}Schema.properties[prop]

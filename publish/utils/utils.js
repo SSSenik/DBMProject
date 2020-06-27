@@ -1,16 +1,42 @@
-function presentationModeToHtmlString(mode, value) {
-    if (!value) return '<label></label>';
+function presentationModeToHtmlString(mode, value, type) {
     switch (mode) {
         case 'image':
-            return `<br><img height="345" src='${value}' alt='an image'>`;
+            return (
+                value &&
+                `<br><img width="345" src='${value}' alt='an image' class='img-thumbnail img-fluid rounded mx-auto d-block'>`
+            );
         case 'video':
-            return `
+            return (
+                value &&
+                `
                 <br>
-                <iframe width="420" height="345" src="${value}">
-                </iframe>
-            `;
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item" width="345" src="${value}">
+                    </iframe>
+                </div>
+            `
+            );
         default:
-            return `<label>${value}</label>`;
+            switch (type) {
+                case 'boolean':
+                    return `<input disabled class="position-static" type="checkbox" checked="${value}">`;
+                case 'color':
+                    return `<label style="background-color: ${value};">${value}</label>`;
+                case 'range':
+                    return `<label>${value}%</label>`;
+                case 'time':
+                    return `<label>${new Date(
+                        new Date().toLocaleDateString() + ` ${value}`
+                    ).toLocaleTimeString()}</label>`;
+                case 'date':
+                    return `<label>${new Date(
+                        value
+                    ).toLocaleDateString()}</label>`;
+                case 'datetime':
+                    return `<label>${new Date(value).toLocaleString()}</label>`;
+                default:
+                    return `<label>${value}</label>`;
+            }
     }
 }
 

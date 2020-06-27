@@ -41,18 +41,21 @@
     <div class="container mt-4">
         <h1>{{title}} Details</h1>
         <hr>
-        {{#properties}}
-        <div>
-            <label title={{description}}>{{label}}:</label>
-            {{{htmlString}}}
+        <div class="mx-5 border shadow-sm p-5">
+            {{#properties}}
+            <div>
+                <label title={{description}}><strong>{{label}}:</strong></label>
+                {{{htmlString}}}
+            </div>
+            {{/properties}}
+            <hr>
+            {{#references}}
+            <div>
+                <label><strong>{{model}}:</strong></label>
+                <label id="label{{model}}value"></label>
+            </div>
+            {{/references}}
         </div>
-        {{/properties}}
-        {{#references}}
-        <div>
-            <label>{{model}}:</label>
-            <label id="label{{model}}value"></label>
-        </div>
-        {{/references}}
     </div>
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

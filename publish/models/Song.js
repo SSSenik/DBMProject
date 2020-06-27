@@ -21,7 +21,6 @@ class Song {
         Object.defineProperty(this, 'lyrics', { enumerable: false });
         Object.defineProperty(this, 'video_clip', { enumerable: false });
         Object.defineProperty(this, 'album_id', { enumerable: false, writable: true });
-        Object.defineProperty(this, 'artist_id', { enumerable: false, writable: true });
         Object.defineProperty(this, 'genre_id', { enumerable: false, writable: true });
     }
 
@@ -95,11 +94,11 @@ class Song {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Song SET name = ?,description = ?,duration = ?,lyrics = ?,release_date = ?,video_clip = ?,album_id = ?,artist_id = ?,genre_id = ? WHERE id = ?`, 
-            [this.name,this.description,this.duration,this.lyrics,this.release_date,this.video_clip,this.album_id,this.artist_id,this.genre_id, this.id], callback);
+            database.run(`UPDATE Song SET name = ?,description = ?,duration = ?,lyrics = ?,release_date = ?,video_clip = ?,album_id = ?,genre_id = ? WHERE id = ?`, 
+            [this.name,this.description,this.duration,this.lyrics,this.release_date,this.video_clip,this.album_id,this.genre_id, this.id], callback);
         } else{
-            database.run(`INSERT INTO Song (name, description, duration, lyrics, release_date, video_clip,album_id,artist_id,genre_id) VALUES (?,?,?,?,?,?,?,?,?)`, 
-            [this.name,this.description,this.duration,this.lyrics,this.release_date,this.video_clip,this.album_id,this.artist_id,this.genre_id], callback);
+            database.run(`INSERT INTO Song (name, description, duration, lyrics, release_date, video_clip,album_id,genre_id) VALUES (?,?,?,?,?,?,?,?)`, 
+            [this.name,this.description,this.duration,this.lyrics,this.release_date,this.video_clip,this.album_id,this.genre_id], callback);
         }
     }
 

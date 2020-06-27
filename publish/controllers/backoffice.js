@@ -63,7 +63,17 @@ router.get('/Album/Details/:id', function (req, res) {
                     name: prop,
                     value: row[prop],
                     label: AlbumSchema.properties[prop].label,
-                    htmlString: presentationModeToHtmlString(AlbumSchema.properties[prop].presentationMode, row[prop])
+                    htmlString: presentationModeToHtmlString(
+                        AlbumSchema.properties[prop].presentationMode, 
+                        row[prop], 
+                        AlbumSchema.properties[prop].type
+                    ),
+                    isCheckbox: schemaTypeToInputType(
+                        AlbumSchema.properties[prop].type
+                    ) === 'checkbox',
+                    isRange: schemaTypeToInputType(
+                        AlbumSchema.properties[prop].type
+                    ) === 'range',
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -105,6 +115,9 @@ router.get('/Album/Insert', function (req, res) {
                 isCheckbox: schemaTypeToInputType(
                     AlbumSchema.properties[prop].type
                 ) === 'checkbox',
+                isRange: schemaTypeToInputType(
+                    AlbumSchema.properties[prop].type
+                ) === 'range',
                 required: AlbumSchema.required.includes(prop),
                 attrs: columnConstraintToHtmlAttrs(AlbumSchema.properties[prop]),
                 name: prop,
@@ -137,6 +150,9 @@ router.get('/Album/Edit/:id', function (req, res) {
                     isCheckbox: schemaTypeToInputType(
                         AlbumSchema.properties[prop].type
                     ) === 'checkbox',
+                    isRange: schemaTypeToInputType(
+                        AlbumSchema.properties[prop].type
+                    ) === 'range',
                     required: AlbumSchema.required.includes(prop),
                     attrs: columnConstraintToHtmlAttrs(
                         AlbumSchema.properties[prop]
@@ -227,7 +243,17 @@ router.get('/Artist/Details/:id', function (req, res) {
                     name: prop,
                     value: row[prop],
                     label: ArtistSchema.properties[prop].label,
-                    htmlString: presentationModeToHtmlString(ArtistSchema.properties[prop].presentationMode, row[prop])
+                    htmlString: presentationModeToHtmlString(
+                        ArtistSchema.properties[prop].presentationMode, 
+                        row[prop], 
+                        ArtistSchema.properties[prop].type
+                    ),
+                    isCheckbox: schemaTypeToInputType(
+                        ArtistSchema.properties[prop].type
+                    ) === 'checkbox',
+                    isRange: schemaTypeToInputType(
+                        ArtistSchema.properties[prop].type
+                    ) === 'range',
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -269,6 +295,9 @@ router.get('/Artist/Insert', function (req, res) {
                 isCheckbox: schemaTypeToInputType(
                     ArtistSchema.properties[prop].type
                 ) === 'checkbox',
+                isRange: schemaTypeToInputType(
+                    ArtistSchema.properties[prop].type
+                ) === 'range',
                 required: ArtistSchema.required.includes(prop),
                 attrs: columnConstraintToHtmlAttrs(ArtistSchema.properties[prop]),
                 name: prop,
@@ -301,6 +330,9 @@ router.get('/Artist/Edit/:id', function (req, res) {
                     isCheckbox: schemaTypeToInputType(
                         ArtistSchema.properties[prop].type
                     ) === 'checkbox',
+                    isRange: schemaTypeToInputType(
+                        ArtistSchema.properties[prop].type
+                    ) === 'range',
                     required: ArtistSchema.required.includes(prop),
                     attrs: columnConstraintToHtmlAttrs(
                         ArtistSchema.properties[prop]
@@ -391,7 +423,17 @@ router.get('/Genre/Details/:id', function (req, res) {
                     name: prop,
                     value: row[prop],
                     label: GenreSchema.properties[prop].label,
-                    htmlString: presentationModeToHtmlString(GenreSchema.properties[prop].presentationMode, row[prop])
+                    htmlString: presentationModeToHtmlString(
+                        GenreSchema.properties[prop].presentationMode, 
+                        row[prop], 
+                        GenreSchema.properties[prop].type
+                    ),
+                    isCheckbox: schemaTypeToInputType(
+                        GenreSchema.properties[prop].type
+                    ) === 'checkbox',
+                    isRange: schemaTypeToInputType(
+                        GenreSchema.properties[prop].type
+                    ) === 'range',
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -433,6 +475,9 @@ router.get('/Genre/Insert', function (req, res) {
                 isCheckbox: schemaTypeToInputType(
                     GenreSchema.properties[prop].type
                 ) === 'checkbox',
+                isRange: schemaTypeToInputType(
+                    GenreSchema.properties[prop].type
+                ) === 'range',
                 required: GenreSchema.required.includes(prop),
                 attrs: columnConstraintToHtmlAttrs(GenreSchema.properties[prop]),
                 name: prop,
@@ -465,6 +510,9 @@ router.get('/Genre/Edit/:id', function (req, res) {
                     isCheckbox: schemaTypeToInputType(
                         GenreSchema.properties[prop].type
                     ) === 'checkbox',
+                    isRange: schemaTypeToInputType(
+                        GenreSchema.properties[prop].type
+                    ) === 'range',
                     required: GenreSchema.required.includes(prop),
                     attrs: columnConstraintToHtmlAttrs(
                         GenreSchema.properties[prop]
@@ -555,7 +603,17 @@ router.get('/Song/Details/:id', function (req, res) {
                     name: prop,
                     value: row[prop],
                     label: SongSchema.properties[prop].label,
-                    htmlString: presentationModeToHtmlString(SongSchema.properties[prop].presentationMode, row[prop])
+                    htmlString: presentationModeToHtmlString(
+                        SongSchema.properties[prop].presentationMode, 
+                        row[prop], 
+                        SongSchema.properties[prop].type
+                    ),
+                    isCheckbox: schemaTypeToInputType(
+                        SongSchema.properties[prop].type
+                    ) === 'checkbox',
+                    isRange: schemaTypeToInputType(
+                        SongSchema.properties[prop].type
+                    ) === 'range',
                 })),
             references: Object.getOwnPropertyNames(row)
                 .filter((prop) =>
@@ -597,6 +655,9 @@ router.get('/Song/Insert', function (req, res) {
                 isCheckbox: schemaTypeToInputType(
                     SongSchema.properties[prop].type
                 ) === 'checkbox',
+                isRange: schemaTypeToInputType(
+                    SongSchema.properties[prop].type
+                ) === 'range',
                 required: SongSchema.required.includes(prop),
                 attrs: columnConstraintToHtmlAttrs(SongSchema.properties[prop]),
                 name: prop,
@@ -629,6 +690,9 @@ router.get('/Song/Edit/:id', function (req, res) {
                     isCheckbox: schemaTypeToInputType(
                         SongSchema.properties[prop].type
                     ) === 'checkbox',
+                    isRange: schemaTypeToInputType(
+                        SongSchema.properties[prop].type
+                    ) === 'range',
                     required: SongSchema.required.includes(prop),
                     attrs: columnConstraintToHtmlAttrs(
                         SongSchema.properties[prop]

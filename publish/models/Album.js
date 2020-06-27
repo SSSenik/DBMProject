@@ -17,6 +17,7 @@ class Album {
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
         Object.defineProperty(this, 'description', { enumerable: false });
         Object.defineProperty(this, 'cover', { enumerable: false });
+        Object.defineProperty(this, 'artist_id', { enumerable: false, writable: true });
     }
 
     static create() {
@@ -89,11 +90,11 @@ class Album {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Album SET name = ?,description = ?,release_date = ?,cover = ? WHERE id = ?`, 
-            [this.name,this.description,this.release_date,this.cover, this.id], callback);
+            database.run(`UPDATE Album SET name = ?,description = ?,release_date = ?,cover = ?,artist_id = ? WHERE id = ?`, 
+            [this.name,this.description,this.release_date,this.cover,this.artist_id, this.id], callback);
         } else{
-            database.run(`INSERT INTO Album (name, description, release_date, cover) VALUES (?,?,?,?)`, 
-            [this.name,this.description,this.release_date,this.cover], callback);
+            database.run(`INSERT INTO Album (name, description, release_date, cover,artist_id) VALUES (?,?,?,?,?)`, 
+            [this.name,this.description,this.release_date,this.cover,this.artist_id], callback);
         }
     }
 

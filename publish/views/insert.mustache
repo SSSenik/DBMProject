@@ -110,7 +110,7 @@
             <div class="form-group {{#isCheckbox}}form-check{{/isCheckbox}}">
                 {{^isCheckbox}}<label title={{description}} for="{{name}}_id">{{label}}</label>{{/isCheckbox}}
                 <input type="{{type}}" id="{{name}}_id" name="{{name}}" 
-                    class="{{^isCheckbox}}form-control{{/isCheckbox}}{{#isCheckbox}}form-check-input{{/isCheckbox}}" 
+                    class="{{^isCheckbox}}{{^isRange}}form-control{{/isRange}}{{/isCheckbox}} {{#isCheckbox}}form-check-input{{/isCheckbox}} {{#isRange}}form-control-range{{/isRange}}" 
                     {{#required}}required{{/required}} {{#attrs}}{{name}}="{{value}}"{{/attrs}}>
                 {{#isCheckbox}}<label title={{description}} for="{{name}}_id" class="form-check-label">{{label}}</label>{{/isCheckbox}}
             </div>

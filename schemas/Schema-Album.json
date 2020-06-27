@@ -26,5 +26,11 @@
         }
     },
     "required": ["name", "release_date"],
-    "references": []
+    "references": [
+        {
+            "model": "Artist",
+            "relation": "1-M",
+            "label": "name"
+        }
+    ]
 }

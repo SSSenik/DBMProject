@@ -11,12 +11,12 @@
         "description": {
             "description": "Descrição da Música",
             "label": "Descrição",
-            "type": "boolean"
+            "type": "string"
         },
         "duration": {
             "description": "Duração da Música",
             "label": "Duração (seg)",
-            "type": "integer",
+            "type": "number",
             "minimum": 0
         },
         "lyrics": {
@@ -40,11 +40,6 @@
     "references": [
         {
             "model": "Album",
-            "relation": "1-M",
-            "label": "name"
-        },
-        {
-            "model": "Artist",
             "relation": "1-M",
             "label": "name"
         },

@@ -63,34 +63,41 @@
                 </div>
             </div>
             <table id="table{{title}}" class="table table-hover">
-                <tr>
-                    {{#columns}}
-                    <th scope="col">{{.}}</th>
-                    {{/columns}}
-                </tr>
-                {{#rows}}
-                <tr id="{{rowId}}">
-                    {{#properties}}
-                    <td>
-                        {{.}}
-                    </td>
-                    {{/properties}}
-                    {{#actions}}
-                    <td>
-                        <a href="{{link}}" title="{{tooltip}}" {{#events}}{{name}}="javascript:{{function}}({{args}})" {{/events}}>
-                            {{#image}}
-                            <img src="{{src}}" alt="{{alt}}" />
-                            {{/image}}
-                        </a>
-                    </td>
-                    {{/actions}}
-                </tr>
-                {{/rows}}
-                {{^rows}}
-                <tr>
-                    <td colspan="100%"><label>Table is empty</label></td>
-                </tr>
-                {{/rows}}
+                <thead>
+                    <tr>
+                        {{#columns}}
+                        <th scope="col">{{.}}</th>
+                        {{/columns}}
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#rows}}
+                    <tr id="{{rowId}}">
+                        {{#properties}}
+                        <td>
+                            {{.}}
+                        </td>
+                        {{/properties}}
+                        <td class="text-center">
+                        {{#actions}}
+                            <a href="{{link}}" title="{{tooltip}}" class="flex-fill" {{#events}}{{name}}="javascript:{{function}}({{args}})" {{/events}}>
+                                {{#image}}
+                                <img src="{{src}}" alt="{{alt}}" />
+                                {{/image}}
+                            </a>
+                        {{/actions}}
+                        </td>
+                    </tr>
+                    {{/rows}}
+                    {{^rows}}
+                    <tr>
+                        <td colspan="100%"><label>Table is empty</label></td>
+                    </tr>
+                    {{/rows}}
+                </tbody>
             </table>
         </div>
     <div>
