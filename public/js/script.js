@@ -163,6 +163,7 @@ class Property {
         type,
         isRequired,
         unique,
+        presentationMode,
         pattern,
         maximum,
         minimum,
@@ -174,6 +175,7 @@ class Property {
         this.type = type || 'string';
         this.isRequired = isRequired || false;
         this.unique = unique || false;
+        this.presentationMode = presentationMode;
         this.pattern = pattern;
         this.maximum = maximum;
         this.minimum = minimum;
@@ -185,6 +187,7 @@ class Property {
             label,
             type,
             unique,
+            presentationMode,
             pattern,
             maximum,
             minimum,
@@ -194,6 +197,7 @@ class Property {
             label,
             type,
             unique,
+            presentationMode,
             pattern,
             maximum,
             minimum,
@@ -289,6 +293,25 @@ class Property {
               <option value="url" ${
                   this.type === 'url' ? 'selected' : ''
               }>URL</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="prop-presentationMode-${
+              this.id
+          }" class="col-sm-3 col-form-label">
+            Presentation Mode
+          </label>
+          <div class="col-sm-9">
+            <select class="form-control" id="prop-presentationMode-${
+                this.id
+            }" onchange="updatePropertyValue(this)">
+              <option value="image" ${
+                  this.presentationMode === 'image' ? 'selected' : ''
+              }>Image</option>
+              <option value="video" ${
+                  this.presentationMode === 'video' ? 'selected' : ''
+              }>Video</option>
             </select>
           </div>
         </div>
@@ -404,6 +427,9 @@ function updatePropertyValue(element) {
 }
 
 function handleConstraints(property, type) {
+    const propPresentationModeHTML = document.getElementById(
+        `prop-presentationMode-${property.id}`
+    );
     const propPatternHTML = document.getElementById(
         `prop-pattern-${property.id}`
     );
@@ -413,26 +439,51 @@ function handleConstraints(property, type) {
         case 'string':
             property.maximum = undefined;
             property.minimum = undefined;
+            propPresentationModeHTML.parentNode.parentNode.style.display =
+                'flex';
             propPatternHTML.parentNode.parentNode.style.display = 'flex';
             propMaxHTML.parentNode.parentNode.style.display = 'none';
             propMinHTML.parentNode.parentNode.style.display = 'none';
+            propPresentationModeHTML.value = '';
+            propMaxHTML.value = '';
+            propMinHTML.value = '';
+            break;
+        case 'url':
+            property.pattern = undefined;
+            property.maximum = undefined;
+            property.minimum = undefined;
+            propPresentationModeHTML.parentNode.parentNode.style.display =
+                'flex';
+            propPatternHTML.parentNode.parentNode.style.display = 'none';
+            propMaxHTML.parentNode.parentNode.style.display = 'none';
+            propMinHTML.parentNode.parentNode.style.display = 'none';
+            propPresentationModeHTML.value = '';
+            propPatternHTML.value = '';
             propMaxHTML.value = '';
             propMinHTML.value = '';
             break;
         case 'integer':
+            property.presentationMode = undefined;
             property.pattern = undefined;
+            propPresentationModeHTML.parentNode.parentNode.style.display =
+                'none';
             propPatternHTML.parentNode.parentNode.style.display = 'none';
             propMaxHTML.parentNode.parentNode.style.display = 'flex';
             propMinHTML.parentNode.parentNode.style.display = 'flex';
+            propPresentationModeHTML.value = '';
             propPatternHTML.value = '';
             break;
         default:
+            property.presentationMode = undefined;
             property.pattern = undefined;
             property.maximum = undefined;
             property.minimum = undefined;
+            propPresentationModeHTML.parentNode.parentNode.style.display =
+                'none';
             propPatternHTML.parentNode.parentNode.style.display = 'none';
             propMaxHTML.parentNode.parentNode.style.display = 'none';
             propMinHTML.parentNode.parentNode.style.display = 'none';
+            propPresentationModeHTML.value = '';
             propPatternHTML.value = '';
             propMaxHTML.value = '';
             propMinHTML.value = '';
