@@ -15,8 +15,8 @@
         },
         "duration": {
             "description": "Duração da Música",
-            "label": "Duração",
-            "type": "integer",
+            "label": "Duração (seg)",
+            "type": "number",
             "minimum": 0
         },
         "lyrics": {
@@ -28,17 +28,18 @@
             "description": "Data de Saida da Música",
             "label": "Data de Saida",
             "type": "date"
+        },
+        "video_clip": {
+            "description": "Video Clip da musica",
+            "label": "Video Clip",
+            "type": "url",
+            "presentationMode": "video"
         }
     },
-    "required": ["name", "duration"],
+    "required": ["name", "release_date", "duration"],
     "references": [
         {
             "model": "Album",
-            "relation": "1-M",
-            "label": "name"
-        },
-        {
-            "model": "Artist",
             "relation": "1-M",
             "label": "name"
         },

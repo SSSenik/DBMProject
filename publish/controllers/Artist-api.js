@@ -7,7 +7,7 @@ router.post('/Artist', function (req, res) {
     let obj = Object.assign(new Artist(), req.body);
     obj.save((msg) => {
         if (!msg.success) return res.json(msg);
-        Artist.getLastId((row) => {
+        Artist.getLastInserted((row) => {
             const jsonRes = JSON.parse(
                 JSON.stringify(row, Object.keys(new Artist()).concat(['id']))
             )[0];

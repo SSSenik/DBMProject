@@ -8,12 +8,12 @@
             "label": "Nome",
             "type": "string"
         },
-        "contact": {
+        "email": {
             "description": "Contacto do Artista",
-            "label": "Contacto",
-            "type": "string"
+            "label": "Email de Contacto",
+            "type": "email"
         }
     },
-    "required": ["name"],
+    "required": ["name", "email"],
     "references": []
 }

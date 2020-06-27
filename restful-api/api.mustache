@@ -7,7 +7,7 @@ router.post('/{{title}}', function (req, res) {
     let obj = Object.assign(new {{title}}(), req.body);
     obj.save((msg) => {
         if (!msg.success) return res.json(msg);
-        {{title}}.getLastId((row) => {
+        {{title}}.getLastInserted((row) => {
             const jsonRes = JSON.parse(
                 JSON.stringify(row, Object.keys(new {{title}}()).concat(['id']))
             )[0];

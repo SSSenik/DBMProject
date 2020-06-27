@@ -8,14 +8,16 @@ jsf.extend('faker', () => faker);
 const schemaAlbum = require('../schemas/Schema-Album.json');
 
 class Album {
-    constructor(name, description, release_date) {
+    constructor(name, description, release_date, cover) {
         this.name = name;
         this.description = description;
         this.release_date = release_date;
+        this.cover = cover;
 
         Object.defineProperty(this, 'id', { enumerable: false, writable: true } );
         Object.defineProperty(this, 'description', { enumerable: false });
-        Object.defineProperty(this, 'release_date', { enumerable: false });
+        Object.defineProperty(this, 'cover', { enumerable: false });
+        Object.defineProperty(this, 'artist_id', { enumerable: false, writable: true });
     }
 
     static create() {
@@ -34,13 +36,17 @@ class Album {
         database.run("DELETE FROM Album WHERE id = ?", [id], callback)
     }
 
-    static getLastId(callback) {
+    static top(property, order, limit, callback) {
         database.where(
-            'SELECT * FROM Album ORDER BY id DESC LIMIT 1',
+            `SELECT * FROM Album ORDER BY ${property} ${order} LIMIT ${limit}`,
             [],
             Album,
             callback
         );
+    }
+
+    static getLastInserted(callback) {
+        this.top('id', 'DESC', 1, callback);
     }
     
     static many(model, id, callback) {
@@ -84,11 +90,11 @@ class Album {
 
     save(callback) {
         if (this.id) {
-            database.run(`UPDATE Album SET name = ?,description = ?,release_date = ? WHERE id = ?`, 
-            [this.name,this.description,this.release_date, this.id], callback);
+            database.run(`UPDATE Album SET name = ?,description = ?,release_date = ?,cover = ?,artist_id = ? WHERE id = ?`, 
+            [this.name,this.description,this.release_date,this.cover,this.artist_id, this.id], callback);
         } else{
-            database.run(`INSERT INTO Album (name, description, release_date) VALUES (?,?,?)`, 
-            [this.name,this.description,this.release_date], callback);
+            database.run(`INSERT INTO Album (name, description, release_date, cover,artist_id) VALUES (?,?,?,?,?)`, 
+            [this.name,this.description,this.release_date,this.cover,this.artist_id], callback);
         }
     }
 

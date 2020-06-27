@@ -7,7 +7,7 @@ router.post('/Song', function (req, res) {
     let obj = Object.assign(new Song(), req.body);
     obj.save((msg) => {
         if (!msg.success) return res.json(msg);
-        Song.getLastId((row) => {
+        Song.getLastInserted((row) => {
             const jsonRes = JSON.parse(
                 JSON.stringify(row, Object.keys(new Song()).concat(['id']))
             )[0];

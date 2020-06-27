@@ -19,6 +19,20 @@
             "path": "./schemas/Schema-Song.json"
         }
     ],
+    "frontoffice": [
+        {
+            "model": "Album",
+            "property": "name",
+            "order": "DESC",
+            "limit": 3
+        },
+        {
+            "model": "Artist",
+            "property": "name",
+            "order": "DESC",
+            "limit": 3
+        }
+    ],
     "baseGenFolder": "publish",
     "staticFiles": {
         "sqlite": {
@@ -40,6 +54,14 @@
         "editView": {
             "originalPath": "/staticFiles/edit.mustache",
             "destinationPath": "/views/edit.mustache"
+        },
+        "menuView": {
+            "originalPath": "/staticFiles/menu.mustache",
+            "destinationPath": "/views/menu.mustache"
+        },
+        "homeView": {
+            "originalPath": "/staticFiles/home.mustache",
+            "destinationPath": "/views/home.mustache"
         },
         "imgDelete": {
             "originalPath": "/staticFiles/delete.png",

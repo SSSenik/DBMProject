@@ -11,20 +11,26 @@
         "description": {
             "description": "Descrição do Album",
             "label": "Descrição",
-            "type": "string",
-            "presentationMode": "fulltext"
+            "type": "string"
         },
         "release_date": {
-            "description": "Data de Saida do Album",
-            "label": "Data de Saida",
+            "description": "Data de Lançamento do Album",
+            "label": "Data de Lançamento",
             "type": "date"
         },
         "cover": {
             "description": "Capa do Album",
             "label": "Capa",
-            "type": "date"
+            "type": "url",
+            "presentationMode": "image"
         }
     },
-    "required": ["name"],
-    "references": []
+    "required": ["name", "release_date"],
+    "references": [
+        {
+            "model": "Artist",
+            "relation": "1-M",
+            "label": "name"
+        }
+    ]
 }
