@@ -62,10 +62,12 @@ function renderSchemaProperties(schema) {
 
 function renderSchemaReferences(schema) {
     if (schema.references) {
-        return schema.references.map(
-            (reference) =>
-                `<p class="card-text"> ${reference.model} - (${reference.relation}) </p>`
-        );
+        return schema.references
+            .map(
+                (reference) =>
+                    `<p class="card-text"> ${reference.model} - (${reference.relation}) </p>`
+            )
+            .join('');
     }
 
     return 'No references';
