@@ -27,6 +27,18 @@
             "limit": 3
         },
         {
+            "model": "Album",
+            "property": "name",
+            "order": "ASC",
+            "limit": 4
+        },
+        {
+            "model": "Artist",
+            "property": "name",
+            "order": "DESC",
+            "limit": 3
+        },
+        {
             "model": "Artist",
             "property": "name",
             "order": "DESC",
