@@ -3,10 +3,6 @@ body {
     color: white;
 }
 
-#mainPage form {
-    display: inline-block;
-}
-
 #mainPage {
     display: flex;
     flex-direction: column;
@@ -14,15 +10,16 @@ body {
     justify-content: center;
 }
 
-#mainPage h1 {
+#mainPage > h1 {
     margin-bottom: 50px;
 }
 
-#mainPage button {
+#mainPage > button {
     width: 400px;
 }
 
-.button-red {
+.button-red,
+.button-publish {
     background-color: orangered;
     border: none;
     color: white;
@@ -35,8 +32,17 @@ body {
     margin: 10px;
 }
 
-.button-red:hover {
+.button-red:hover,
+.button-publish:hover {
     background-color: tomato;
+}
+
+.button-publish {
+    background-color: royalblue;
+}
+
+.button-publish:hover {
+    background-color: slateblue;
 }
 
 .header {
@@ -117,4 +123,8 @@ pre {
 
 .toast-body {
     background-color: #f44336;
+}
+
+.modal {
+    color: black;
 }

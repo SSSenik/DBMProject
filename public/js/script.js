@@ -833,6 +833,37 @@ function editSchema(schema) {
 }
 
 // - - - - - - - - - - -
+// Generate page
+// - - - - - - - - - - -
+
+function generate() {
+    $('#generateModal').modal();
+    const modalTitle = document.getElementById('generateModalTitle');
+    const modalBody = document.getElementById('generateModalBody');
+    const modalBodyLoading = document.getElementById(
+        'generateModalBodyLoading'
+    );
+    modalTitle.textContent = 'A gerar website...';
+    modalBody.style.display = 'none';
+    modalBodyLoading.style.display = 'block';
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/generate', true);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                modalTitle.textContent = 'Gerado com sucesso!';
+                modalBodyLoading.style.display = 'none';
+                modalBody.style.display = 'block';
+            } else {
+                modalTitle.textContent = 'Não foi possivel publicar o website';
+            }
+        }
+    };
+    xhr.send();
+}
+
+// - - - - - - - - - - -
 // Loading of pages
 // - - - - - - - - - - -
 

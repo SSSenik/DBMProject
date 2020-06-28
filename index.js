@@ -86,8 +86,8 @@ app.post('/styles', async (req, res) => {
     }
 });
 
-app.post('/generate', (req, res) => {
-    generateServer();
+app.post('/generate', async (req, res) => {
+    await generateServer();
     res.send('GENERATED');
 });
 
