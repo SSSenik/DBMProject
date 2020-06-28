@@ -86,6 +86,24 @@ app.post('/styles', async (req, res) => {
     }
 });
 
+app.get('/views', (req, res) => {
+    res.json(config.frontoffice);
+});
+
+app.post('/views', async (req, res) => {
+    try {
+        config.frontoffice = req.body.views;
+        await fs.writeFile(
+            './server/config.json',
+            JSON.stringify(config, null, '\t')
+        );
+        res.send('Views criadas com sucesso');
+    } catch (e) {
+        console.log(e);
+        res.status(400).send('Não foi possivel criar o schema');
+    }
+});
+
 app.post('/generate', async (req, res) => {
     await generateServer();
     res.send('GENERATED');
