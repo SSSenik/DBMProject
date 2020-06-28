@@ -8,30 +8,26 @@ const {
 
 const menuItems = [
     {{#schemas}}
-    { href: '/backoffice/{{title}}', name: '{{title}}' },
+    { name: '{{title}}' },
     {{/schemas}}
 ];
 
-{{#tables}}
+{{#schemas}}
 const {{title}} = require(__basedir + '/Models/{{title}}.js');
 const {{title}}Schema = require(__basedir + '/schemas/Schema-{{title}}.json');
-
-{{/tables}}
+{{/schemas}}
 async function frontoffice(req, res) {
-    {{#tables}}
-    const rows{{title}} = await new Promise((res) => {
-        {{title}}.top('name', 'DESC', 3, (rows) => {
-            res(fetchRows(rows));
-        });
-    });
-    {{/tables}}
     res.render('home', {
         schemas: menuItems,
         tables: [
             {{#tables}}
             {
                 title: '{{title}}',
-                rows: rows{{title}},
+                rows: await new Promise((res) => {
+                    {{title}}.top('{{orderColumn}}', '{{order}}', {{itemAmount}}, (rows) => {
+                        res(fetchRows(rows));
+                    });
+                }),
                 columns: Object.keys(new {{title}}()).map(
                     (col) => {{title}}Schema.properties[col].label
                 ),

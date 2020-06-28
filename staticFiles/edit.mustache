@@ -41,6 +41,7 @@
             return false;
         }
 
+        {{#hasReferences}}
         function getManyToManyValues(model,) {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", `/api/${model}/{{title}}/{{id}}`, true);
@@ -55,7 +56,6 @@
             xhr.send();
         }
 
-        {{#hasReferences}}
         function loadValues(model, values, label, controlId, isManyToMany) {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", `/api/${model}`, true);
