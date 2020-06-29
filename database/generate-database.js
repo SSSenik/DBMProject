@@ -19,7 +19,7 @@ const createTableView = (schema) => ({
         null: schema.required.find((name) => name === columnName)
             ? 'NOT NULL'
             : 'NULL',
-        unique: schema.properties[columnName].unique && 'UNIQUE',
+        unique: schema.properties[columnName].unique ? 'UNIQUE' : '',
         constraint: buildConstraints(columnName, schema.properties[columnName]),
         hasComma: i !== arr.length - 1,
     })),
@@ -38,19 +38,17 @@ async function generate(dbname, schemas) {
         const data = await fs.readFile(DBSCRIPT_MUSTACHE);
         for (const schema of schemas) {
             await new Promise((res, rej) => {
-                db.run(
-                    mustache.render(
-                        data.toString(),
-                        createTableView(require(`.${schema.path}`))
-                    ),
-                    (err) => {
-                        if (err) {
-                            rej(err);
-                        } else {
-                            res();
-                        }
-                    }
+                const query = mustache.render(
+                    data.toString(),
+                    createTableView(require(`.${schema.path}`))
                 );
+                db.run(query, (err) => {
+                    if (err) {
+                        rej(err);
+                    } else {
+                        res();
+                    }
+                });
             });
         }
     } catch (e) {

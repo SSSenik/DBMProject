@@ -36,7 +36,9 @@ function renderSchemaProperties(schema) {
     let properties = [];
     for (var [name, info] of Object.entries(schema.properties)) {
         properties.push(`
-            <p class="mb-0"> • ${name} </p>
+            <p class="mb-0"> • ${name} ${
+            schema.required.includes(name) ? '(Required)' : ''
+        }</p>
             <p class="mb-0 ml-3"> ${info.description} </p>
             <p class="mb-0 ml-3"> Type: ${info.type} </p>
             <p class="mb-0 ml-3"> Unique: ${info.unique || false} </p>
@@ -61,7 +63,7 @@ function renderSchemaProperties(schema) {
 }
 
 function renderSchemaReferences(schema) {
-    if (schema.references) {
+    if (schema.references.length > 0) {
         return schema.references
             .map(
                 (reference) =>
@@ -121,7 +123,6 @@ function renderExistingSchemas() {
 }
 
 function deleteSchema(schemaName) {
-    console.log(schemaName);
     var xhr = new XMLHttpRequest();
     xhr.open('DELETE', '/schemas', true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
@@ -207,7 +208,6 @@ class Property {
     }
 
     render() {
-        console.log(this);
         return `
     <div class="card text-white bg-dark mb-3" id="property-${this.id}">
       <div class="card-header">
@@ -516,19 +516,18 @@ function renderDefaultLabels() {
 class Reference {
     static count = 0;
 
-    constructor({ model, relation, label, isRequired } = {}) {
+    constructor({ model, relation, label } = {}) {
         this.id = Reference.count++;
         this.model = model || existingSchemas[0].title;
         this.relation = relation || '1-1';
         this.label =
             label ||
             Object.values(existingSchemas[0].properties)[0].description;
-        this.isRequired = isRequired === undefined ? false : isRequired;
     }
 
     toJSON() {
-        let { model, relation, label, isRequired } = this;
-        return { model, relation, label, isRequired };
+        let { model, relation, label } = this;
+        return { model, relation, label };
     }
 
     render() {
@@ -587,19 +586,6 @@ class Reference {
             </select>
           </div>
         </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="ref-isRequired-${this.id}"
-            onchange="updateReferenceValue(this)"
-            ${this.isRequired ? 'checked' : ''}
-          />
-          <label class="form-check-label" for="ref-isRequired-${this.id}">
-            Required on reference insert form
-          </label>
-        </div>
-      </div>
     </div>
     `;
     }
@@ -652,13 +638,18 @@ function updateReferenceValue(element) {
 
 function handleModelChange(ref, value, selection) {
     const refLabels = document.getElementById(`ref-label-${ref.id}`);
-    ref.label = Object.keys(getExistingSchema(value).properties)[0];
-    refLabels.innerHTML = Object.keys(getExistingSchema(value).properties).map(
-        (prop) =>
-            `<option value="${prop}" ${
-                selection === prop ? 'selected' : ''
-            }>${prop}</option>`
-    );
+    const schema = getExistingSchema(value);
+    ref.label = Object.keys(schema.properties).filter((prop) =>
+        schema.required.includes(prop)
+    )[0];
+    refLabels.innerHTML = Object.keys(schema.properties)
+        .filter((prop) => schema.required.includes(prop))
+        .map(
+            (prop) =>
+                `<option value="${prop}" ${
+                    selection === prop ? 'selected' : ''
+                }>${prop}</option>`
+        );
 }
 
 // - - - - - - - - - - -
@@ -683,7 +674,7 @@ function buildPreview() {
             }
         }
         if (requiredProperties.length) {
-            preview.properties.required = requiredProperties;
+            preview.required = requiredProperties;
         }
     }
 
@@ -759,10 +750,16 @@ function validateSchema(isCreation) {
         }
     }
     if (requiredProperties.length) {
-        schema.properties.required = requiredProperties;
+        schema.required = requiredProperties;
+    } else {
+        errorContainer.textContent =
+            'Schema must have atleast one required property';
+        $('.toast').toast('show');
+        return;
     }
 
     // References
+    schema.references = [];
     for (var i = 0; i < references.length; i++) {
         schema.references = references;
     }
@@ -877,7 +874,7 @@ window.onload = () => {
         case '/editor.html':
             const submitBtn = document.getElementById('submitBtn');
             if (window.location.search) {
-                submitBtn.textContent = 'Edit schema';
+                submitBtn.textContent = 'Save schema';
                 submitBtn.onclick = () => {
                     validateSchema(false);
                 };

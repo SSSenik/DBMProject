@@ -21,7 +21,7 @@ function presentationModeToHtmlString(mode, value, type) {
                 case 'boolean':
                     return `<input disabled class="position-static" type="checkbox" checked="${value}">`;
                 case 'color':
-                    return `<label style="background-color: ${value};">${value}</label>`;
+                    return `<label style="background-color: ${value}; width: 24px; color: transparent; border-radius: 12px;">${value}</label>`;
                 case 'range':
                     return `<label>${value}%</label>`;
                 case 'time':

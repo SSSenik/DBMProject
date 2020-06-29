@@ -214,5 +214,4 @@ function buildResult() {
         }
     };
     xhr.send(JSON.stringify({ styles }));
-    console.log(styles);
 }

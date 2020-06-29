@@ -10,8 +10,12 @@ const app = express();
 app.use(express.static('public'));
 app.use(express.json());
 
-app.get('/schemas', (req, res) => {
-    const schemas = config.schemas.map((schema) => require(schema.path));
+app.get('/schemas', async (req, res) => {
+    let schemas = [];
+    for (const schema of config.schemas) {
+        const sch = JSON.parse((await fs.readFile(schema.path)).toString());
+        schemas.push(sch);
+    }
     res.json(schemas);
 });
 

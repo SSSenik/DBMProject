@@ -16,8 +16,7 @@
                 if (this.readyState == 4 && this.status == 200) {
                     var response = JSON.parse(this.responseText);
                     if(!response.success) {
-                        // alert("An error has ocurred");
-                        $('#errorModal').modal('show');
+                        alert("An error has ocurred");
                         return
                     }
                     window.location.href = '/backoffice/{{title}}';
@@ -144,22 +143,6 @@
             {{/references}}
             <input type="submit" value="Save" class="btn"/>
         </form>
-    </div>
-    <!-- Small modal -->
-    <div class="modal" id="errorModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Error</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>An Error as ocurred</p>
-                </div>
-            </div>
-        </div>
     </div>
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
