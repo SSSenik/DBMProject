@@ -47,6 +47,10 @@
                                     <option>Jupiter</option>
                                     <option>Hideout</option>
                                     <option>Graph Paper</option>
+                                    <option>Formal Invitation</option>
+                                    <option>Cutout</option>
+                                    <option>Domino</option>
+                                    <option>Circuit Board</option>
                                 </select>
                             </div>
                         </div>
@@ -79,6 +83,24 @@
                                     id="backgroundFColor"
                                     value="#000000"
                                     oninput="changeBackgroundFColor(this)"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label
+                                for="backgroundFColor"
+                                class="col-md-4 col-form-label"
+                                >Foreground Opacity</label
+                            >
+                            <div class="col-md-8">
+                                <input
+                                    type="range"
+                                    class="form-control-range"
+                                    id="backgroundOpacity"
+                                    min="0"
+                                    max="100"
+                                    value="40"
+                                    oninput="changeBackgroundOpacity(this)"
                                 />
                             </div>
                         </div>
@@ -145,7 +167,7 @@
                                     type="color"
                                     class="form-control"
                                     id="textColor"
-                                    value="#000"
+                                    value="#000000"
                                     oninput="changeTextColor(this)"
                                 />
                             </div>
@@ -265,6 +287,24 @@
                             </div>
                         </div>
                         <h5>Navbar:</h5>
+                        <div class="form-group row">
+                            <label
+                                for="navbarBackgroundColor"
+                                class="col-sm-4 col-form-label"
+                                >Alignment</label
+                            >
+                            <div class="col-sm-8">
+                                <select
+                                    class="form-control"
+                                    id="navbarOrientation"
+                                    onchange="changeNavbarOrientation(this)"
+                                >
+                                    <option selected value="">Left</option>
+                                    <option value="auto">Center</option>
+                                    <option value="0 0 0 auto">Rigth</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label
                                 for="navbarBackgroundColor"

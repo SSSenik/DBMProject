@@ -16,7 +16,6 @@
                 if (this.readyState == 4 && this.status == 200) {
                     var response = JSON.parse(this.responseText);
                     if(!response.success) {
-                        // alert("An error has ocurred");
                         $('#errorModal').modal('show');
                         return
                     }
@@ -110,11 +109,11 @@
         <form onsubmit="submitForm(); return false;">
             {{#properties}}
             <div class="form-group {{#isCheckbox}}form-check{{/isCheckbox}}">
-                {{^isCheckbox}}<label title={{description}} for="{{name}}_id">{{label}}</label>{{/isCheckbox}}
+                {{^isCheckbox}}<label title="{{description}}" for="{{name}}_id">{{label}}</label>{{/isCheckbox}}
                 <input type="{{type}}" id="{{name}}_id" name="{{name}}" 
                     class="{{^isCheckbox}}{{^isRange}}form-control{{/isRange}}{{/isCheckbox}} {{#isCheckbox}}form-check-input{{/isCheckbox}} {{#isRange}}form-control-range{{/isRange}}" 
                     {{#required}}required{{/required}} {{#attrs}}{{name}}="{{value}}"{{/attrs}}>
-                {{#isCheckbox}}<label title={{description}} for="{{name}}_id" class="form-check-label">{{label}}</label>{{/isCheckbox}}
+                {{#isCheckbox}}<label title="{{description}}" for="{{name}}_id" class="form-check-label">{{label}}</label>{{/isCheckbox}}
             </div>
             {{/properties}}
             {{#references}}

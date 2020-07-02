@@ -27,6 +27,8 @@ async function frontoffice(req, res) {
         tables: [
             {
                 title: 'Album',
+                limit: '3',
+                orderText: 'DESC' === 'ASC' ? 'Ascendent' : 'Descendent',
                 rows: await new Promise((res) => {
                     Album.top('name', 'DESC', 3, (rows) => {
                         res(fetchRows(rows));
@@ -38,6 +40,8 @@ async function frontoffice(req, res) {
             },
             {
                 title: 'Album',
+                limit: '4',
+                orderText: 'ASC' === 'ASC' ? 'Ascendent' : 'Descendent',
                 rows: await new Promise((res) => {
                     Album.top('name', 'ASC', 4, (rows) => {
                         res(fetchRows(rows));
@@ -49,6 +53,8 @@ async function frontoffice(req, res) {
             },
             {
                 title: 'Artist',
+                limit: '3',
+                orderText: 'DESC' === 'ASC' ? 'Ascendent' : 'Descendent',
                 rows: await new Promise((res) => {
                     Artist.top('name', 'DESC', 3, (rows) => {
                         res(fetchRows(rows));
@@ -60,6 +66,8 @@ async function frontoffice(req, res) {
             },
             {
                 title: 'Artist',
+                limit: '3',
+                orderText: 'DESC' === 'ASC' ? 'Ascendent' : 'Descendent',
                 rows: await new Promise((res) => {
                     Artist.top('name', 'DESC', 3, (rows) => {
                         res(fetchRows(rows));

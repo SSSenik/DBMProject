@@ -27,6 +27,10 @@ tbody {
     color: #000000;
 }
 
+.navbar-nav {
+    margin: 0 0 0 auto;
+}
+
 nav {
     background-color: #e3f2fd;
 }

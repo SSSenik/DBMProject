@@ -23,6 +23,8 @@ async function frontoffice(req, res) {
             {{#tables}}
             {
                 title: '{{title}}',
+                limit: '{{itemAmount}}',
+                orderText: '{{order}}' === 'ASC' ? 'Ascendent' : 'Descendent',
                 rows: await new Promise((res) => {
                     {{title}}.top('{{orderColumn}}', '{{order}}', {{itemAmount}}, (rows) => {
                         res(fetchRows(rows));

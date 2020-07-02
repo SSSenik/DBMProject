@@ -16,7 +16,7 @@
                 if (this.readyState == 4 && this.status == 200) {
                     var response = JSON.parse(this.responseText);
                     if(!response.success) {
-                        alert("An error has ocurred");
+                        $('#errorModal').modal('show');
                         return
                     }
                     window.location.href = '/backoffice/{{title}}';
@@ -28,13 +28,13 @@
             let data = {};
             {{#properties}}
             data['{{name}}'] = document.getElementsByName('{{name}}')[0].type === 'checkbox' 
-                ? document.getElementsByName('{{name}}')[0].checked
-                : document.getElementsByName('{{name}}')[0].value 
+                ? document.getElementsByName('{{name}}')[0].checked || undefined
+                : document.getElementsByName('{{name}}')[0].value || undefined
             {{/properties}}
             {{#references}}
                 data['{{name}}'] = {{isManyToMany}} 
-                    ? [...document.getElementsByName('{{model}}_ids')].filter(node => node.checked).map((node => node.value))
-                    : document.getElementsByName('{{name}}')[0].value
+                    ? [...document.getElementsByName('{{model}}_ids')].filter(node => node.checked).map((node => node.value || undefined))
+                    : document.getElementsByName('{{name}}')[0].value || undefined
             {{/references}}
             
             xhttp.send(JSON.stringify(data));
@@ -42,7 +42,7 @@
         }
 
         {{#hasReferences}}
-        function getManyToManyValues(model,) {
+        function getManyToManyValues(model) {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", `/api/${model}/{{title}}/{{id}}`, true);
             xhr.onreadystatechange = function () {
@@ -128,11 +128,11 @@
             <input type="hidden" name="id" value="{{id}}" />
             {{#properties}}
             <div class="form-group {{#isCheckbox}}form-check{{/isCheckbox}}">
-                {{^isCheckbox}}<label title={{description}} for="{{name}}_id">{{label}}</label>{{/isCheckbox}}
+                {{^isCheckbox}}<label title="{{description}}" for="{{name}}_id">{{label}}</label>{{/isCheckbox}}
                 <input type="{{type}}" id="{{name}}_id" name="{{name}}" value="{{value}}" {{#isCheckbox}}checked{{/isCheckbox}}
                     class="{{^isCheckbox}}{{^isRange}}form-control{{/isRange}}{{/isCheckbox}} {{#isCheckbox}}form-check-input{{/isCheckbox}} {{#isRange}}form-control-range{{/isRange}}" 
                     {{#required}}required{{/required}} {{#attrs}}{{name}}="{{value}}"{{/attrs}}>
-                {{#isCheckbox}}<label title={{description}} for="{{name}}_id" class="form-check-label">{{label}}</label>{{/isCheckbox}}
+                {{#isCheckbox}}<label title="{{description}}" for="{{name}}_id" class="form-check-label">{{label}}</label>{{/isCheckbox}}
             </div>
             {{/properties}}
             {{#references}}

@@ -31,7 +31,7 @@ async function genFolderTree() {
 
 async function copyStaticFiles() {
     console.log('COPYING STATIC FILES...');
-    Object.keys(config.staticFiles).forEach(async (name) => {
+    Object.keys(config.staticFiles).forEach(async name => {
         try {
             await fs.copyFile(
                 `.${config.staticFiles[name].originalPath}`,
@@ -55,7 +55,7 @@ async function generateDataStructure() {
 
 const createIndexView = () => ({
     port: config.port,
-    schemaApis: config.schemas.map((schema) => ({
+    schemaApis: config.schemas.map(schema => ({
         title: schema.name,
     })),
 });
