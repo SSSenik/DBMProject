@@ -21,21 +21,30 @@ function presentationModeToHtmlString(mode, value, type) {
                 case 'boolean':
                     return `<input disabled class="position-static" type="checkbox" checked="${value}">`;
                 case 'color':
-                    return `<label style="background-color: ${value}; width: 24px; color: transparent; border-radius: 12px;">${value}</label>`;
+                    return `<label style="background-color: ${
+                        value || ''
+                    }; width: 24px; color: transparent; border-radius: 12px;">${
+                        value || ''
+                    }</label>`;
                 case 'range':
-                    return `<label>${value}%</label>`;
+                    return `<label>${value || 0}%</label>`;
                 case 'time':
-                    return `<label>${new Date(
-                        new Date().toLocaleDateString() + ` ${value}`
-                    ).toLocaleTimeString()}</label>`;
+                    return `<label>${
+                        value &&
+                        new Date(
+                            new Date().toLocaleDateString() + ` ${value}`
+                        ).toLocaleTimeString()
+                    }</label>`;
                 case 'date':
-                    return `<label>${new Date(
-                        value
-                    ).toLocaleDateString()}</label>`;
+                    return `<label>${
+                        value && new Date(value).toLocaleDateString()
+                    }</label>`;
                 case 'datetime':
-                    return `<label>${new Date(value).toLocaleString()}</label>`;
+                    return `<label>${
+                        value && new Date(value).toLocaleString()
+                    }</label>`;
                 default:
-                    return `<label>${value}</label>`;
+                    return `<label>${value || ''}</label>`;
             }
     }
 }
@@ -57,7 +66,7 @@ function schemaTypeToInputType(type) {
 
 function columnConstraintToHtmlAttrs(column) {
     let attrs = [];
-    Object.keys(column).forEach((prop) => {
+    Object.keys(column).forEach(prop => {
         switch (prop) {
             case 'maxLength':
                 attrs.push({

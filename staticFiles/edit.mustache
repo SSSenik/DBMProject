@@ -121,18 +121,18 @@
 </head>
 <body>
     {{>menu}}
-    <div class="container mt-4 bg-white p-4 rounded shadow">
+    <div class="container mt-4 mb-4 bg-white p-4 rounded shadow">
         <h1>Edit {{title}}</h1>
         <hr>
         <form onsubmit="submitForm(); return false;">
             <input type="hidden" name="id" value="{{id}}" />
             {{#properties}}
             <div class="form-group {{#isCheckbox}}form-check{{/isCheckbox}}">
-                {{^isCheckbox}}<label title="{{description}}" for="{{name}}_id">{{label}}</label>{{/isCheckbox}}
+                {{^isCheckbox}}<label title="{{description}}" for="{{name}}_id">{{label}}{{#required}}*{{/required}}</label>{{/isCheckbox}}
                 <input type="{{type}}" id="{{name}}_id" name="{{name}}" value="{{value}}" {{#isCheckbox}}checked{{/isCheckbox}}
                     class="{{^isCheckbox}}{{^isRange}}form-control{{/isRange}}{{/isCheckbox}} {{#isCheckbox}}form-check-input{{/isCheckbox}} {{#isRange}}form-control-range{{/isRange}}" 
                     {{#required}}required{{/required}} {{#attrs}}{{name}}="{{value}}"{{/attrs}}>
-                {{#isCheckbox}}<label title="{{description}}" for="{{name}}_id" class="form-check-label">{{label}}</label>{{/isCheckbox}}
+                {{#isCheckbox}}<label title="{{description}}" for="{{name}}_id" class="form-check-label">{{label}}{{#required}}*{{/required}}</label>{{/isCheckbox}}
             </div>
             {{/properties}}
             {{#references}}
@@ -142,6 +142,8 @@
             </div>
             {{/references}}
             <input type="submit" value="Save" class="btn"/>
+            <br>
+            <small>* Required fields</small>
         </form>
     </div>
     <!-- JS, Popper.js, and jQuery -->
