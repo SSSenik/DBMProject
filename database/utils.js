@@ -20,7 +20,7 @@ function schemaTypeToSQLiteType(type) {
 
 function buildConstraints(columnName, column) {
     let constraint = '';
-    Object.keys(column).forEach((prop) => {
+    Object.keys(column).forEach(prop => {
         switch (prop) {
             case 'maxLength':
                 constraint += `LENGTH(${columnName}) <= ${column[prop]} AND `;
@@ -52,7 +52,6 @@ async function createRelationshipQuery(schemaTitle, ref) {
                         tableName: schemaTitle,
                         refColumnName: `${ref.model}_id`.toLowerCase(),
                         refTableName: ref.model,
-                        indexName: `${ref.model}_unique`,
                     },
                 });
                 queriesData.push({
@@ -60,7 +59,7 @@ async function createRelationshipQuery(schemaTitle, ref) {
                     mustData: {
                         tableName: schemaTitle,
                         refColumnName: `${ref.model}_id`.toLowerCase(),
-                        indexName: `${ref.model}_unique`,
+                        indexName: `index_${ref.model}_${schemaTitle}`,
                     },
                 });
                 break;
@@ -90,7 +89,7 @@ async function createRelationshipQuery(schemaTitle, ref) {
                 break;
         }
         if (!queriesData.length) return;
-        return queriesData.map((q) =>
+        return queriesData.map(q =>
             mustache.render(q.mustString.toString(), q.mustData)
         );
     } catch (err) {

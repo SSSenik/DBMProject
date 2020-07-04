@@ -15,11 +15,5 @@
         }
     },
     "required": ["name", "email"],
-    "references": [
-        {
-            "model": "Genre",
-            "relation": "1-1",
-            "label": "name"
-        }
-    ]
+    "references": []
 }

@@ -66,7 +66,7 @@ function renderSchemaReferences(schema) {
     if (schema.references.length > 0) {
         return schema.references
             .map(
-                (reference) =>
+                reference =>
                     `<p class="card-text"> ${reference.model} - (${reference.relation}) </p>`
             )
             .join('');
@@ -77,7 +77,7 @@ function renderSchemaReferences(schema) {
 
 function renderExistingSchemas() {
     const schemasHTML = existingSchemas.map(
-        (schema) =>
+        schema =>
             `
         <div class="col-12" id="schema-${schema.title}">
             <div class="card text-white bg-dark mb-3">
@@ -172,13 +172,13 @@ class Property {
         minimum,
     } = {}) {
         this.id = Property.count++;
-        this.name = name || `prop-${this.id}`;
+        this.name = name || `prop${this.id}`;
         this.description = description;
         this.label = label;
         this.type = type || 'string';
         this.isRequired = isRequired || false;
         this.unique = unique || false;
-        this.presentationMode = presentationMode;
+        this.presentationMode = presentationMode || undefined;
         this.pattern = pattern;
         this.maximum = maximum;
         this.minimum = minimum;
@@ -246,7 +246,7 @@ class Property {
         </div>
         <div class="form-group row">
           <label for="prop-label-${this.id}" class="col-sm-3 col-form-label">
-            Label name (in details)
+            Label name
           </label>
           <div class="col-sm-9">
             <input type="text" class="form-control" value="${
@@ -308,9 +308,12 @@ class Property {
             <select class="form-control" id="prop-presentationMode-${
                 this.id
             }" onchange="updatePropertyValue(this)">
-              <option value="image" ${
-                  this.presentationMode === 'image' ? 'selected' : ''
-              }>Image</option>
+                <option value="" ${
+                    !this.presentationMode ? 'selected' : ''
+                }>Text</option>
+                <option value="image" ${
+                    this.presentationMode === 'image' ? 'selected' : ''
+                }>Image</option>
               <option value="video" ${
                   this.presentationMode === 'video' ? 'selected' : ''
               }>Video</option>
@@ -423,7 +426,9 @@ function updatePropertyValue(element) {
         handleConstraints(property, element.value);
     }
     property[propField] =
-        element.type === 'checkbox' ? element.checked : element.value;
+        element.type === 'checkbox'
+            ? element.checked
+            : element.value || undefined;
 
     renderPreview();
 }
@@ -499,7 +504,7 @@ function handleConstraints(property, type) {
 
 function renderExistingSchemasNames(selection) {
     return existingSchemas.map(
-        (schema) =>
+        schema =>
             `<option value="${schema.title}" ${
                 selection === schema.title ? 'selected' : ''
             }>${schema.title}</option>`
@@ -508,7 +513,7 @@ function renderExistingSchemasNames(selection) {
 
 function renderDefaultLabels() {
     return Object.values(existingSchemas[0].properties).map(
-        (prop) =>
+        prop =>
             `<option value="${prop.description}">${prop.description}</option>`
     );
 }
@@ -639,13 +644,13 @@ function updateReferenceValue(element) {
 function handleModelChange(ref, value, selection) {
     const refLabels = document.getElementById(`ref-label-${ref.id}`);
     const schema = getExistingSchema(value);
-    ref.label = Object.keys(schema.properties).filter((prop) =>
+    ref.label = Object.keys(schema.properties).filter(prop =>
         schema.required.includes(prop)
     )[0];
     refLabels.innerHTML = Object.keys(schema.properties)
-        .filter((prop) => schema.required.includes(prop))
+        .filter(prop => schema.required.includes(prop))
         .map(
-            (prop) =>
+            prop =>
                 `<option value="${prop}" ${
                     selection === prop ? 'selected' : ''
                 }>${prop}</option>`
@@ -711,7 +716,7 @@ function validateSchema(isCreation) {
     }
     if (
         isCreation &&
-        existingSchemas.map((schema) => schema.title).includes(schemaName)
+        existingSchemas.map(schema => schema.title).includes(schemaName)
     ) {
         errorContainer.textContent = 'Schema with this name already exists';
         $('.toast').toast('show');
@@ -736,12 +741,24 @@ function validateSchema(isCreation) {
             $('.toast').toast('show');
             return;
         }
+        if (!!properties[i].name.match(/[^a-zA-Z0-9]+/)) {
+            errorContainer.textContent = 'Invalid Property name';
+            $('.toast').toast('show');
+            return;
+        }
         if (mapDuplicates[properties[i].name]) {
             errorContainer.textContent =
                 'Cannot have properties with the same name';
             $('.toast').toast('show');
             return;
         }
+
+        if (!properties[i].label) {
+            errorContainer.textContent = 'All properties must have a label';
+            $('.toast').toast('show');
+            return;
+        }
+
         mapDuplicates[properties[i].name] = true;
 
         schema.properties[properties[i].name] = properties[i].toJSON();
@@ -788,16 +805,14 @@ function createSchema(schema) {
 // - - - - - - - - - - -
 
 function prefillData(schemaToEdit) {
-    const schema = existingSchemas.filter(
-        (sch) => sch.title === schemaToEdit
-    )[0];
+    const schema = existingSchemas.filter(sch => sch.title === schemaToEdit)[0];
     if (schema) {
         document.getElementById('modelName').value = schema.title;
         document.getElementById('modelDesc').value = schema.description;
         schemaName = schema.title;
         schemaDescription = schema.description;
 
-        Object.keys(schema.properties).forEach((prop) => {
+        Object.keys(schema.properties).forEach(prop => {
             addProperty(
                 new Property({
                     name: prop,
@@ -808,7 +823,7 @@ function prefillData(schemaToEdit) {
             );
         });
         if (schema.references) {
-            schema.references.forEach((ref) => {
+            schema.references.forEach(ref => {
                 addReference(new Reference(ref));
             });
         }

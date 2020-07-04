@@ -11,12 +11,12 @@ const {
 
 const DBSCRIPT_MUSTACHE = './database/dbscript.mustache';
 
-const createTableView = (schema) => ({
+const createTableView = schema => ({
     tableName: schema.title,
     columns: Object.keys(schema.properties).map((columnName, i, arr) => ({
         name: columnName,
         type: schemaTypeToSQLiteType(schema.properties[columnName].type),
-        null: schema.required.find((name) => name === columnName)
+        null: schema.required.find(name => name === columnName)
             ? 'NOT NULL'
             : 'NULL',
         unique: schema.properties[columnName].unique ? 'UNIQUE' : '',
@@ -28,7 +28,7 @@ const createTableView = (schema) => ({
 async function generate(dbname, schemas) {
     const db = new sqlite3.Database(
         `./${config.baseGenFolder}/database/${dbname}`,
-        (err) => {
+        err => {
             if (err) return console.error(err.message);
             console.log('Connected to SQLite database.');
         }
@@ -42,7 +42,7 @@ async function generate(dbname, schemas) {
                     data.toString(),
                     createTableView(require(`.${schema.path}`))
                 );
-                db.run(query, (err) => {
+                db.run(query, err => {
                     if (err) {
                         rej(err);
                     } else {
@@ -55,7 +55,7 @@ async function generate(dbname, schemas) {
         console.log('Error catched', e);
     }
 
-    db.close((err) => {
+    db.close(err => {
         if (err) {
             return console.error(err.message);
         }
@@ -65,7 +65,7 @@ async function generate(dbname, schemas) {
 async function generateRelationships(dbname, schemas) {
     const db = new sqlite3.Database(
         `./${config.baseGenFolder}/database/${dbname}`,
-        (err) => {
+        err => {
             if (err) return console.error(err.message);
             console.log('Connected to SQLite database.');
         }
@@ -83,7 +83,7 @@ async function generateRelationships(dbname, schemas) {
                 );
                 for (const q of queries) {
                     await new Promise((res, rej) => {
-                        db.run(q, (err) => {
+                        db.run(q, err => {
                             if (err) {
                                 rej(err);
                             } else {
@@ -98,7 +98,7 @@ async function generateRelationships(dbname, schemas) {
         }
     }
 
-    db.close((err) => {
+    db.close(err => {
         if (err) {
             return console.error(err.message);
         }
